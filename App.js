@@ -15,11 +15,12 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [tasks,setTask] = useState([]);
+  const [tasks,setTask] = useState(["w"]);
   const [text,setText] = useState('');
   const add = (task) =>{
     if (task == null) return;
     setTask([...tasks,task]);
+    setText("")
     Keyboard.dismiss();
   }
   const remove = (task) =>{
@@ -37,7 +38,7 @@ const App = () => {
           tasks.map((task,i) => {
             return(
               <View key={i}>
-                <Task style={styles.task} task={task}></Task>
+                <Task style={styles.task} task={task} delete={remove}></Task>
               </View>
             );
           })
@@ -75,12 +76,13 @@ const styles = StyleSheet.create({
   button:{
     width:width/4,
     height:50,
-    // flex:1,
   },
   task:{
     backgroundColor:'#6fdc6f',
-    width:500,
+    width:width,
     height:50,
+    paddingTop:10,
+    display:'flex',
   }
 });
 

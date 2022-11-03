@@ -1,10 +1,18 @@
 import React from 'react';
-import { View,Text, StyleSheet} from 'react-native';
+import { View,Text, StyleSheet, Touchable, TouchableOpacity} from 'react-native';
+import  Icon  from 'react-native-vector-icons/EvilIcons';
 const Task = (props) =>{
 
     return(
         <View style={props.style}>
-            <Text>{props.task}</Text>
+            <Text id='1' style={{paddingLeft:10,width:20}}>
+                {props.task}
+            </Text>
+            <TouchableOpacity onPress={(evt) => {props.delete(props.task)}} style={{width:50,alignSelf:"flex-end",top:-20}} >
+            <View>
+                <Icon size={20} color='0x900' name="trash"/>
+            </View>
+            </TouchableOpacity>
         </View>
     )
 }
