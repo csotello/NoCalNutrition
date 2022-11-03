@@ -5,7 +5,7 @@ const Task = (props) =>{
 
     return(
         <View style={props.style}>
-            <Text id='1' style={{paddingLeft:10,width:20}}>
+            <Text id='1' style={{paddingLeft:10}}>
                 {props.task}
             </Text>
             <TouchableOpacity onPress={(evt) => {props.delete(props.task)}} style={{width:50,alignSelf:"flex-end",top:-20}} >
