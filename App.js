@@ -18,6 +18,7 @@ const App = () => {
   const [tasks,setTask] = useState([]);
   const [text,setText] = useState('');
   const [loaded,setLoaded] = useState(false)
+
   const load = async () => {
     try {
       const val = await EncryptedStorage.getItem("tasks")
@@ -34,6 +35,7 @@ const App = () => {
     load()
     setLoaded(true)
   }
+
   const store = async (tasks)=>{
     try {
       await EncryptedStorage.setItem(
@@ -45,22 +47,28 @@ const App = () => {
       console.log("Failed to store")
     }
   }
+
   const add = (task) =>{
     if (task == null) return;
-    var current = [...tasks,task]
+    var id = 0
+    tasks.forEach(task => {if(task.id > id) id = task.id})
+    id += 1
+    var current = [...tasks,{id:id,task:task,completed:false}]
     store(current)
-    setTask([...tasks,task]);
+    setTask(current);
     setText("");
     Keyboard.dismiss();
   }
+
   const remove = (task) =>{
     setText("");
     var current = tasks.filter((val,i) =>
-    val != task
+      val.id != task
   )
     store(current)
     setTask(current)
   } 
+
   return (
     <View style={styles.background}>
       <View>
@@ -71,7 +79,7 @@ const App = () => {
           tasks.map((task,i) => {
             return(
               <View key={i}>
-                <Task style={styles.task} task={task} delete={remove}></Task>
+                <Task style={styles.task} id={task.id} task={task.task} delete={remove}></Task>
               </View>
             );
           })
@@ -90,11 +98,6 @@ const App = () => {
           title="Add"
           color='#2db92d'
           onPress={() => add(text)}
-          style={styles.button}></Button>
-        <Button 
-          title="Remove"
-          color='#2db92d'
-          onPress={() => remove(text)}
           style={styles.button}></Button>
       </View>
     </View>

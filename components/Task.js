@@ -8,7 +8,7 @@ const Task = (props) =>{
             <Text id='1' style={{paddingLeft:10}}>
                 {props.task}
             </Text>
-            <TouchableOpacity onPress={(evt) => {props.delete(props.task)}} style={{width:50,alignSelf:"flex-end",top:-20}} >
+            <TouchableOpacity onPress={(evt) => {props.delete(props.id)}} style={{width:50,alignSelf:"flex-end",top:-20}} >
             <View>
                 <Icon size={20} color='0x900' name="trash"/>
             </View>
