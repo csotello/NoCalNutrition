@@ -81,10 +81,26 @@ const Habits = ({route}) => {
     }
     
     const remove = (title) =>{
-        console.log(title)
         let cur = habits.filter(x => x.title != title)
         store(cur)
         setHabits(cur)
+    }
+
+    const setDays = (habit) =>{
+        habits.forEach(cur =>{
+            if(cur.title === habit.title){
+                cur.days = {
+                    Monday:"Default",
+                    Tuesday:"Default",
+                    Wednesday:"Default",
+                    Thursday:"Default",
+                    Friday:"Default",
+                    Saturday:"Default",
+                    Sunday:"Default",
+                }
+            }
+        })
+        setHabits([...habits])
     }
     return(
         <View>
@@ -92,7 +108,7 @@ const Habits = ({route}) => {
                 <Text style={{fontSize:20,alignSelf:"center", paddingBottom:10}}>Habits</Text>
                 <ScrollView>
                     {habits.map((habit,i) => {
-                        return <Habit title={habit.title} days={habit.days} key={i} remove={remove}></Habit>
+                        return <Habit habit={habit} setDays={setDays} key={i} remove={remove}></Habit>
                     })}
                 </ScrollView>
                 <Modal isOpen={visible} onClose={() => setVisible(prev => !prev)} size="lg">
