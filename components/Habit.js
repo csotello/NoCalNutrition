@@ -24,6 +24,10 @@ const Habit = (props) => {
             Sunday:"Default",
         })
     }
+
+    const edit = (habit) => {
+        props.edit(habit)
+    }
     return(
         <ScrollView>
             <Box rounded={"lg"}>
@@ -31,6 +35,10 @@ const Habit = (props) => {
                 <Text style={{paddingLeft:20,fontSize:20}}>{props.habit.title}</Text>
                 <Text style={{marginLeft:40,fontSize:20}}>{props.habit.catagory}</Text>
                 <Spacer/>
+                <IconButton
+                    icon={<Icon name="pencil" size={30}/>}
+                    onPress={() => edit(props.habit)}
+                    />
                 <IconButton
                     icon={<Icon name="trash" size={30}/>}
                     onPress={() => props.remove(props.habit.title)}
