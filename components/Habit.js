@@ -1,5 +1,5 @@
-import { View, Text } from "react-native"
-import {Box, Button, Flex, IconButton} from 'native-base'
+import { ScrollView, Text } from "react-native"
+import {Box, Button, Flex, IconButton, Spacer} from 'native-base'
 import Icon  from "react-native-vector-icons/EvilIcons"
 import { useState } from "react"
 const Habit = (props) => {
@@ -13,7 +13,7 @@ const Habit = (props) => {
         })
     }
     const reset = () =>{
-        props.setDays(props.title)
+        props.setDays(props.habit.title)
         setDays({
             Monday:"Default",
             Tuesday:"Default",
@@ -25,21 +25,17 @@ const Habit = (props) => {
         })
     }
     return(
-        <View>
+        <ScrollView>
             <Box rounded={"lg"}>
             <Flex direction="row" w={"100%"}>
                 <Text style={{paddingLeft:20,fontSize:20}}>{props.habit.title}</Text>
+                <Text style={{marginLeft:40,fontSize:20}}>{props.habit.catagory}</Text>
+                <Spacer/>
                 <IconButton
-                    style={{paddingLeft:50}}
-                    right={-200}
-                    top={-10}
                     icon={<Icon name="trash" size={30}/>}
-                    onPress={() => props.remove(props.title)}
+                    onPress={() => props.remove(props.habit.title)}
                     />
                 <IconButton
-                    style={{paddingLeft:100}}
-                    right={-130}
-                    top={-10}
                     icon={<Icon name="undo" size={30}/>}
                     onPress={() => reset()}
                     />
@@ -50,13 +46,15 @@ const Habit = (props) => {
                         borderRadius={100} 
                         variant="outline" 
                         borderColor={"amber.100"} 
-                        w={"14%"} h={10} key={i} 
+                        marginBottom={10}
+                        marginRight={2}
+                        w={"12%"} h={10} key={i} 
                         onPress={(evt) => handleClick(day)} 
                         background={days[day] == "Default" ? "#6fdc6f" : "#178237"}>{dayText[day]}</Button>
                 })}
                 </Flex>
             </Box>
-        </View>
+        </ScrollView>
     )
 }
 

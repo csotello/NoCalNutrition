@@ -8,6 +8,7 @@ import EncryptedStorage from 'react-native-encrypted-storage'
 const Habits = ({route}) => {
     const [visible,setVisible] = useState(false)
     const [text,setText] = useState("")
+    const [catagory, setCatagory] = useState("")
     const [loaded,setLoaded] = useState(false)
     const [habits,setHabits] = useState([{
         title:"Drink 100oz of Water",
@@ -19,7 +20,8 @@ const Habits = ({route}) => {
             Friday:"Default",
             Saturday:"Default",
             Sunday:"Default",
-        }
+        },
+        catagory:"goal"
     }])
     const load = async () => {
         try {
@@ -61,7 +63,8 @@ const Habits = ({route}) => {
                 Friday:"Default",
                 Saturday:"Default",
                 Sunday:"Default",
-            }
+            },
+            catagory:catagory,
         }
         let has = false
         habits.forEach(habit=>{
@@ -116,6 +119,8 @@ const Habits = ({route}) => {
                         <Modal.CloseButton/>
                         <Text style={{fontSize:20}}>New Habit</Text>
                         <Input value={text} onChangeText={(txt) => setText(txt)} placeholder={"habit"}></Input>
+                        <Text style={{fontSize:20}}>Catagory</Text>
+                        <Input value={catagory} onChangeText={(txt) => setCatagory(txt)} placeholder={"catagory"}></Input>
                         <Button onPress={() => add(text)}>Add</Button>
                     </Modal.Content>
                 </Modal>
