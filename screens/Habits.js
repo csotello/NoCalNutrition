@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ScrollView, View, Text, Keyboard, ToastAndroid} from 'react-native';
 import {Box} from 'native-base';
 import Habit from '../components/Habit';
@@ -10,6 +10,7 @@ const Habits = ({route}) => {
   const [text, setText] = useState('');
   const [catagory, setCatagory] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [editTitle, setEditTitle] = useState(null);
   const [edit, setEdit] = useState(null);
   const [habits, setHabits] = useState([
     {
@@ -104,6 +105,11 @@ const Habits = ({route}) => {
     setHabits([...habits]);
   };
 
+  const openEditor = habit => {
+    setEdit({...habit});
+    setEditTitle(habit.title);
+  };
+
   return (
     <View>
       <Box>
@@ -118,7 +124,7 @@ const Habits = ({route}) => {
                 setDays={setDays}
                 key={i}
                 remove={remove}
-                edit={setEdit}></Habit>
+                edit={openEditor}></Habit>
             );
           })}
         </ScrollView>
@@ -159,11 +165,40 @@ const Habits = ({route}) => {
               zIndex: 50,
               borderRadius: 10,
               shadowColor: '#171717',
-              elevation:20,
+              elevation: 20,
               top: -200,
               backgroundColor: 'white',
               alignSelf: 'center',
-            }}></View>
+            }}>
+            <Text>Habit title</Text>
+            <Input
+              value={edit.title}
+              onChangeText={txt => setEdit({...edit, title: txt})}
+              variant="outline"
+              size={'sm'}
+              placeholder="Title"
+            />
+            <Text>Catagory</Text>
+            <Input
+              value={edit.catagory}
+              onChangeText={txt => setEdit({...edit, catagory: txt})}
+              variant="outline"
+              size={'sm'}
+              placeholder="New Task"></Input>
+            <Button
+              onPress={() => {
+                habits.forEach(habit => {
+                  if (habit.title === editTitle) {
+                    habit.title = edit.title;
+                    habit.catagory = edit.catagory;
+                  }
+                });
+                setHabits(prev => [...habits]);
+                setEdit(prev => null);
+              }}>
+              Change
+            </Button>
+          </View>
         )}
       </Box>
     </View>
