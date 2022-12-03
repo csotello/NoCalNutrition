@@ -195,6 +195,7 @@ const Habits = ({route}) => {
                 });
                 setHabits(prev => [...habits]);
                 setEdit(prev => null);
+                store(habits);
               }}>
               Change
             </Button>
