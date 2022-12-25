@@ -3,6 +3,7 @@ import Home from './screens/Home';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Habits from './screens/Habits';
+import Nutrition from './screens/Nutrition';
 import Customize from './screens/Customize';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NativeBaseProvider} from 'native-base';
@@ -41,6 +42,16 @@ const App = () => {
               tabBarLabel: 'Habits',
               tabBarIcon: ({color}) => (
                 <Icon name="calendar" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Nutrition"
+            component={Nutrition}
+            options={{
+              tabBarLabel: 'nutrition',
+              tabBarIcon: ({color}) => (
+                <Icon name="nutrition" color={color} size={26} />
               ),
             }}
           />
