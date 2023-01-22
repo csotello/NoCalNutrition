@@ -21,7 +21,7 @@ const Food = props => {
               {nutrients.map((nutrient, i) => {
                 return (
                   <>
-                    <View style={{paddingLeft: 5}}>
+                    <View style={{paddingLeft: 5}} key={i}>
                       <Text>
                         {nutrient.nutrientName}
                         <Text>{nutrient.value} </Text>
