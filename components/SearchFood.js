@@ -33,7 +33,7 @@ const SearchFood = props => {
                   ) {
                     return (
                       <>
-                        <View style={{paddingLeft: 5}}>
+                        <View style={{paddingLeft: 5}} key={i}>
                           <Text>
                             {nutrient.nutrientName} {nutrient.value}{' '}
                             {nutrient.unitName}{' '}
