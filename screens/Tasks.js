@@ -14,7 +14,7 @@ import Task from '../components/Task';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const Home = () => {
+const Tasks = () => {
   const [tasks, setTask] = useState([]);
   const [text, setText] = useState('');
   const [loaded, setLoaded] = useState(false);
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Tasks;

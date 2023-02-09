@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import Home from './screens/Home';
+import Tasks from './screens/Tasks';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Habits from './screens/Habits';
@@ -7,6 +7,19 @@ import Nutrition from './screens/Nutrition';
 import Customize from './screens/Customize';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NativeBaseProvider} from 'native-base';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import AddFood from './screens/AddFood';
+
+const HomeStack = createNativeStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator screenOptions={{headerShown: false}}>
+      <HomeStack.Screen name="Nutrition" component={Nutrition} />
+      <HomeStack.Screen name="AddFood" component={AddFood} />
+    </HomeStack.Navigator>
+  );
+}
 
 const App = () => {
   const Tab = createMaterialBottomTabNavigator();
@@ -26,6 +39,17 @@ const App = () => {
           activeColor="#178237"
           barStyle={{backgroundColor: '#6fdc6f'}}>
           <Tab.Screen
+            name="Home"
+            component={HomeStackScreen}
+            options={{
+              headerShown: false,
+              tabBarLabel: 'Nutrition',
+              tabBarIcon: ({color}) => (
+                <Icon name="nutrition" color={color} size={26} />
+              ),
+            }}
+          />
+          {/* <Tab.Screen
             name="Tasks"
             component={Home}
             options={{
@@ -33,8 +57,8 @@ const App = () => {
               tabBarIcon: ({color}) => (
                 <Icon name="clipboard" color={color} size={26} />
               ),
-            }}
-          />
+            }} */}
+          {/* /> */}
           <Tab.Screen
             name="Habits"
             component={Habits}
@@ -45,17 +69,7 @@ const App = () => {
               ),
             }}
           />
-          <Tab.Screen
-            name="Nutrition"
-            component={Nutrition}
-            options={{
-              tabBarLabel: 'nutrition',
-              tabBarIcon: ({color}) => (
-                <Icon name="nutrition" color={color} size={26} />
-              ),
-            }}
-          />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Customize"
             component={Customize}
             options={{
@@ -63,8 +77,8 @@ const App = () => {
               tabBarIcon: ({color}) => (
                 <Icon name="build" color={color} size={26} />
               ),
-            }}
-          />
+            }} */}
+          {/* /> */}
         </Tab.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
