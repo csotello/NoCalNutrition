@@ -2,6 +2,7 @@ import {Button, Center, ScrollView} from 'native-base';
 import {useState, useEffect} from 'react';
 import {Text, View, Modal, Input, IconButton} from 'native-base';
 import {API_KEY} from '@env';
+import {useNavigation} from '@react-navigation/native';
 const SearchFood = props => {
   const [searchResults, setSearchResults] = useState([]);
   const [text, setText] = useState('');
@@ -13,13 +14,12 @@ const SearchFood = props => {
         setSearchResults([...data.foods]);
       });
   };
-
+  const navigation = useNavigation();
   const displaySearch = () => {
     return (
       <>
         {searchResults &&
           searchResults.map((item, i) => {
-            console.log(item);
             return (
               <View style={{padding: 10}} key={i}>
                 <Text>{item.brandName}</Text>
@@ -61,23 +61,20 @@ const SearchFood = props => {
   };
 
   return (
-    <Modal isOpen={props.visible} onClose={() => props.close()} size="lg">
-      <Modal.Content h={'80%'} background="#6fdc6f" paddingTop={10} w={'100%'}>
-        <Modal.CloseButton />
-        <Text style={{fontSize: 20}}>New Food</Text>
-        <Input
-          value={text}
-          onChangeText={txt => setText(txt)}
-          placeholder={'Cheese'}></Input>
-        <Button onPress={() => search(text)}>Search</Button>
-        <ScrollView>
-          {searchResults &&
-            searchResults.map(item => {
-              return <>{displaySearch()}</>;
-            })}
-        </ScrollView>
-      </Modal.Content>
-    </Modal>
+    <View>
+      <Text style={{fontSize: 20}}>New Food</Text>
+      <Input
+        value={text}
+        onChangeText={txt => setText(txt)}
+        placeholder={'Cheese'}></Input>
+      <Button onPress={() => search(text)}>Search</Button>
+      <ScrollView>
+        {searchResults &&
+          searchResults.map(item => {
+            return <>{displaySearch()}</>;
+          })}
+      </ScrollView>
+    </View>
   );
 };
 
