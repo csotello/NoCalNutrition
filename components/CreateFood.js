@@ -16,8 +16,8 @@ import {
 } from 'native-base';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useState} from 'react';
-const CustomFood = props => {
-  const [text, setText] = useState({});
+const CreateFood = props => {
+  const [text, setText] = useState({sevingUnit: 'g'});
 
   const theme = extendTheme({
     components: {
@@ -45,12 +45,15 @@ const CustomFood = props => {
   const create = async () => {
     let food = convertCustomFood(text);
     try {
-      const customFood = await EncryptedStorage.getItem('customFood');
-      let curr = customFood !== undefined ? [...customFood, food] : [food];
-      await EncryptedStorage.setItem('customFood', Json.stringify(curr));
+      const customFood = JSON.parse(
+        await EncryptedStorage.getItem('customFood'),
+      );
+      let curr = customFood ? [...customFood, food] : [food];
+      await EncryptedStorage.setItem('customFood', JSON.stringify(curr));
     } catch (error) {
       console.error(error);
     }
+    props.setPage('custom');
   };
 
   return (
@@ -178,4 +181,4 @@ const CustomFood = props => {
     </NativeBaseProvider>
   );
 };
-export default CustomFood;
+export default CreateFood;

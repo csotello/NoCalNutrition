@@ -4,7 +4,7 @@ import {Text, View, Modal, Input, IconButton} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
-import CustomFood from '../components/CustomFood';
+import CreateFood from '../components/CreateFood';
 import SearchFood from '../components/SearchFood';
 import AddFood from './AddFood';
 const Nutrition = ({route}) => {
