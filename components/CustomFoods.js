@@ -1,26 +1,28 @@
 import {Button, ScrollView, View} from 'native-base';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Text} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import SyncStorage from 'sync-storage';
 const CustomFoods = props => {
   const [foods, setFoods] = useState([]);
-  const [loaded, setLoaded] = useState(false);
+  const [status, setStatus] = useState('loading');
   const load = async () => {
     try {
-      const customFood = JSON.parse(
-        await EncryptedStorage.getItem('customFood'),
-      );
-      console.log(customFood);
-      setFoods(customFood === [] ? [] : customFood);
+      const customFood = await EncryptedStorage.getItem('customFood');
+      console.log('Custom: ' + customFood);
+      console.log('Sync: ' + SyncStorage.get('customFood'));
+      const val = JSON.parse(customFood);
+      console.log(val);
+      setFoods([...val]);
+      setStatus(val.length === 0 ? 'empty' : 'loaded');
     } catch (error) {
       console.error('Failed to load');
       console.log(error);
     }
   };
-  if (!loaded) {
+  useEffect(() => {
     load();
-    setLoaded(true);
-  }
+  }, []);
 
   const removeFood = async food => {
     var cur = foods.filter(
@@ -31,8 +33,9 @@ const CustomFoods = props => {
   };
 
   const displayFoods = food => {
+    console.log(food);
     return (
-      <View style={{elevation: 1}}>
+      <View style={{borderRadius: 5, width: '100%', height: 50}}>
         <Text>{food.description}</Text>
         <Text>{food.householdServingFullText}</Text>
         <Button onPress={removeFood(food)} />
@@ -46,7 +49,7 @@ const CustomFoods = props => {
       <ScrollView>
         {foods &&
           foods.map((item, i) => {
-            return <>{displayFoods(item)}</>;
+            return <View key={i}>{displayFoods(item)}</View>;
           })}
       </ScrollView>
     </>
