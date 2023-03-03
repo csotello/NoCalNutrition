@@ -1,17 +1,13 @@
 import {ScrollView} from 'native-base';
 import {useState, useEffect} from 'react';
-import {Text, View, Modal, Input, IconButton} from 'native-base';
+import {Text, View, IconButton} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
-import CreateFood from '../components/CreateFood';
-import SearchFood from '../components/SearchFood';
 import AddFood from './AddFood';
 const Nutrition = ({route}) => {
-  const date = new Date().toDateString();
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [isOpen, setOpen] = useState(false);
   const [food, setFood] = useState({
     Breakfast: [],
     Lunch: [],
@@ -27,10 +23,10 @@ const Nutrition = ({route}) => {
 
   const load = async () => {
     try {
-      const val = await EncryptedStorage.getItem('nutrition');
+      const val = JSON.parse(await EncryptedStorage.getItem('nutrition'));
       if (val) {
-        setFood(JSON.parse(val));
-        console.log('Loaded');
+        setFood({...val});
+        console.log('Loaded: ' + val);
       }
     } catch (error) {
       console.log(error);
@@ -44,7 +40,7 @@ const Nutrition = ({route}) => {
 
   const store = async nutrition => {
     try {
-      await EncryptedStorage.setItem('nutrition', JSON.stringify(tasks));
+      await EncryptedStorage.setItem('nutrition', JSON.stringify(nutrition));
       console.log('Stored:' + JSON.stringify(nutrition));
     } catch (error) {
       console.log('Failed to store');

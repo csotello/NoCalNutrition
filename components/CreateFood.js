@@ -1,18 +1,14 @@
-import {StyleSheet, TextInput} from 'react-native';
 import {NativeBaseProvider, extendTheme} from 'native-base';
-import styles from '../styles/styles';
 import {convertCustomFood} from '../utils';
 import {
   View,
   Button,
-  Modal,
   Text,
   Input,
   Flex,
   Select,
   CheckIcon,
   ScrollView,
-  theme,
 } from 'native-base';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useState} from 'react';
@@ -45,15 +41,15 @@ const CreateFood = props => {
   const create = async () => {
     let food = convertCustomFood(text);
     try {
-      const customFood = JSON.parse(
-        await EncryptedStorage.getItem('customFood'),
-      );
-      let curr = customFood ? [...customFood, food] : [food];
-      await EncryptedStorage.setItem('customFood', JSON.stringify(curr));
+      const val = JSON.parse(await EncryptedStorage.getItem('customFood'));
+      console.log('Custom Before:' + val);
+      let count = val.push(food);
+      console.log('Custom After: ' + val);
+      await EncryptedStorage.setItem('customFood', JSON.stringify(val));
     } catch (error) {
       console.error(error);
     }
-    props.setPage('custom');
+    // props.setPage('custom');
   };
 
   return (
