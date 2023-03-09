@@ -15,8 +15,10 @@ const Food = props => {
         return (
           <View key={i} style={{paddingLeft: 10}}>
             <Text>
-              {item.brandName} {item.description} {item.servingSize}{' '}
-              {item.servingSizeUnit}
+              {item.brandName} {item.description}
+            </Text>
+            <Text>
+              {item.servingSize?.toPrecision(3)} {item.servingSizeUnit}
             </Text>
             <Text>
               {nutrients.map((nutrient, i) => {
@@ -36,7 +38,7 @@ const Food = props => {
             <Button
               w={50}
               top={-50}
-              right={-250}
+              right={-350}
               padding={1}
               backgroundColor={backgroundColor}
               leftIcon={
