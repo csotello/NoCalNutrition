@@ -1,12 +1,13 @@
-import {View, Text} from 'native-base';
-
+import {View, Text, Button} from 'native-base';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {backgroundColor} from '../utils';
 const Food = props => {
   return (
     <View style={{padding: 10}}>
       <Text>{props.title}</Text>
       {props.meal?.map((item, i) => {
-        console.log(item);
-        let nutrients = item.foodNutrients.filter(item => {
+        // console.log(item);
+        let nutrients = item.foodNutrients?.filter(item => {
           return item.nutrientName.match(
             /^(Protein|Carbohydrate, by difference|Total lipid \(fat\))$/,
           );
@@ -32,6 +33,21 @@ const Food = props => {
                 );
               })}
             </Text>
+            <Button
+              w={50}
+              top={-50}
+              right={-250}
+              padding={1}
+              backgroundColor={backgroundColor}
+              leftIcon={
+                <Icon
+                  name="trash-outline"
+                  color={'black'}
+                  size={20}
+                  onPress={() => props.remove(item, props.title)}
+                />
+              }
+            />
           </View>
         );
       })}

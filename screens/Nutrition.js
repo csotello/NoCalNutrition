@@ -57,9 +57,24 @@ const Nutrition = ({route}) => {
     Object.entries(cur).forEach(([key, value]) => {
       if (key === meal) {
         value = value === undefined ? [item] : [...value, item];
+        console.log('key: ' + key + ' value: ' + value);
         cur[key] = [...value];
       }
     });
+    setFood({...cur});
+    store({...cur});
+  };
+
+  const removeFood = (item, section) => {
+    let meal = food[`${section}`];
+    meal = meal?.filter(cur => item.description !== cur.description);
+    let cur = {
+      Breakfast: [...food.Breakfast],
+      Lunch: [...food.Lunch],
+      Dinner: [...food.Dinner],
+      Snacks: [...food.Snacks],
+    };
+    cur[`${section}`] = [...meal];
     setFood({...cur});
     store({...cur});
   };
@@ -69,7 +84,14 @@ const Nutrition = ({route}) => {
       <Text>Nutrition</Text>
       <ScrollView>
         {Object.keys(food).map((meal, i) => {
-          return <Food meal={[...food[meal]]} title={meal} key={i} />;
+          return (
+            <Food
+              meal={[...food[meal]]}
+              title={meal}
+              key={i}
+              remove={removeFood}
+            />
+          );
         })}
       </ScrollView>
       <IconButton
