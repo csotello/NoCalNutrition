@@ -41,9 +41,10 @@ const CreateFood = props => {
   const create = async () => {
     let food = convertCustomFood(text);
     try {
-      const val = JSON.parse(await EncryptedStorage.getItem('customFood'));
+      var val = JSON.parse(await EncryptedStorage.getItem('customFood'));
       console.log('Custom Before:' + val);
-      let count = val.push(food);
+      if (val) val.push(food);
+      else val = [food];
       console.log('Custom After: ' + val);
       await EncryptedStorage.setItem('customFood', JSON.stringify(val));
     } catch (error) {

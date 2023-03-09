@@ -12,7 +12,7 @@ const CustomFoods = props => {
         await EncryptedStorage.getItem('customFood'),
       );
       console.log('Loaded: ' + customFood);
-      setFoods([...customFood]);
+      setFoods(customFood ? [...customFood] : []);
       setLoaded(true);
     } catch (error) {
       console.error('Failed to load');
