@@ -8,7 +8,11 @@ import AddFood from './AddFood';
 const Nutrition = ({route}) => {
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [totals, setTotals] = useState({});
+  const [totals, setTotals] = useState({
+    protein: 0,
+    carbs: 0,
+    fat: 0,
+  });
   const [food, setFood] = useState({
     Breakfast: [],
     Lunch: [],
@@ -89,16 +93,17 @@ const Nutrition = ({route}) => {
     };
     Object.keys(food).forEach(meal => {
       food[`${meal}`]?.map(food => {
-        console.log(food);
         food.foodNutrients.map((nutrient, i) => {
           switch (nutrient.nutrientName) {
             case 'Protein':
-              console.log('protein: ' + nutrient.value);
               newTotals.protein += nutrient.value;
+              break;
             case 'Carbohydrate, by difference':
               newTotals.carbs += nutrient.value;
+              break;
             case 'Total lipid (fat)':
               newTotals.fat += nutrient.value;
+              break;
             default:
           }
         });
