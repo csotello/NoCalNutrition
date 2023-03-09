@@ -1,7 +1,12 @@
+import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const backgroundColor = 'rgb(111, 220, 111)';
+
 //Convert user input into format used by API
 export const convertCustomFood = food => {
   ret = {
-    description: food.foodName || '',
+    description: food.name || '',
     householdServingFullText: food.serving || '',
     servingSize: food.servingWeight || '',
     servingSizeUnit: `${food.servingUnit || ''}`.toLocaleUpperCase(),
