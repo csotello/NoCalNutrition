@@ -4,14 +4,18 @@ import {Flex, Modal} from 'native-base';
 import CreateFood from '../components/CreateFood';
 import SearchFood from '../components/SearchFood';
 import CustomFoods from '../components/CustomFoods';
+import EditFood from '../components/EditFood';
 
 const AddFood = props => {
-  const [page, setPage] = useState('search');
+  const [page, setPage] = useState({title: 'search', data: {}});
 
   const displayPage = page => {
-    if (page === 'search') return <SearchFood add={props.add} />;
-    else if (page === 'custom') return <CustomFoods add={props.add} />;
-    else if (page === 'create') return <CreateFood setPage={setPage} />;
+    if (page.title === 'search')
+      return <SearchFood add={props.add} setPage={setPage} />;
+    else if (page.title === 'custom') return <CustomFoods add={props.add} />;
+    else if (page.title === 'create') return <CreateFood setPage={setPage} />;
+    else if (page.title === 'edit')
+      return <EditFood food={page.data} setPage={setPage} add={props.add} />;
   };
   const style = {
     tab: {
@@ -33,13 +37,19 @@ const AddFood = props => {
         width={'100%'}>
         <Modal.CloseButton />
         <Flex direction="row">
-          <Text style={style.tab} onPress={() => setPage('search')}>
+          <Text
+            style={style.tab}
+            onPress={() => setPage({title: 'search', data: {}})}>
             Search
           </Text>
-          <Text style={style.tab} onPress={() => setPage('custom')}>
+          <Text
+            style={style.tab}
+            onPress={() => setPage({title: 'custom', data: {}})}>
             Custom Foods
           </Text>
-          <Text style={style.tab} onPress={() => setPage('create')}>
+          <Text
+            style={style.tab}
+            onPress={() => setPage({title: 'create', data: {}})}>
             Create
           </Text>
         </Flex>

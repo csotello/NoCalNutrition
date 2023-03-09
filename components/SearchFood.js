@@ -20,11 +20,20 @@ const SearchFood = props => {
       <>
         {searchResults &&
           searchResults.map((item, i) => {
+            console.log(item);
             return (
               <View style={{padding: 10}} key={i}>
-                <Text>{item.brandName}</Text>
-                <Text>{item.brandOwner}</Text>
+                {item.brandName && <Text>{item.brandName}</Text>}
+                {item.brandOwner && <Text>{item.brandOwner}</Text>}
                 <Text>{item.description}</Text>
+                {item.servingSize && item.servingSizeUnit && (
+                  <Text>
+                    {item.servingSize} {item.servingSizeUnit}
+                  </Text>
+                )}
+                {item.householdServingFullText && (
+                  <Text>{item.householdServingFullText}</Text>
+                )}
                 {item.foodNutrients.map((nutrient, i) => {
                   if (
                     nutrient.nutrientName.match(
@@ -50,7 +59,8 @@ const SearchFood = props => {
                   w={10}
                   borderRadius={50}
                   onPress={() => {
-                    props.add({...item}, 'Lunch');
+                    // props.add({...item}, 'Lunch');
+                    props.setPage({title: 'edit', data: {...item}});
                   }}
                 />
               </View>
