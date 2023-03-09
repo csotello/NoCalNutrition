@@ -1,4 +1,4 @@
-import {ScrollView} from 'native-base';
+import {Flex, ScrollView} from 'native-base';
 import {useState, useEffect} from 'react';
 import {Text, View, IconButton} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -8,6 +8,7 @@ import AddFood from './AddFood';
 const Nutrition = ({route}) => {
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [totals, setTotals] = useState({});
   const [food, setFood] = useState({
     Breakfast: [],
     Lunch: [],
@@ -19,7 +20,8 @@ const Nutrition = ({route}) => {
     if (!loaded) {
       load();
     }
-  }, [load]);
+    updateTotals();
+  }, [load, food]);
 
   const load = async () => {
     try {
@@ -79,9 +81,49 @@ const Nutrition = ({route}) => {
     store({...cur});
   };
 
+  const updateTotals = () => {
+    newTotals = {
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+    };
+    Object.keys(food).forEach(meal => {
+      food[`${meal}`]?.map(food => {
+        console.log(food);
+        food.foodNutrients.map((nutrient, i) => {
+          switch (nutrient.nutrientName) {
+            case 'Protein':
+              console.log('protein: ' + nutrient.value);
+              newTotals.protein += nutrient.value;
+            case 'Carbohydrate, by difference':
+              newTotals.carbs += nutrient.value;
+            case 'Total lipid (fat)':
+              newTotals.fat += nutrient.value;
+            default:
+          }
+        });
+      });
+    });
+    setTotals({...newTotals});
+  };
+
   return (
     <View>
       <Text>Nutrition</Text>
+      <Flex direction="row">
+        <View style={{padding: 1, margin: 2}}>
+          <Text>P</Text>
+          <Text>{totals.protein.toPrecision(3) || 0}</Text>
+        </View>
+        <View style={{padding: 1, margin: 2}}>
+          <Text>C</Text>
+          <Text>{totals.carbs.toPrecision(3) || 0}</Text>
+        </View>
+        <View style={{padding: 1, margin: 2}}>
+          <Text>F</Text>
+          <Text>{totals.fat.toPrecision(3) || 0}</Text>
+        </View>
+      </Flex>
       <ScrollView>
         {Object.keys(food).map((meal, i) => {
           return (
