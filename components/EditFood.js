@@ -1,9 +1,12 @@
-import {Flex, Input} from 'native-base';
+import {Button, Flex, Input, Select, CheckIcon} from 'native-base';
 import {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 
 const EditFood = props => {
-  const [servings, setServings] = useState(0);
+  const [servings, setServings] = useState({
+    value: 0,
+    unit: 'g',
+  });
   const [nutrients, setNutrients] = useState({
     protein: 0,
     carbs: 0,
@@ -11,7 +14,7 @@ const EditFood = props => {
   });
   useEffect(() => {
     const serving = Number(props.food.servingSize).toPrecision(4);
-    setServings(serving || 0);
+    setServings({...servings, value: serving});
     var cur = {...nutrients};
     props.food.foodNutrients.map((nutrient, i) => {
       switch (nutrient.nutrientName) {
@@ -33,14 +36,30 @@ const EditFood = props => {
   return (
     <View>
       <Text>{props.food.description}</Text>
+      <Text>{props.food.additionalDescriptions}</Text>
       <Flex direction="row" style={{marginBottom: 10}}>
-        <Text style={{paddingTop: 10, paddingRight: 10}}>Servings:</Text>
+        <Text style={{paddingTop: 10, paddingRight: 10}}>Serving:</Text>
         <Input
-          value={servings.toString()}
-          onChangeText={text => setServings(Number(text))}
+          value={servings.value.toString()}
+          onChangeText={text =>
+            setServings({...servings, value: Number(text) || 0})
+          }
           w={100}
           h={10}
         />
+        <Select
+          minWidth={90}
+          selectedValue={servings.unit}
+          style={{fontSize: 15}}
+          _selectedItem={{endIcon: <CheckIcon />}}
+          onValueChange={itemValue =>
+            setServings({...servings, unit: itemValue})
+          }>
+          <Select.Item label="g" value="g" />
+          <Select.Item label="ml" value="ml" />
+          <Select.Item label="lbs" value="lbs" />
+          <Select.Item label="oz" value="oz" />
+        </Select>
       </Flex>
       <Flex direction="row">
         <Text>Protein: </Text>
@@ -78,6 +97,7 @@ const EditFood = props => {
         />
         <Text>g</Text>
       </Flex>
+      <Button>Add</Button>
     </View>
   );
 };
