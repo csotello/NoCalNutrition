@@ -8,12 +8,17 @@ import {
   IconButton,
 } from 'native-base';
 import {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 const EditFood = props => {
   const [servings, setServings] = useState({
     value: 0,
     unit: props.food.servingSizeUnit || 'g',
+  });
+  const [descriptors, setDescriptors] = useState({
+    brandName: props.food.brandName || '',
+    description: props.food.description || '',
+    additionalDescriptions: props.food.additionalDescriptions || '',
   });
   const [nutrients, setNutrients] = useState({
     protein: 0,
@@ -23,7 +28,7 @@ const EditFood = props => {
   const [meal, setMeal] = useState(props.food.meal || 'Breakfast');
 
   useEffect(() => {
-    const serving = Number(props.food.servingSize).toPrecision(4);
+    const serving = Number(props.food.servingSize);
     setServings({...servings, value: serving});
     var cur = {...nutrients};
     props.food.foodNutrients.map((nutrient, i) => {
@@ -48,6 +53,9 @@ const EditFood = props => {
     var newFood = {...props.food};
     newFood.servingSize = servings.value;
     newFood.servingSizeUnit = servings.unit;
+    newFood.brandName = descriptors.brandName;
+    newFood.description = descriptors.description;
+    newFood.additionalDescriptions = descriptors.additionalDescriptions;
     newFood.foodNutrients.map((nutrient, i) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
@@ -111,44 +119,65 @@ const EditFood = props => {
   };
 
   return (
-    <View>
-      <Text>{props.food.description}</Text>
-      <Text>{props.food.additionalDescriptions}</Text>
-      <Text>Meal:</Text>
-      <Select
-        minWidth={90}
-        selectedValue={meal}
-        style={{fontSize: 15}}
-        _selectedItem={{endIcon: <CheckIcon />}}
-        onValueChange={itemValue => setMeal(itemValue)}>
-        <Select.Item label="Breakfast" value="Breakfast" />
-        <Select.Item label="Lunch" value="Lunch" />
-        <Select.Item label="Dinner" value="Dinner" />
-        <Select.Item label="Snacks" value="Snacks" />
-      </Select>
-      <Flex direction="row" style={{marginBottom: 10}}>
-        <Text style={{paddingTop: 10, paddingRight: 10}}>Amount:</Text>
+    <ScrollView>
+      <Flex direction="column" style={{marginBottom: 10}}>
+        Brand Name:
         <Input
-          value={servings.value.toString()}
+          value={descriptors.brandName}
           onChangeText={text =>
-            setServings({...servings, value: Number(text) || 0})
+            setDescriptors({...descriptors, brandName: text})
           }
-          w={100}
-          h={10}
         />
+        Description:
+        <Input
+          value={descriptors.description}
+          onChangeText={text =>
+            setDescriptors({...descriptors, description: text})
+          }
+        />
+        Additional Description:
+        <Input
+          value={descriptors.additionalDescriptions}
+          onChangeText={text =>
+            setDescriptors({...descriptors, additionalDescriptions: text})
+          }
+        />
+        <Text>Meal:</Text>
         <Select
           minWidth={90}
-          selectedValue={servings.unit}
+          selectedValue={meal}
           style={{fontSize: 15}}
           _selectedItem={{endIcon: <CheckIcon />}}
-          onValueChange={itemValue =>
-            setServings({...servings, unit: itemValue})
-          }>
-          <Select.Item label="g" value="g" />
-          <Select.Item label="ml" value="ml" />
-          <Select.Item label="lbs" value="lbs" />
-          <Select.Item label="oz" value="oz" />
+          onValueChange={itemValue => setMeal(itemValue)}>
+          <Select.Item label="Breakfast" value="Breakfast" />
+          <Select.Item label="Lunch" value="Lunch" />
+          <Select.Item label="Dinner" value="Dinner" />
+          <Select.Item label="Snacks" value="Snacks" />
         </Select>
+        <Text style={{paddingTop: 10, paddingRight: 10}}>Amount:</Text>
+        <Flex direction="row">
+          <Input
+            value={servings.value.toString()}
+            onChangeText={text =>
+              setServings({...servings, value: Number(text) || 0})
+            }
+            w={100}
+            h={10}
+          />
+          <Select
+            minWidth={90}
+            selectedValue={servings.unit}
+            style={{fontSize: 15}}
+            _selectedItem={{endIcon: <CheckIcon />}}
+            onValueChange={itemValue =>
+              setServings({...servings, unit: itemValue})
+            }>
+            <Select.Item label="g" value="g" />
+            <Select.Item label="ml" value="ml" />
+            <Select.Item label="lbs" value="lbs" />
+            <Select.Item label="oz" value="oz" />
+          </Select>
+        </Flex>
       </Flex>
       <Flex direction="row">
         {displayNutrient('Protein')}
@@ -163,7 +192,7 @@ const EditFood = props => {
         }}>
         Add
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 
