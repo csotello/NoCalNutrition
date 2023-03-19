@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
 import AddFood from './AddFood';
+import uuid from 'uuid-random';
 const Nutrition = ({route}) => {
   const [modal, setModal] = useState({
     page: 'search',
@@ -66,7 +67,7 @@ const Nutrition = ({route}) => {
       Snacks: [...food.Snacks],
     };
     Object.entries(cur).forEach(([key, value]) => {
-      item['UUID'] = crypto.randomUUID();
+      item['UUID'] = uuid();
       if (key === meal) {
         value = value === undefined ? [item] : [...value, item];
         console.log('key: ' + key + ' value: ' + value);
@@ -79,7 +80,7 @@ const Nutrition = ({route}) => {
 
   const removeFood = (item, section) => {
     let meal = food[`${section}`];
-    meal = meal?.filter(cur => item.description !== cur.description);
+    meal = meal?.filter(cur => item.UUID !== cur.UUID);
     let cur = {
       Breakfast: [...food.Breakfast],
       Lunch: [...food.Lunch],
@@ -108,7 +109,7 @@ const Nutrition = ({route}) => {
       Snacks: [...food.Snacks],
     };
     Object.entries(cur).forEach(([key, value]) => {
-      value = value?.filter(cur => food.UUID !== cur.UUID);
+      value = value?.filter(cur => item.UUID !== cur.UUID);
       if (key === meal) value.push({...item});
       cur[key] = [...value];
     });
@@ -127,13 +128,13 @@ const Nutrition = ({route}) => {
         food.foodNutrients.map((nutrient, i) => {
           switch (nutrient.nutrientName) {
             case 'Protein':
-              newTotals.protein += nutrient.value;
+              newTotals.protein += Number(nutrient.value);
               break;
             case 'Carbohydrate, by difference':
-              newTotals.carbs += nutrient.value;
+              newTotals.carbs += Number(nutrient.value);
               break;
             case 'Total lipid (fat)':
-              newTotals.fat += nutrient.value;
+              newTotals.fat += Number(nutrient.value);
               break;
             default:
           }
@@ -144,27 +145,27 @@ const Nutrition = ({route}) => {
   };
 
   return (
-    <View>
+    <ScrollView>
       <Text>Nutrition</Text>
       <Flex direction="row">
         <Spacer />
         <View style={{padding: 1, margin: 2}}>
           <Text style={{paddingLeft: 10}}>P</Text>
-          <Text>{totals.protein.toPrecision(3) || 0}</Text>
+          <Text>{totals.protein || 0}</Text>
         </View>
         <Spacer />
         <View style={{padding: 1, margin: 2}}>
           <Text style={{paddingLeft: 10}}>C</Text>
-          <Text>{totals.carbs.toPrecision(3) || 0}</Text>
+          <Text>{totals.carbs || 0}</Text>
         </View>
         <Spacer />
         <View style={{padding: 1, margin: 2}}>
           <Text style={{paddingLeft: 10}}>F</Text>
-          <Text>{totals.fat.toPrecision(3) || 0}</Text>
+          <Text>{totals.fat || 0}</Text>
         </View>
         <Spacer />
       </Flex>
-      <ScrollView>
+      <View>
         {Object.keys(food).map((meal, i) => {
           return (
             <Food
@@ -176,7 +177,7 @@ const Nutrition = ({route}) => {
             />
           );
         })}
-      </ScrollView>
+      </View>
       <IconButton
         size={10}
         rounded="100"
@@ -198,7 +199,7 @@ const Nutrition = ({route}) => {
         edit={editFood}
         close={() => setModal({...modal, isVisible: false})}
       />
-    </View>
+    </ScrollView>
   );
 };
 
