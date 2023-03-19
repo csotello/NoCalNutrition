@@ -63,6 +63,7 @@ const SearchFood = props => {
                       page: 'edit',
                       data: {...item},
                       isVisible: true,
+                      isNew: true,
                     });
                   }}
                 />

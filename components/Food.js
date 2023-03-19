@@ -12,7 +12,9 @@ const Food = props => {
           );
         });
         return (
-          <View key={i} style={{paddingLeft: 10}}>
+          <View
+            key={i}
+            style={{paddingLeft: 10, marginBottom: 10, paddingBottom: 10}}>
             <Flex direction="row">
               <Flex direction="column">
                 <View>
@@ -20,8 +22,7 @@ const Food = props => {
                     {item.brandName} {item.description}
                   </Text>
                   <Text>
-                    {Number(item.servingSize).toPrecision(3)}{' '}
-                    {item.servingSizeUnit}
+                    Amount: {Number(item.servingSize)} {item.servingSizeUnit}
                   </Text>
 
                   {nutrients.map((nutrient, i) => {

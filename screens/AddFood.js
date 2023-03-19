@@ -12,9 +12,6 @@ const AddFood = props => {
   };
 
   const displayPage = page => {
-    console.log(page);
-    console.log(page === 'edit');
-    console.log(props.info);
     switch (page) {
       case 'search':
         return <SearchFood add={props.add} setPage={setPage} />;
@@ -29,6 +26,7 @@ const AddFood = props => {
             add={props.add}
             close={props.close}
             edit={props.edit}
+            isNew={props.info.isNew}
           />
         );
       default:
