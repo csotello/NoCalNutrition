@@ -1,35 +1,46 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {ScrollView, Text, View, TextInput, Button} from 'react-native';
+import {Text} from 'react-native';
 import {Flex, Modal} from 'native-base';
 import CreateFood from '../components/CreateFood';
 import SearchFood from '../components/SearchFood';
 import CustomFoods from '../components/CustomFoods';
 import EditFood from '../components/EditFood';
+import styles from '../styles/styles';
 
 const AddFood = props => {
-  const [page, setPage] = useState({title: 'search', data: {}});
+  const setPage = page => {
+    props.setInfo({...page});
+  };
 
   const displayPage = page => {
-    if (page.title === 'search')
-      return <SearchFood add={props.add} setPage={setPage} />;
-    else if (page.title === 'custom') return <CustomFoods add={props.add} />;
-    else if (page.title === 'create') return <CreateFood setPage={setPage} />;
-    else if (page.title === 'edit')
-      return <EditFood food={page.data} setPage={setPage} add={props.add} />;
+    console.log(page);
+    console.log(page === 'edit');
+    console.log(props.info);
+    switch (page) {
+      case 'search':
+        return <SearchFood add={props.add} setPage={setPage} />;
+      case 'custom':
+        return <CustomFoods add={props.add} />;
+      case 'create':
+        return <CreateFood />;
+      case 'edit':
+        return (
+          <EditFood
+            food={props.info.data}
+            add={props.add}
+            close={props.close}
+            edit={props.edit}
+          />
+        );
+      default:
+        return <Text>Error</Text>;
+    }
   };
-  const style = {
-    tab: {
-      width: '34%',
-      padding: 10,
-      justifyContent: 'center',
-      marginBottom: 10,
-      textAlign: 'center',
-      borderColor: 'grey',
-      elevation: 1,
-    },
-  };
+
   return (
-    <Modal isOpen={props.isOpen} onClose={() => props.close()} size="lg">
+    <Modal
+      isOpen={props.info.isVisible}
+      onClose={() => props.close()}
+      size="lg">
       <Modal.Content
         h={'100%'}
         background="#6fdc6f"
@@ -38,22 +49,37 @@ const AddFood = props => {
         <Modal.CloseButton />
         <Flex direction="row">
           <Text
-            style={style.tab}
-            onPress={() => setPage({title: 'search', data: {}})}>
+            style={styles.modalTab}
+            onPress={() =>
+              setPage({
+                ...props.info,
+                page: 'search',
+              })
+            }>
             Search
           </Text>
           <Text
-            style={style.tab}
-            onPress={() => setPage({title: 'custom', data: {}})}>
+            style={styles.modalTab}
+            onPress={() =>
+              setPage({
+                ...props.info,
+                page: 'custom',
+              })
+            }>
             Custom Foods
           </Text>
           <Text
-            style={style.tab}
-            onPress={() => setPage({title: 'create', data: {}})}>
+            style={styles.modalTab}
+            onPress={() =>
+              setPage({
+                ...props.info,
+                page: 'create',
+              })
+            }>
             Create
           </Text>
         </Flex>
-        {displayPage(page)}
+        {displayPage(props.info.page)}
       </Modal.Content>
     </Modal>
   );

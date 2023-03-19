@@ -1,4 +1,4 @@
-import {Flex, ScrollView} from 'native-base';
+import {Flex, ScrollView, Spacer} from 'native-base';
 import {useState, useEffect} from 'react';
 import {Text, View, IconButton} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -6,7 +6,12 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
 import AddFood from './AddFood';
 const Nutrition = ({route}) => {
-  const [visible, setVisible] = useState(false);
+  const [modal, setModal] = useState({
+    page: 'search',
+    data: {},
+    isVisible: false,
+    isNew: true,
+  });
   const [loaded, setLoaded] = useState(false);
   const [totals, setTotals] = useState({
     protein: 0,
@@ -61,6 +66,7 @@ const Nutrition = ({route}) => {
       Snacks: [...food.Snacks],
     };
     Object.entries(cur).forEach(([key, value]) => {
+      item['UUID'] = crypto.randomUUID();
       if (key === meal) {
         value = value === undefined ? [item] : [...value, item];
         console.log('key: ' + key + ' value: ' + value);
@@ -85,8 +91,33 @@ const Nutrition = ({route}) => {
     store({...cur});
   };
 
+  const openEdit = (food, meal) => {
+    setModal({
+      page: 'edit',
+      data: {...food, meal: meal},
+      isVisible: true,
+      isNew: false,
+    });
+  };
+
+  const editFood = (item, meal) => {
+    let cur = {
+      Breakfast: [...food.Breakfast],
+      Lunch: [...food.Lunch],
+      Dinner: [...food.Dinner],
+      Snacks: [...food.Snacks],
+    };
+    Object.entries(cur).forEach(([key, value]) => {
+      value = value?.filter(cur => food.UUID !== cur.UUID);
+      if (key === meal) value.push({...item});
+      cur[key] = [...value];
+    });
+    setFood({...cur});
+    store({...cur});
+  };
+
   const updateTotals = () => {
-    newTotals = {
+    let newTotals = {
       protein: 0,
       fat: 0,
       carbs: 0,
@@ -116,18 +147,22 @@ const Nutrition = ({route}) => {
     <View>
       <Text>Nutrition</Text>
       <Flex direction="row">
+        <Spacer />
         <View style={{padding: 1, margin: 2}}>
-          <Text>P</Text>
+          <Text style={{paddingLeft: 10}}>P</Text>
           <Text>{totals.protein.toPrecision(3) || 0}</Text>
         </View>
+        <Spacer />
         <View style={{padding: 1, margin: 2}}>
-          <Text>C</Text>
+          <Text style={{paddingLeft: 10}}>C</Text>
           <Text>{totals.carbs.toPrecision(3) || 0}</Text>
         </View>
+        <Spacer />
         <View style={{padding: 1, margin: 2}}>
-          <Text>F</Text>
+          <Text style={{paddingLeft: 10}}>F</Text>
           <Text>{totals.fat.toPrecision(3) || 0}</Text>
         </View>
+        <Spacer />
       </Flex>
       <ScrollView>
         {Object.keys(food).map((meal, i) => {
@@ -137,6 +172,7 @@ const Nutrition = ({route}) => {
               title={meal}
               key={i}
               remove={removeFood}
+              edit={openEdit}
             />
           );
         })}
@@ -147,11 +183,21 @@ const Nutrition = ({route}) => {
         variant="solid"
         position={'absolute'}
         icon={<Icon name="plus" size={20} />}
-        onPress={() => setVisible(prev => !prev)}
+        onPress={() =>
+          setModal(() => {
+            return {...modal, isVisible: !modal.isVisible, page: 'search'};
+          })
+        }
         right={15}
         top={450}
       />
-      <AddFood isOpen={visible} add={add} close={() => setVisible(false)} />
+      <AddFood
+        info={{...modal}}
+        setInfo={setModal}
+        add={add}
+        edit={editFood}
+        close={() => setModal({...modal, isVisible: false})}
+      />
     </View>
   );
 };
