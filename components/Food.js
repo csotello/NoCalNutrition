@@ -1,12 +1,11 @@
-import {View, Text, Button} from 'native-base';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {View, Text, Button, IconButton, Flex, Spacer} from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {backgroundColor} from '../utils';
 const Food = props => {
   return (
     <View style={{padding: 10}}>
       <Text>{props.title}</Text>
       {props.meal?.map((item, i) => {
-        // console.log(item);
         let nutrients = item.foodNutrients?.filter(item => {
           return item.nutrientName.match(
             /^(Protein|Carbohydrate, by difference|Total lipid \(fat\))$/,
@@ -14,42 +13,48 @@ const Food = props => {
         });
         return (
           <View key={i} style={{paddingLeft: 10}}>
-            <Text>
-              {item.brandName} {item.description}
-            </Text>
-            <Text>
-              {item.servingSize?.toPrecision(3)} {item.servingSizeUnit}
-            </Text>
-            <Text>
-              {nutrients.map((nutrient, i) => {
-                return (
-                  <>
-                    <View style={{paddingLeft: 5}} key={i}>
-                      <Text>
-                        {nutrient.nutrientName}
-                        <Text>{nutrient.value} </Text>
-                        <Text>{nutrient.unitName} </Text>
-                      </Text>
-                    </View>
-                  </>
-                );
-              })}
-            </Text>
-            <Button
-              w={50}
-              top={-50}
-              right={-350}
-              padding={1}
-              backgroundColor={backgroundColor}
-              leftIcon={
-                <Icon
-                  name="trash-outline"
-                  color={'black'}
-                  size={20}
-                  onPress={() => props.remove(item, props.title)}
-                />
-              }
-            />
+            <Flex direction="row">
+              <Flex direction="column">
+                <View>
+                  <Text>
+                    {item.brandName} {item.description}
+                  </Text>
+                  <Text>
+                    {Number(item.servingSize).toPrecision(3)}{' '}
+                    {item.servingSizeUnit}
+                  </Text>
+
+                  {nutrients.map((nutrient, i) => {
+                    return (
+                      <>
+                        <View style={{paddingLeft: 5}} key={i}>
+                          <Text>
+                            {nutrient.nutrientName}
+                            <Text>{nutrient.value} </Text>
+                            <Text>{nutrient.unitName} </Text>
+                          </Text>
+                        </View>
+                      </>
+                    );
+                  })}
+                </View>
+              </Flex>
+              <Spacer />
+              <IconButton
+                backgroundColor={backgroundColor}
+                icon={<Icon size={16} name="trash-alt" />}
+                onPress={() => props.remove(item, props.title)}
+              />
+              <Spacer />
+              <IconButton
+                backgroundColor={backgroundColor}
+                icon={<Icon size={16} name="pencil-alt" />}
+                onPress={() => {
+                  props.edit(item, props.title);
+                }}
+              />
+              <Spacer />
+            </Flex>
           </View>
         );
       })}

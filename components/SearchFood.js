@@ -59,8 +59,11 @@ const SearchFood = props => {
                   w={10}
                   borderRadius={50}
                   onPress={() => {
-                    // props.add({...item}, 'Lunch');
-                    props.setPage({title: 'edit', data: {...item}});
+                    props.setPage({
+                      page: 'edit',
+                      data: {...item},
+                      isVisible: true,
+                    });
                   }}
                 />
               </View>
