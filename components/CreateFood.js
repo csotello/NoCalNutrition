@@ -12,9 +12,9 @@ import {
 } from 'native-base';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useState} from 'react';
+import uuid from 'uuid-random';
 const CreateFood = props => {
   const [text, setText] = useState({sevingUnit: 'g'});
-
   const theme = extendTheme({
     components: {
       Input: {
@@ -40,6 +40,7 @@ const CreateFood = props => {
 
   const create = async () => {
     let food = convertCustomFood(text);
+    food['UUID'] = uuid();
     try {
       var val = JSON.parse(await EncryptedStorage.getItem('customFood'));
       console.log('Custom Before:' + val);
@@ -50,7 +51,6 @@ const CreateFood = props => {
     } catch (error) {
       console.error(error);
     }
-    // props.setPage('custom');
   };
 
   return (
@@ -173,7 +173,13 @@ const CreateFood = props => {
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
         </Flex>
-        <Button onPress={() => create()}>Create</Button>
+        <Button
+          onPress={() => {
+            create();
+            alert('Custom Food Created');
+          }}>
+          Create
+        </Button>
       </ScrollView>
     </NativeBaseProvider>
   );
