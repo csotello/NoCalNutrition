@@ -190,7 +190,7 @@ const EditFood = props => {
         onPress={() => {
           addFood();
         }}>
-        Add
+        {props.isNew ? 'Add' : 'Apply'}
       </Button>
     </ScrollView>
   );
