@@ -16,9 +16,9 @@ const AddFood = props => {
       case 'search':
         return <SearchFood add={props.add} setPage={setPage} />;
       case 'custom':
-        return <CustomFoods add={props.add} />;
+        return <CustomFoods add={props.add} setPage={setPage} />;
       case 'create':
-        return <CreateFood />;
+        return <CreateFood setPage={setPage} />;
       case 'edit':
         return (
           <EditFood
