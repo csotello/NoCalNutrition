@@ -1,11 +1,21 @@
-import {Flex, IconButton, ScrollView, View} from 'native-base';
+import {
+  Flex,
+  IconButton,
+  ScrollView,
+  View,
+  Spacer,
+  AlertDialog,
+  Button,
+} from 'native-base';
 import {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {getMainNutrients} from '../utils';
 const CustomFoods = props => {
   const [foods, setFoods] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const load = async () => {
     try {
@@ -42,6 +52,7 @@ const CustomFoods = props => {
   };
 
   const displayFoods = food => {
+    let nutrients = getMainNutrients(food);
     return (
       <Flex
         direction="row"
@@ -49,10 +60,33 @@ const CustomFoods = props => {
           paddingLeft: 10,
           paddingBottom: 20,
         }}>
-        <View style={{paddingRight: 10}}>
+        <View style={{paddingRight: 10, minWidth: 100}}>
           <Text>{food.description || 'Food Description'}</Text>
-          <Text>{food.householdServingFullText || 'serving'}</Text>
+          {food.householdServingFullText && (
+            <Text>{food.householdServingFullText}</Text>
+          )}
+          {food.servingSize && (
+            <Text>
+              {food.servingSize} {food.servingSizeUnit.toLocaleLowerCase()}
+            </Text>
+          )}
         </View>
+        <Spacer />
+        <View>
+          <Text>P</Text>
+          <Text>{nutrients.protein?.value || 0}</Text>
+        </View>
+        <Spacer />
+        <View>
+          <Text>C</Text>
+          <Text>{nutrients.carbs?.value || 0}</Text>
+        </View>
+        <Spacer />
+        <View>
+          <Text>F</Text>
+          <Text>{nutrients.totalFat?.value || 0}</Text>
+        </View>
+        <Spacer />
         <IconButton
           icon={<Icon name="plus" size={10} />}
           variant="ghost"
@@ -68,14 +102,52 @@ const CustomFoods = props => {
         <IconButton
           icon={<Icon name="trash-alt" size={10} />}
           variant="ghost"
-          onPress={() => removeFood(food)}
+          onPress={() => setIsOpen(true)}
+        />
+        {alertDialog(food)}
+        <IconButton
+          icon={<Icon size={16} name="pencil-alt" />}
+          variant="ghost"
+          onPress={() => {
+            props.setPage({
+              page: 'create',
+              data: {...food},
+              isVisible: true,
+              isNew: false,
+            });
+          }}
         />
       </Flex>
     );
   };
 
+  const alertDialog = food => {
+    return (
+      <AlertDialog isOpen={isOpen} close={() => setIsOpen(false)}>
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Delete Custom Food</AlertDialog.Header>
+          <AlertDialog.Body>
+            This will permentently delete the custom food. Data cannot be
+            recovered.
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button
+              colorScheme="danger"
+              onPress={() => {
+                removeFood(food);
+                setIsOpen(false);
+              }}>
+              Delete
+            </Button>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
+    );
+  };
+
   return (
-    <ScrollView style={{height: 500}}>
+    <ScrollView>
       <Text>Custom Foods</Text>
       {foods?.map((item, i) => {
         return <View key={i}>{displayFoods(item)}</View>;
