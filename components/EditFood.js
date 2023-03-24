@@ -34,13 +34,13 @@ const EditFood = props => {
     props.food.foodNutrients.map((nutrient, i) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
-          cur.protein = nutrient.value;
+          cur.protein = Number(nutrient.value);
           break;
         case 'Carbohydrate, by difference':
-          cur.carbs = nutrient.value;
+          cur.carbs = Number(nutrient.value);
           break;
         case 'Total lipid (fat)':
-          cur.fat = nutrient.value;
+          cur.fat = Number(nutrient.value);
           break;
         default:
           break;
