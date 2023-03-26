@@ -144,13 +144,21 @@ const Nutrition = ({route}) => {
     setTotals({...newTotals});
   };
 
-  return (
-    <ScrollView>
-      <Text>Nutrition</Text>
+  const displayNutrients = () => {
+    const style = {
+      view: {
+        padding: 1,
+        margin: 2,
+      },
+      text: {
+        paddingLeft: 10,
+      },
+    };
+    return (
       <Flex direction="row">
         <Spacer />
-        <View style={{padding: 1, margin: 2}}>
-          <Text style={{paddingLeft: 10}}>P</Text>
+        <View style={style.view}>
+          <Text style={style.text}>P</Text>
           <Text>{totals.protein || 0}</Text>
         </View>
         <Spacer />
@@ -165,6 +173,13 @@ const Nutrition = ({route}) => {
         </View>
         <Spacer />
       </Flex>
+    );
+  };
+
+  return (
+    <ScrollView>
+      <Text>Nutrition</Text>
+      {displayNutrients()}
       <View>
         {Object.keys(food).map((meal, i) => {
           return (
@@ -189,8 +204,9 @@ const Nutrition = ({route}) => {
             return {...modal, isVisible: !modal.isVisible, page: 'search'};
           })
         }
+        zIndex={10}
         right={15}
-        top={450}
+        top={350}
       />
       <AddFood
         info={{...modal}}
