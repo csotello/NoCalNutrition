@@ -11,10 +11,36 @@ import {
   ScrollView,
 } from 'native-base';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import uuid from 'uuid-random';
 const CreateFood = props => {
-  const [text, setText] = useState({sevingUnit: 'g'});
+  const [food, setFood] = useState({sevingSizeUnit: 'g'});
+  useEffect(() => {
+    if (props.food) {
+      console.log(props.food);
+      let cur = {
+        ...props.food,
+      };
+      cur.foodNutrients?.map((nutrient, i) => {
+        switch (nutrient.nutrientName) {
+          case 'Protein':
+            cur.protein = nutrient.value;
+            break;
+          case 'Carbohydrate, by difference':
+            cur.carbs = nutrient.value;
+            break;
+          case 'Total Lipid (fat)':
+            cur.totalFat = nutrient.value;
+            break;
+          default:
+            break;
+        }
+      });
+      setFood({...cur});
+    }
+    return () => {};
+  }, []);
+
   const theme = extendTheme({
     components: {
       Input: {
@@ -33,20 +59,41 @@ const CreateFood = props => {
   });
 
   const handleText = (key, value) => {
-    var cur = {...text};
+    var cur = {...food};
     cur[`${key}`] = value;
-    setText(cur);
+    setFood({...cur});
   };
 
   const create = async () => {
-    let food = convertCustomFood(text);
-    food['UUID'] = uuid();
+    let newFood = convertCustomFood(food);
+    newFood['UUID'] = uuid();
+    console.log('Create');
+    console.log(newFood);
     try {
       var val = JSON.parse(await EncryptedStorage.getItem('customFood'));
-      console.log('Custom Before:' + val);
-      if (val) val.push(food);
-      else val = [food];
-      console.log('Custom After: ' + val);
+      if (val) val.push(newFood);
+      else val = [newFood];
+      console.log('Custom After');
+      console.log(val);
+      await EncryptedStorage.setItem('customFood', JSON.stringify(val));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const edit = async () => {
+    console.log('Edit');
+    console.log(food);
+    let newFood = convertCustomFood(food);
+    newFood['UUID'] = props.food.UUID;
+    console.log(newFood);
+    try {
+      var val = JSON.parse(await EncryptedStorage.getItem('customFood'));
+      console.log('old');
+      console.log(val);
+      val = val.filter(item => item.UUID !== newFood.UUID);
+      val.push({...newFood});
+      console.log(val);
       await EncryptedStorage.setItem('customFood', JSON.stringify(val));
     } catch (error) {
       console.error(error);
@@ -61,16 +108,16 @@ const CreateFood = props => {
           <View style={{marginRight: 10}}>
             <Text style={{marginLeft: 8}}>Food Name</Text>
             <Input
-              value={text.name}
+              value={food.description}
               w={40}
               marginBottom={2}
-              onChangeText={txt => handleText('name', txt)}
+              onChangeText={txt => handleText('description', txt)}
               placeholder={'Cheese'}></Input>
           </View>
           <View>
             <Text style={{marginLeft: 8}}>Brand</Text>
             <Input
-              value={text.brandName}
+              value={food.brandName}
               w={40}
               marginBottom={2}
               onChangeText={txt => handleText('brandName', txt)}
@@ -80,21 +127,23 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Serving</Text>
           <Input
-            value={text.serving}
+            value={food.householdServingFullText}
             w={40}
-            onChangeText={txt => handleText('serving', txt)}
+            onChangeText={txt => handleText('householdServingFullText', txt)}
             placeholder={'1 slice'}></Input>
           <Input
-            value={text.servingWeight}
+            value={food.servingSize}
             w={20}
-            onChangeText={txt => handleText('servingWeight', txt)}
+            onChangeText={txt => handleText('servingSize', txt)}
             placeholder={'0'}></Input>
           <Select
             minWidth={90}
-            selectedValue={text.unit}
+            selectedValue={food.servingSizeUnit}
             style={{fontSize: 15}}
             _selectedItem={{endIcon: <CheckIcon />}}
-            onValueChange={itemValue => handleText('servingUnit', itemValue)}>
+            onValueChange={itemValue =>
+              handleText('servingSizeUnit', itemValue)
+            }>
             <Select.Item label="g" value="g" />
             <Select.Item label="ml" value="ml" />
             <Select.Item label="lbs" value="lbs" />
@@ -104,7 +153,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Total Fat</Text>
           <Input
-            value={text.totalFat}
+            value={food.totalFat}
             onChangeText={txt => handleText('totalFat', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
@@ -112,7 +161,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Saturated Fat</Text>
           <Input
-            value={text.saturatedFat}
+            value={food.saturatedFat}
             onChangeText={txt => handleText('saturatedFat', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
@@ -120,7 +169,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Trans Fat</Text>
           <Input
-            value={text.transFat}
+            value={food.transFat}
             onChangeText={txt => handleText('transFat', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
@@ -128,7 +177,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Cholesterol</Text>
           <Input
-            value={text.cholesterol}
+            value={food.cholesterol}
             onChangeText={txt => handleText('cholesterol', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>mg</Text>
@@ -136,7 +185,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Sodium</Text>
           <Input
-            value={text.sodium}
+            value={food.sodium}
             onChangeText={txt => handleText('sodium', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>mg</Text>
@@ -144,7 +193,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Total Carbohydrates</Text>
           <Input
-            value={text.carbs}
+            value={food.carbs}
             onChangeText={txt => handleText('carbs', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
@@ -152,7 +201,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Dietary Fibers</Text>
           <Input
-            value={text.fiber}
+            value={food.fiber}
             onChangeText={txt => handleText('fiber', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
@@ -160,7 +209,7 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Total Sugars</Text>
           <Input
-            value={text.sugar}
+            value={food.sugar}
             onChangeText={txt => handleText('sugar', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
@@ -168,17 +217,22 @@ const CreateFood = props => {
         <Flex direction="row">
           <Text>Protein</Text>
           <Input
-            value={text.protein}
+            value={food.protein}
             onChangeText={txt => handleText('protein', txt)}
             placeholder={'0'}></Input>
           <Text style={{marginLeft: 5}}>g</Text>
         </Flex>
         <Button
           onPress={() => {
-            create();
-            alert('Custom Food Created');
+            if (props.isNew) {
+              create();
+              alert('Custom Food Created');
+            } else {
+              edit();
+              alert('Custom Food edited');
+            }
           }}>
-          Create
+          {props.isNew ? 'Create' : 'Apply'}
         </Button>
       </ScrollView>
     </NativeBaseProvider>
