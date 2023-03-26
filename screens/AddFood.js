@@ -18,7 +18,13 @@ const AddFood = props => {
       case 'custom':
         return <CustomFoods add={props.add} setPage={setPage} />;
       case 'create':
-        return <CreateFood setPage={setPage} />;
+        return (
+          <CreateFood
+            setPage={setPage}
+            food={props.info.data}
+            isNew={props.info.isNew}
+          />
+        );
       case 'edit':
         return (
           <EditFood
@@ -72,6 +78,8 @@ const AddFood = props => {
               setPage({
                 ...props.info,
                 page: 'create',
+                data: {},
+                isNew: true,
               })
             }>
             Create
