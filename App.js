@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React from 'react';
 import Tasks from './screens/Tasks';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
@@ -7,19 +7,6 @@ import Nutrition from './screens/Nutrition';
 import Customize from './screens/Customize';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NativeBaseProvider} from 'native-base';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AddFood from './screens/AddFood';
-
-const HomeStack = createNativeStackNavigator();
-
-function HomeStackScreen() {
-  return (
-    <HomeStack.Navigator screenOptions={{headerShown: false}}>
-      <HomeStack.Screen name="Nutrition" component={Nutrition} />
-      <HomeStack.Screen name="AddFood" component={AddFood} />
-    </HomeStack.Navigator>
-  );
-}
 
 const App = () => {
   const Tab = createMaterialBottomTabNavigator();
@@ -35,12 +22,12 @@ const App = () => {
     <NativeBaseProvider>
       <NavigationContainer theme={MyTheme}>
         <Tab.Navigator
-          initialRouteName="Tasks"
+          initialRouteName="Home"
           activeColor="#178237"
           barStyle={{backgroundColor: '#6fdc6f'}}>
           <Tab.Screen
             name="Home"
-            component={HomeStackScreen}
+            component={Nutrition}
             options={{
               headerShown: false,
               tabBarLabel: 'Nutrition',
@@ -59,7 +46,7 @@ const App = () => {
               ),
             }} */}
           {/* /> */}
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Habits"
             component={Habits}
             options={{
@@ -68,7 +55,7 @@ const App = () => {
                 <Icon name="calendar" color={color} size={26} />
               ),
             }}
-          />
+          /> */}
           {/* <Tab.Screen
             name="Customize"
             component={Customize}
