@@ -24,7 +24,7 @@ const Tasks = () => {
       const val = await EncryptedStorage.getItem('tasks');
       if (val) {
         setTask(JSON.parse(val));
-        console.log('Loaded');
+        console.log('Loaded Tasks');
       }
     } catch (error) {
       console.log(error);
@@ -39,9 +39,11 @@ const Tasks = () => {
   const store = async tasks => {
     try {
       await EncryptedStorage.setItem('tasks', JSON.stringify(tasks));
+      // await storage.setItem('tasks', JSON.stringify(tasks));
       console.log('Stored:' + JSON.stringify(tasks));
     } catch (error) {
       console.log('Failed to store');
+      console.log(error);
     }
   };
 
