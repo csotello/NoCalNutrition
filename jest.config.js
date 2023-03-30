@@ -1,8 +1,9 @@
 module.exports = async () => {
   return {
     preset: 'react-native',
-    // rootDir: './',
     setupFiles: ['<rootDir>/tests/setup.js'],
-    // setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+    transformIgnorePatterns: [
+      'node_modules/(?!(@react-native|native-base|react-native|react-native-vector-icons|react-navigation|@react-navigation|react-native-paper|react-native-iphone-x-helper)/)',
+    ],
   };
 };
