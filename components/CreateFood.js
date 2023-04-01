@@ -1,4 +1,3 @@
-import {NativeBaseProvider, extendTheme} from 'native-base';
 import {convertCustomFood} from '../utils';
 import {
   View,
@@ -9,7 +8,10 @@ import {
   Select,
   CheckIcon,
   ScrollView,
+  NativeBaseProvider,
+  extendTheme,
 } from 'native-base';
+import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useEffect, useState} from 'react';
 import uuid from 'uuid-random';
@@ -226,10 +228,10 @@ const CreateFood = props => {
           onPress={() => {
             if (props.isNew) {
               create();
-              alert('Custom Food Created');
+              Alert.alert('Custom Food Created');
             } else {
               edit();
-              alert('Custom Food edited');
+              Alert.alert('Custom Food edited');
             }
           }}>
           {props.isNew ? 'Create' : 'Apply'}
