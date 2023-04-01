@@ -56,8 +56,24 @@ export const convertCustomFood = food => {
 };
 
 export const defaultFood = {
-  name: '',
-  description: '',
+  descritpiton: 'Kroger Mexican Cheese',
+  householdServingFullText: '1/4 cup',
+  servingSize: 28,
+  servingSizeUnit: 'G',
+  foodNutrients: [
+    {
+      nutrientName: 'Protein',
+      value: 12,
+    },
+    {
+      nutrientName: 'Carbohydrate, by difference',
+      value: 10,
+    },
+    {
+      nutrientName: 'Total lipid (fat)',
+      value: 8,
+    },
+  ],
 };
 
 export const store = async (key, value) => {
