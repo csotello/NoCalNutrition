@@ -134,11 +134,13 @@ const CreateFood = props => {
             onChangeText={txt => handleText('householdServingFullText', txt)}
             placeholder={'1 slice'}></Input>
           <Input
+            testID="servingInput"
             value={food.servingSize}
             w={20}
             onChangeText={txt => handleText('servingSize', txt)}
             placeholder={'0'}></Input>
           <Select
+            testID="servingSizeUnitInput"
             minWidth={90}
             selectedValue={food.servingSizeUnit}
             style={{fontSize: 15}}
@@ -146,10 +148,10 @@ const CreateFood = props => {
             onValueChange={itemValue =>
               handleText('servingSizeUnit', itemValue)
             }>
-            <Select.Item label="g" value="g" />
-            <Select.Item label="ml" value="ml" />
-            <Select.Item label="lbs" value="lbs" />
-            <Select.Item label="oz" value="oz" />
+            <Select.Item testID="servingSizeUnit" label="g" value="g" />
+            <Select.Item testID="servingSizeUnit" label="ml" value="ml" />
+            <Select.Item testID="servingSizeUnit" label="lbs" value="lbs" />
+            <Select.Item testID="servingSizeUnit" label="oz" value="oz" />
           </Select>
         </Flex>
         <Flex direction="row">

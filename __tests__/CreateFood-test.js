@@ -28,6 +28,9 @@ it('Handles user input', () => {
   const brandName = screen.getByPlaceholderText('Kroger');
   fireEvent.changeText(brandName, 'Kroger');
   expect(brandName.props.value).toBe('Kroger');
+  const serving = screen.getByTestId('servingInput');
+  fireEvent.changeText(serving, '28');
+  expect(serving.props.value).toBe('28');
   const button = screen.getByText('Create');
   fireEvent.press(button);
 });

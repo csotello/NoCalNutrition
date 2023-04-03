@@ -26,11 +26,12 @@ const Food = props => {
           <AlertDialog.Footer>
             <Button
               colorScheme="danger"
+              testID="Delete Button"
               onPress={() => {
                 props.remove(food, section);
                 setIsOpen(false);
               }}>
-              Delete
+              <Text>Delete</Text>
             </Button>
           </AlertDialog.Footer>
         </AlertDialog.Content>
@@ -76,12 +77,14 @@ const Food = props => {
               <Spacer />
               {alertDialog(item, props.title)}
               <IconButton
+                testID="Delete Icon"
                 backgroundColor={backgroundColor}
                 icon={<Icon size={16} name="trash-alt" />}
                 onPress={() => setIsOpen(true)}
               />
               <Spacer />
               <IconButton
+                testID="Edit Icon"
                 backgroundColor={backgroundColor}
                 icon={<Icon size={16} name="pencil-alt" />}
                 onPress={() => {

@@ -37,12 +37,12 @@ it('Has functional Icons', () => {
     </NativeBaseProvider>,
   );
 
-  const deleteIcon = screen.queryAllByLabelText('Delete Icon');
-  const editIcon = screen.queryAllByLabelText('Edit Icon');
+  const deleteIcon = screen.getByTestId('Delete Icon');
+  const editIcon = screen.queryByTestId('Edit Icon');
 
   fireEvent.press(editIcon[0]);
   fireEvent.press(deleteIcon[0]);
-  const deleteButton = screen.getByLabelText('Delete Button');
+  const deleteButton = screen.getByTestId('Delete Button');
   fireEvent.press(deleteButton);
   expect(remove).toHaveBeenCalled();
   expect(edit).toHaveBeenCalled();
