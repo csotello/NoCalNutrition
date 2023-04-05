@@ -194,6 +194,7 @@ const Nutrition = ({route}) => {
         })}
       </View>
       <IconButton
+        testID="openModal"
         size={10}
         rounded="100"
         variant="solid"
@@ -209,6 +210,7 @@ const Nutrition = ({route}) => {
         top={350}
       />
       <AddFood
+        testID="AddFood"
         info={{...modal}}
         setInfo={setModal}
         add={add}
