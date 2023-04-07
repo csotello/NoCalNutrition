@@ -38,10 +38,10 @@ it('Has functional Icons', () => {
   );
 
   const deleteIcon = screen.getByTestId('Delete Icon');
-  const editIcon = screen.queryByTestId('Edit Icon');
+  const editIcon = screen.getByTestId('Edit Icon');
 
-  fireEvent.press(editIcon[0]);
-  fireEvent.press(deleteIcon[0]);
+  fireEvent.press(editIcon);
+  fireEvent.press(deleteIcon);
   const deleteButton = screen.getByTestId('Delete Button');
   fireEvent.press(deleteButton);
   expect(remove).toHaveBeenCalled();
