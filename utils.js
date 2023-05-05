@@ -1,5 +1,4 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
-export const backgroundColor = 'rgb(111, 220, 111)';
 
 //Convert user input into format used by API
 export const convertCustomFood = food => {
@@ -56,7 +55,7 @@ export const convertCustomFood = food => {
 };
 
 export const defaultFood = {
-  descritpiton: 'Kroger Mexican Cheese',
+  description: 'Kroger Mexican Cheese',
   householdServingFullText: '1/4 cup',
   servingSize: 28,
   servingSizeUnit: 'G',
@@ -79,7 +78,6 @@ export const defaultFood = {
 export const store = async (key, value) => {
   try {
     await EncryptedStorage.setItem(key, JSON.stringify(value));
-    // console.log('Stored:' + JSON.stringify(value));
   } catch (error) {
     console.log('Failed to store');
   }
