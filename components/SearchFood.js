@@ -1,8 +1,10 @@
-import {Button, Center, ScrollView} from 'native-base';
-import {useState, useEffect} from 'react';
-import {Text, View, Modal, Input, IconButton} from 'native-base';
+import {Button, ScrollView} from 'native-base';
+import {useState} from 'react';
+import {View, Input} from 'native-base';
 import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
+import Text from '../styledComponents/Text';
+
 const SearchFood = props => {
   const [searchResults, setSearchResults] = useState([]);
   const [text, setText] = useState('');
