@@ -47,7 +47,7 @@ const AddFood = props => {
       size="lg">
       <Modal.Content
         h={'100%'}
-        background="#6fdc6f"
+        background={styles.primaryBackgroundColor}
         paddingTop={10}
         width={'100%'}>
         <Modal.CloseButton />
