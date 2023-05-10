@@ -1,14 +1,7 @@
-import {
-  View,
-  Text,
-  Button,
-  IconButton,
-  Flex,
-  Spacer,
-  AlertDialog,
-} from 'native-base';
+import {View, Button, IconButton, Flex, Spacer, AlertDialog} from 'native-base';
+import Text from '../styledComponents/Text';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {backgroundColor} from '../utils';
+import styles from '../styles/styles';
 import {useState} from 'react';
 const Food = props => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +13,7 @@ const Food = props => {
           <AlertDialog.CloseButton />
           <AlertDialog.Header>Delete Food</AlertDialog.Header>
           <AlertDialog.Body>
-            This will permentently delete the food item. Data cannot be
+            This will permanently delete the food item. Data cannot be
             recovered.
           </AlertDialog.Body>
           <AlertDialog.Footer>
@@ -57,8 +50,7 @@ const Food = props => {
                 <View>
                   <Text>
                     {item.brandName} {item.description}
-                  </Text>
-                  <Text>
+                    {'\n'}
                     Amount: {Number(item.servingSize)} {item.servingSizeUnit}
                   </Text>
                   {nutrients.map((nutrient, i) => {
@@ -66,8 +58,8 @@ const Food = props => {
                       <View style={{paddingLeft: 5}} key={i}>
                         <Text>
                           {nutrient.nutrientName}
-                          <Text>{nutrient.value} </Text>
-                          <Text>{nutrient.unitName} </Text>
+                          {nutrient.value}
+                          {nutrient.unitName}
                         </Text>
                       </View>
                     );
@@ -78,15 +70,13 @@ const Food = props => {
               {alertDialog(item, props.title)}
               <IconButton
                 testID="Delete Icon"
-                backgroundColor={backgroundColor}
-                icon={<Icon size={16} name="trash-alt" />}
+                icon={<Icon size={16} name="trash-alt" color={'white'} />}
                 onPress={() => setIsOpen(true)}
               />
               <Spacer />
               <IconButton
                 testID="Edit Icon"
-                backgroundColor={backgroundColor}
-                icon={<Icon size={16} name="pencil-alt" />}
+                icon={<Icon size={16} name="pencil-alt" color={'white'} />}
                 onPress={() => {
                   props.edit(item, props.title);
                 }}
