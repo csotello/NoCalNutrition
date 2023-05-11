@@ -1,52 +1,47 @@
 import React from 'react';
 import Tasks from './screens/Tasks';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Habits from './screens/Habits';
 import Nutrition from './screens/Nutrition';
 import Customize from './screens/Customize';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NativeBaseProvider} from 'native-base';
+import styles from './styles/styles';
 
 const App = () => {
   const Tab = createMaterialBottomTabNavigator();
-  const MyTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: 'rgb(111, 220, 111)',
-      background: 'rgb(111, 220, 111)',
-    },
-  };
+
   return (
     <NativeBaseProvider>
-      <NavigationContainer theme={MyTheme}>
+      <NavigationContainer>
         <Tab.Navigator
           initialRouteName="Home"
-          activeColor="#178237"
-          barStyle={{backgroundColor: '#6fdc6f'}}>
+          // activeColor={styles.navigator.activeColor}
+          barStyle={{backgroundColor: styles.navigator.backgroundColor}}>
           <Tab.Screen
             name="Home"
             component={Nutrition}
             options={{
               headerShown: false,
+              shifting: true,
               tabBarLabel: 'Nutrition',
-              tabBarIcon: ({color}) => (
-                <Icon name="nutrition" color={color} size={26} />
+              tabBarIcon: () => (
+                <Icon name="nutrition" color={'white'} size={26} />
               ),
             }}
           />
-          {/* <Tab.Screen
+          <Tab.Screen
             name="Tasks"
-            component={Home}
+            component={Tasks}
             options={{
               tabBarLabel: 'Tasks',
               tabBarIcon: ({color}) => (
                 <Icon name="clipboard" color={color} size={26} />
               ),
-            }} */}
-          {/* /> */}
-          {/* <Tab.Screen
+            }}
+          />
+          {/*<Tab.Screen
             name="Habits"
             component={Habits}
             options={{
