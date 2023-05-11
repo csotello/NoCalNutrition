@@ -6,6 +6,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
 import AddFood from './AddFood';
 import uuid from 'uuid-random';
+import styles from '../styles/styles';
+
 const Nutrition = ({route}) => {
   const [modal, setModal] = useState({
     page: 'search',
@@ -145,40 +147,31 @@ const Nutrition = ({route}) => {
   };
 
   const displayNutrients = () => {
-    const style = {
-      view: {
-        padding: 1,
-        margin: 2,
-      },
-      text: {
-        paddingLeft: 10,
-      },
-    };
     return (
       <Flex direction="row">
         <Spacer />
-        <View style={style.view}>
-          <Text style={style.text}>P</Text>
-          <Text>{totals.protein || 0}</Text>
-        </View>
+        <Text style={styles.nutrient}>
+          P{'\n'}
+          {totals.protein || 0}
+        </Text>
         <Spacer />
-        <View style={{padding: 1, margin: 2}}>
-          <Text style={{paddingLeft: 10}}>C</Text>
-          <Text>{totals.carbs || 0}</Text>
-        </View>
+        <Text style={styles.nutrient}>
+          C{'\n'}
+          {totals.carbs || 0}
+        </Text>
         <Spacer />
-        <View style={{padding: 1, margin: 2}}>
-          <Text style={{paddingLeft: 10}}>F</Text>
-          <Text>{totals.fat || 0}</Text>
-        </View>
+        <Text style={styles.nutrient}>
+          F{'\n'}
+          {totals.fat || 0}
+        </Text>
         <Spacer />
       </Flex>
     );
   };
 
   return (
-    <ScrollView>
-      <Text>Nutrition</Text>
+    <ScrollView style={{backgroundColor: styles.primaryBackgroundColor}}>
+      <Text style={styles.header}>Nutrition</Text>
       {displayNutrients()}
       <View>
         {Object.keys(food).map((meal, i) => {
