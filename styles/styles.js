@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
   },
   nutrient: {
     textAlign: 'center',
-    color: 'white',
+    fontSize: 16,
   },
   navigator: {
-    activeColor: '#1111',
-    backgroundColor: '#b5b2aa',
+    activeColor: '#0a0a0a',
+    backgroundColor: '#363738',
   },
   customFood: {
     width: 40,
