@@ -8,7 +8,7 @@ import {
   Button,
 } from 'native-base';
 import {useEffect, useState} from 'react';
-import {Text} from 'react-native';
+import Text from '../styledComponents/Text.js';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {getMainNutrients} from '../utils';
@@ -88,7 +88,7 @@ const CustomFoods = props => {
         </View>
         <Spacer />
         <IconButton
-          icon={<Icon name="plus" size={10} />}
+          icon={<Icon name="plus" size={10} color={'white'} />}
           variant="ghost"
           onPress={() => {
             props.setPage({
@@ -100,13 +100,13 @@ const CustomFoods = props => {
           }}
         />
         <IconButton
-          icon={<Icon name="trash-alt" size={10} />}
+          icon={<Icon name="trash-alt" size={10} color={'white'} />}
           variant="ghost"
           onPress={() => setIsOpen(true)}
         />
         {alertDialog(food)}
         <IconButton
-          icon={<Icon size={16} name="pencil-alt" />}
+          icon={<Icon size={16} name="pencil-alt" color={'white'} />}
           variant="ghost"
           onPress={() => {
             props.setPage({
