@@ -17,7 +17,7 @@ const App = () => {
       <NavigationContainer>
         <Tab.Navigator
           initialRouteName="Home"
-          // activeColor={styles.navigator.activeColor}
+          activeColor={styles.navigator.activeColor}
           barStyle={{backgroundColor: styles.navigator.backgroundColor}}>
           <Tab.Screen
             name="Home"
@@ -26,8 +26,12 @@ const App = () => {
               headerShown: false,
               shifting: true,
               tabBarLabel: 'Nutrition',
-              tabBarIcon: () => (
-                <Icon name="nutrition" color={'white'} size={26} />
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="nutrition"
+                  color={focused ? 'black' : 'white'}
+                  size={26}
+                />
               ),
             }}
           />
@@ -36,8 +40,12 @@ const App = () => {
             component={Tasks}
             options={{
               tabBarLabel: 'Tasks',
-              tabBarIcon: ({color}) => (
-                <Icon name="clipboard" color={color} size={26} />
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="clipboard"
+                  color={focused ? 'black' : 'white'}
+                  size={26}
+                />
               ),
             }}
           />
