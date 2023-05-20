@@ -1,6 +1,5 @@
-import {Flex, ScrollView, Spacer} from 'native-base';
+import {Text, Flex, ScrollView, Spacer, View, IconButton} from 'native-base';
 import {useState, useEffect} from 'react';
-import {Text, View, IconButton} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
@@ -27,6 +26,7 @@ const Nutrition = ({route}) => {
     Dinner: [],
     Snacks: [],
   });
+  const [date, setDate] = useState(new Date().toDateString());
 
   useEffect(() => {
     if (!loaded) {
@@ -59,6 +59,12 @@ const Nutrition = ({route}) => {
     } catch (error) {
       console.log('Failed to store');
     }
+  };
+
+  const changeDate = value => {
+    let newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + value);
+    setDate(newDate.toDateString());
   };
 
   const add = (item, meal) => {
@@ -150,17 +156,17 @@ const Nutrition = ({route}) => {
     return (
       <Flex direction="row">
         <Spacer />
-        <Text style={styles.nutrient}>
+        <Text style={{...styles.nutrient, color: '#d10415'}}>
           P{'\n'}
           {totals.protein || 0}
         </Text>
         <Spacer />
-        <Text style={styles.nutrient}>
+        <Text style={{...styles.nutrient, color: '#0426d1'}}>
           C{'\n'}
           {totals.carbs || 0}
         </Text>
         <Spacer />
-        <Text style={styles.nutrient}>
+        <Text style={{...styles.nutrient, color: '#c7d104'}}>
           F{'\n'}
           {totals.fat || 0}
         </Text>
@@ -172,6 +178,23 @@ const Nutrition = ({route}) => {
   return (
     <ScrollView style={{backgroundColor: styles.primaryBackgroundColor}}>
       <Text style={styles.header}>Nutrition</Text>
+      <Flex direction="row">
+        <Spacer />
+        <IconButton
+          variant="ghost"
+          icon={<Icon name="chevron-left" size={20} />}
+          onPress={() => changeDate(-1)}
+        />
+        <Spacer />
+        <Text style={{color: 'white', textAlign: 'center'}}>{date}</Text>
+        <Spacer />
+        <IconButton
+          variant="ghost"
+          icon={<Icon name="chevron-right" size={20} />}
+          onPress={() => changeDate(1)}
+        />
+        <Spacer />
+      </Flex>
       {displayNutrients()}
       <View>
         {Object.keys(food).map((meal, i) => {
