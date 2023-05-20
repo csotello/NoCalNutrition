@@ -82,7 +82,9 @@ const SearchFood = props => {
       <Input
         value={text}
         onChangeText={txt => setText(txt)}
-        placeholder={'Cheese'}></Input>
+        color="white"
+        placeholder={'Cheese'}
+      />
       <Button onPress={() => search(text)}>Search</Button>
       <ScrollView>
         {searchResults &&
