@@ -1,8 +1,8 @@
 import {convertCustomFood} from '../utils';
+import Text from '../styledComponents/Text';
 import {
   View,
   Button,
-  Text,
   Input,
   Flex,
   Select,
@@ -15,11 +15,12 @@ import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useEffect, useState} from 'react';
 import uuid from 'uuid-random';
+import styles from '../styles/styles';
+
 const CreateFood = props => {
-  const [food, setFood] = useState({sevingSizeUnit: 'g'});
+  const [food, setFood] = useState({servingSizeUnit: 'g'});
   useEffect(() => {
     if (props.food) {
-      console.log(props.food);
       let cur = {
         ...props.food,
       };
@@ -49,6 +50,7 @@ const CreateFood = props => {
         baseStyle: {
           w: 20,
           marginLeft: 2,
+          color: 'white',
         },
       },
       Text: {
