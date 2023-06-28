@@ -1,4 +1,4 @@
-import {Text, Flex, ScrollView, Spacer, View, IconButton} from 'native-base';
+import {Text, Flex, ScrollView, Spacer, IconButton} from 'native-base';
 import {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -6,6 +6,8 @@ import Food from '../components/Food';
 import AddFood from './AddFood';
 import uuid from 'uuid-random';
 import styles from '../styles/styles';
+import {retrieve} from '../utils';
+import Nutrients from '../components/Nutrients';
 
 const Nutrition = ({route}) => {
   const [modal, setModal] = useState({
@@ -30,14 +32,18 @@ const Nutrition = ({route}) => {
 
   useEffect(() => {
     if (!loaded) {
-      load();
+      load(food.date);
     }
     updateTotals();
   }, [load, food]);
 
-  const load = async () => {
+  const load = async date => {
+    let key = 'nutrition' + '-' + date;
+    console.log(key);
     try {
-      const val = JSON.parse(await EncryptedStorage.getItem('nutrition'));
+      const val = JSON.parse(
+        await EncryptedStorage.getItem('nutrition' + '-' + date),
+      );
       if (val) {
         setFood({...val});
         console.log('Loaded: ' + val);
@@ -48,23 +54,30 @@ const Nutrition = ({route}) => {
     }
   };
   if (!loaded) {
-    load();
     setLoaded(true);
   }
 
   const store = async nutrition => {
+    let key = 'nutrition' + '-' + date;
+    console.log('key: ' + key);
     try {
-      await EncryptedStorage.setItem('nutrition', JSON.stringify(nutrition));
+      await EncryptedStorage.setItem(
+        'nutrition' + '-' + date,
+        JSON.stringify(nutrition),
+      );
       console.log('Stored:' + JSON.stringify(nutrition));
     } catch (error) {
       console.log('Failed to store');
     }
   };
 
-  const changeDate = value => {
+  const changeDate = async value => {
     let newDate = new Date(date);
     newDate.setDate(newDate.getDate() + value);
-    setDate(newDate.toDateString());
+    newDate = newDate.toDateString();
+    await store({...food});
+    await load(newDate);
+    setDate(newDate);
   };
 
   const add = (item, meal) => {
@@ -152,38 +165,17 @@ const Nutrition = ({route}) => {
     setTotals({...newTotals});
   };
 
-  const displayNutrients = () => {
-    return (
-      <Flex direction="row">
-        <Spacer />
-        <Text style={{...styles.nutrient, color: '#d10415'}}>
-          P{'\n'}
-          {totals.protein || 0}
-        </Text>
-        <Spacer />
-        <Text style={{...styles.nutrient, color: '#0426d1'}}>
-          C{'\n'}
-          {totals.carbs || 0}
-        </Text>
-        <Spacer />
-        <Text style={{...styles.nutrient, color: '#c7d104'}}>
-          F{'\n'}
-          {totals.fat || 0}
-        </Text>
-        <Spacer />
-      </Flex>
-    );
-  };
-
   return (
-    <ScrollView style={{backgroundColor: styles.primaryBackgroundColor}}>
+    <ScrollView
+      style={{backgroundColor: styles.primaryBackgroundColor}}
+      contentContainerStyle={{flexGrow: 1}}>
       <Text style={styles.header}>Nutrition</Text>
       <Flex direction="row">
         <Spacer />
         <IconButton
           variant="ghost"
           icon={<Icon name="chevron-left" size={20} />}
-          onPress={() => changeDate(-1)}
+          onPress={async () => await changeDate(-1)}
         />
         <Spacer />
         <Text style={{color: 'white', textAlign: 'center'}}>{date}</Text>
@@ -191,24 +183,26 @@ const Nutrition = ({route}) => {
         <IconButton
           variant="ghost"
           icon={<Icon name="chevron-right" size={20} />}
-          onPress={() => changeDate(1)}
+          onPress={async () => await changeDate(1)}
         />
         <Spacer />
       </Flex>
-      {displayNutrients()}
-      <View>
-        {Object.keys(food).map((meal, i) => {
-          return (
-            <Food
-              meal={[...food[meal]]}
-              title={meal}
-              key={i}
-              remove={removeFood}
-              edit={openEdit}
-            />
-          );
-        })}
-      </View>
+      <Nutrients
+        protein={totals.protein}
+        fat={totals.fat}
+        carbs={totals.carbs}
+      />
+      {Object.keys(food).map((meal, i) => {
+        return (
+          <Food
+            meal={[...food[meal]]}
+            title={meal}
+            key={i}
+            remove={removeFood}
+            edit={openEdit}
+          />
+        );
+      })}
       <IconButton
         testID="openModal"
         size={10}
