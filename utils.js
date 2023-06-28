@@ -75,18 +75,6 @@ export const defaultFood = {
   ],
 };
 
-export const store = async (key, value) => {
-  try {
-    await EncryptedStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.log('Failed to store');
-  }
-};
-
-export const retrieve = async key => {
-  return JSON.parse(await EncryptedStorage.getItem(key));
-};
-
 export const getMainNutrients = food => {
   let ret = {};
   food?.foodNutrients?.map((nutrient, i) => {
