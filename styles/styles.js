@@ -12,7 +12,10 @@ const styles = StyleSheet.create({
   },
   nutrient: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 12,
+    minWidth: '30%',
+    maxWidth: '30%',
+    marginLeft: 5,
   },
   navigator: {
     activeColor: '#0a0a0a',
