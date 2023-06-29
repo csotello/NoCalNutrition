@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Habits from './screens/Habits';
 import Nutrition from './screens/Nutrition';
-import Customize from './screens/Customize';
+import Settings from './screens/Settings';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NativeBaseProvider} from 'native-base';
 import styles from './styles/styles';
@@ -35,7 +35,7 @@ const App = () => {
               ),
             }}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Tasks"
             component={Tasks}
             options={{
@@ -48,7 +48,7 @@ const App = () => {
                 />
               ),
             }}
-          />
+          /> */}
           {/*<Tab.Screen
             name="Habits"
             component={Habits}
@@ -59,16 +59,20 @@ const App = () => {
               ),
             }}
           /> */}
-          {/* <Tab.Screen
-            name="Customize"
-            component={Customize}
+          <Tab.Screen
+            name="Settings"
+            component={Settings}
             options={{
-              tabBarLabel: 'Customize',
-              tabBarIcon: ({color}) => (
-                <Icon name="build" color={color} size={26} />
+              tabBarLabel: 'Settings',
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="build"
+                  color={focused ? 'black' : 'white'}
+                  size={26}
+                />
               ),
-            }} */}
-          {/* /> */}
+            }}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
