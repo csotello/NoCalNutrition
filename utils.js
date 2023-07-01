@@ -4,6 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 export const convertCustomFood = food => {
   ret = {
     description: food.description || '',
+    category: food.category || '',
     brandName: food.brandName || '',
     householdServingFullText: food.householdServingFullText || '',
     servingSize: food.servingSize || '',
@@ -73,6 +74,23 @@ export const defaultFood = {
       value: 8,
     },
   ],
+};
+
+export const store = async (key, value) => {
+  try {
+    await EncryptedStorage.setItem(key, value);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const retrieve = async key => {
+  try {
+    const val = await EncryptedStorage.getItem(key);
+    return val;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getMainNutrients = food => {
