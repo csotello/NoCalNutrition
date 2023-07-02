@@ -1,5 +1,5 @@
 import {View, Button, IconButton, Flex, Spacer, AlertDialog} from 'native-base';
-import Text from '../styledComponents/Text';
+import WhiteText from '../styledComponents/WhiteText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles/styles';
 import {useState} from 'react';
@@ -24,7 +24,7 @@ const Food = props => {
                 props.remove(food, section);
                 setIsOpen(false);
               }}>
-              <Text>Delete</Text>
+              <WhiteText>Delete</WhiteText>
             </Button>
           </AlertDialog.Footer>
         </AlertDialog.Content>
@@ -34,7 +34,7 @@ const Food = props => {
 
   return (
     <View style={{padding: 10}}>
-      <Text>{props.title}</Text>
+      <WhiteText style={{paddingBottom: 10}}>{props.title}</WhiteText>
       {props.meal?.map((item, i) => {
         let nutrients = item.foodNutrients?.filter(item => {
           return item.nutrientName.match(
@@ -48,19 +48,19 @@ const Food = props => {
             <Flex direction="row">
               <Flex direction="column">
                 <View>
-                  <Text>
+                  <WhiteText>
                     {item.brandName} {item.description}
                     {'\n'}
                     Amount: {Number(item.servingSize)} {item.servingSizeUnit}
-                  </Text>
+                  </WhiteText>
                   {nutrients.map((nutrient, i) => {
                     return (
                       <View style={{paddingLeft: 5}} key={i}>
-                        <Text>
+                        <WhiteText>
                           {nutrient.nutrientName}
                           {nutrient.value}
                           {nutrient.unitName}
-                        </Text>
+                        </WhiteText>
                       </View>
                     );
                   })}

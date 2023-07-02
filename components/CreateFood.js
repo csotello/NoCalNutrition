@@ -1,5 +1,5 @@
 import {convertCustomFood} from '../utils';
-import Text from '../styledComponents/Text';
+import WhiteText from '../styledComponents/WhiteText';
 import {
   View,
   Button,
@@ -107,10 +107,10 @@ const CreateFood = props => {
   return (
     <NativeBaseProvider theme={theme}>
       <ScrollView>
-        <Text style={{fontSize: 20}}>Custom Food</Text>
+        <WhiteText style={{fontSize: 20}}>Custom Food</WhiteText>
         <Flex direction="row">
           <View style={{marginRight: 10}}>
-            <Text style={{marginLeft: 8}}>Food Name</Text>
+            <WhiteText style={{marginLeft: 8}}>Food Name</WhiteText>
             <Input
               value={food.description}
               w={40}
@@ -119,7 +119,7 @@ const CreateFood = props => {
               placeholder={'Cheese'}></Input>
           </View>
           <View>
-            <Text style={{marginLeft: 8}}>Brand</Text>
+            <WhiteText style={{marginLeft: 8}}>Brand</WhiteText>
             <Input
               value={food.brandName}
               w={40}
@@ -129,7 +129,16 @@ const CreateFood = props => {
           </View>
         </Flex>
         <Flex direction="row">
-          <Text>Serving</Text>
+          <WhiteText style={{marginLeft: 8}}>Category</WhiteText>
+          <Input
+            value={food.category}
+            w={40}
+            marginBottom={2}
+            onChangeText={txt => handleText('category', txt)}
+            placeholder={'dairy'}></Input>
+        </Flex>
+        <Flex direction="row">
+          <WhiteText>Serving</WhiteText>
           <Input
             value={food.householdServingFullText}
             w={40}
@@ -157,76 +166,76 @@ const CreateFood = props => {
           </Select>
         </Flex>
         <Flex direction="row">
-          <Text>Total Fat</Text>
+          <WhiteText>Total Fat</WhiteText>
           <Input
             value={food.totalFat}
             onChangeText={txt => handleText('totalFat', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Saturated Fat</Text>
+          <WhiteText>Saturated Fat</WhiteText>
           <Input
             value={food.saturatedFat}
             onChangeText={txt => handleText('saturatedFat', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Trans Fat</Text>
+          <WhiteText>Trans Fat</WhiteText>
           <Input
             value={food.transFat}
             onChangeText={txt => handleText('transFat', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Cholesterol</Text>
+          <WhiteText>Cholesterol</WhiteText>
           <Input
             value={food.cholesterol}
             onChangeText={txt => handleText('cholesterol', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>mg</Text>
+          <WhiteText style={{marginLeft: 5}}>mg</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Sodium</Text>
+          <WhiteText>Sodium</WhiteText>
           <Input
             value={food.sodium}
             onChangeText={txt => handleText('sodium', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>mg</Text>
+          <WhiteText style={{marginLeft: 5}}>mg</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Total Carbohydrates</Text>
+          <WhiteText>Total Carbohydrates</WhiteText>
           <Input
             value={food.carbs}
             onChangeText={txt => handleText('carbs', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Dietary Fibers</Text>
+          <WhiteText>Dietary Fibers</WhiteText>
           <Input
             value={food.fiber}
             onChangeText={txt => handleText('fiber', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Total Sugars</Text>
+          <WhiteText>Total Sugars</WhiteText>
           <Input
             value={food.sugar}
             onChangeText={txt => handleText('sugar', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Flex direction="row">
-          <Text>Protein</Text>
+          <WhiteText>Protein</WhiteText>
           <Input
             value={food.protein}
             onChangeText={txt => handleText('protein', txt)}
             placeholder={'0'}></Input>
-          <Text style={{marginLeft: 5}}>g</Text>
+          <WhiteText style={{marginLeft: 5}}>g</WhiteText>
         </Flex>
         <Button
           onPress={() => {

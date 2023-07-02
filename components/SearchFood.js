@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {View, Input} from 'native-base';
 import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
-import Text from '../styledComponents/Text';
+import WhiteText from '../styledComponents/WhiteText';
 
 const SearchFood = props => {
   const [searchResults, setSearchResults] = useState([]);
@@ -25,16 +25,16 @@ const SearchFood = props => {
             console.log(item);
             return (
               <View style={{padding: 10}} key={i}>
-                {item.brandName && <Text>{item.brandName}</Text>}
-                {item.brandOwner && <Text>{item.brandOwner}</Text>}
-                <Text>{item.description}</Text>
+                {item.brandName && <WhiteText>{item.brandName}</WhiteText>}
+                {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>}
+                <WhiteText>{item.description}</WhiteText>
                 {item.servingSize && item.servingSizeUnit && (
-                  <Text>
+                  <WhiteText>
                     {item.servingSize} {item.servingSizeUnit}
-                  </Text>
+                  </WhiteText>
                 )}
                 {item.householdServingFullText && (
-                  <Text>{item.householdServingFullText}</Text>
+                  <WhiteText>{item.householdServingFullText}</WhiteText>
                 )}
                 {item.foodNutrients.map((nutrient, i) => {
                   if (
@@ -45,10 +45,10 @@ const SearchFood = props => {
                     return (
                       <>
                         <View style={{paddingLeft: 5}} key={i}>
-                          <Text>
+                          <WhiteText>
                             {nutrient.nutrientName} {nutrient.value}{' '}
                             {nutrient.unitName}{' '}
-                          </Text>
+                          </WhiteText>
                         </View>
                       </>
                     );
@@ -78,7 +78,7 @@ const SearchFood = props => {
 
   return (
     <View>
-      <Text style={{fontSize: 20}}>New Food</Text>
+      <WhiteText style={{fontSize: 20}}>New Food</WhiteText>
       <Input
         value={text}
         onChangeText={txt => setText(txt)}

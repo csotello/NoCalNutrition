@@ -9,6 +9,7 @@ import {
 } from 'native-base';
 import {useEffect, useState} from 'react';
 import {View, Text, ScrollView} from 'react-native';
+import WhiteText from '../styledComponents/WhiteText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 const EditFood = props => {
   const [servings, setServings] = useState({
@@ -19,6 +20,7 @@ const EditFood = props => {
     brandName: props.food.brandName || '',
     description: props.food.description || '',
     additionalDescriptions: props.food.additionalDescriptions || '',
+    category: props.food.category || '',
   });
   const [nutrients, setNutrients] = useState({
     protein: 0,
@@ -79,7 +81,7 @@ const EditFood = props => {
   const displayNutrient = nutrient => {
     return (
       <View>
-        <Text>{nutrient}: </Text>
+        <WhiteText>{nutrient}: </WhiteText>
         <IconButton
           icon={<Icon name="caret-up" size={10} />}
           variant="ghost"
@@ -91,6 +93,7 @@ const EditFood = props => {
         />
         <Flex direction="row">
           <Input
+            color={'white'}
             paddingLeft={10}
             marginRight={3}
             value={nutrients[nutrient.toLowerCase()].toString()}
@@ -103,7 +106,7 @@ const EditFood = props => {
             w={100}
             h={10}
           />
-          <Text>g</Text>
+          <WhiteText style={{fontSize: 15, alignSelf: 'center'}}>g</WhiteText>
         </Flex>
         <IconButton
           icon={<Icon name="caret-down" size={10} />}
@@ -121,31 +124,43 @@ const EditFood = props => {
   return (
     <ScrollView>
       <Flex direction="column" style={{marginBottom: 10}}>
-        Brand Name:
+        <WhiteText>Brand Name:</WhiteText>
         <Input
+          color={'white'}
           value={descriptors.brandName}
           onChangeText={text =>
             setDescriptors({...descriptors, brandName: text})
           }
         />
-        Description:
+        <WhiteText>Description:</WhiteText>
         <Input
+          color={'white'}
           value={descriptors.description}
           onChangeText={text =>
             setDescriptors({...descriptors, description: text})
           }
         />
-        Additional Description:
+        <WhiteText>Additional Description:</WhiteText>
         <Input
+          color={'white'}
           value={descriptors.additionalDescriptions}
           onChangeText={text =>
             setDescriptors({...descriptors, additionalDescriptions: text})
           }
         />
-        <Text>Meal:</Text>
+        <WhiteText>Category:</WhiteText>
+        <Input
+          color={'white'}
+          value={descriptors.category}
+          onChangeText={text =>
+            setDescriptors({...descriptors, category: text})
+          }
+        />
+        <WhiteText>Meal:</WhiteText>
         <Select
           minWidth={90}
           selectedValue={meal}
+          color={'white'}
           style={{fontSize: 15}}
           _selectedItem={{endIcon: <CheckIcon />}}
           onValueChange={itemValue => setMeal(itemValue)}>
@@ -154,9 +169,12 @@ const EditFood = props => {
           <Select.Item label="Dinner" value="Dinner" />
           <Select.Item label="Snacks" value="Snacks" />
         </Select>
-        <Text style={{paddingTop: 10, paddingRight: 10}}>Amount:</Text>
+        <WhiteText style={{paddingTop: 10, paddingRight: 10}}>
+          Amount:
+        </WhiteText>
         <Flex direction="row">
           <Input
+            color={'white'}
             value={servings.value.toString()}
             onChangeText={text =>
               setServings({...servings, value: Number(text) || 0})
@@ -165,7 +183,9 @@ const EditFood = props => {
             h={10}
           />
           <Select
-            minWidth={90}
+            color={'white'}
+            w={100}
+            h={10}
             selectedValue={servings.unit}
             style={{fontSize: 15}}
             _selectedItem={{endIcon: <CheckIcon />}}

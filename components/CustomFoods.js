@@ -8,7 +8,7 @@ import {
   Button,
 } from 'native-base';
 import {useEffect, useState} from 'react';
-import Text from '../styledComponents/Text.js';
+import WhiteText from '../styledComponents/WhiteText.js';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {getMainNutrients} from '../utils';
@@ -61,30 +61,30 @@ const CustomFoods = props => {
           paddingBottom: 20,
         }}>
         <View style={{paddingRight: 10, minWidth: 100}}>
-          <Text>{food.description || 'Food Description'}</Text>
+          <WhiteText>{food.description || 'Food Description'}</WhiteText>
           {food.householdServingFullText && (
-            <Text>{food.householdServingFullText}</Text>
+            <WhiteText>{food.householdServingFullText}</WhiteText>
           )}
           {food.servingSize && (
-            <Text>
+            <WhiteText>
               {food.servingSize} {food.servingSizeUnit.toLocaleLowerCase()}
-            </Text>
+            </WhiteText>
           )}
         </View>
         <Spacer />
         <View>
-          <Text>P</Text>
-          <Text>{nutrients.protein?.value || 0}</Text>
+          <WhiteText>P</WhiteText>
+          <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
         </View>
         <Spacer />
         <View>
-          <Text>C</Text>
-          <Text>{nutrients.carbs?.value || 0}</Text>
+          <WhiteText>C</WhiteText>
+          <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
         </View>
         <Spacer />
         <View>
-          <Text>F</Text>
-          <Text>{nutrients.totalFat?.value || 0}</Text>
+          <WhiteText>F</WhiteText>
+          <WhiteText>{nutrients.totalFat?.value || 0}</WhiteText>
         </View>
         <Spacer />
         <IconButton
@@ -148,7 +148,7 @@ const CustomFoods = props => {
 
   return (
     <ScrollView>
-      <Text>Custom Foods</Text>
+      <WhiteText>Custom Foods</WhiteText>
       {foods?.map((item, i) => {
         return <View key={i}>{displayFoods(item)}</View>;
       })}
