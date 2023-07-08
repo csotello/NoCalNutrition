@@ -2,13 +2,16 @@ import {View, Button, IconButton, Flex, Spacer, AlertDialog} from 'native-base';
 import WhiteText from '../styledComponents/WhiteText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles/styles';
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 const Food = props => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const cancelRef = useRef(null);
   const alertDialog = (food, section) => {
     return (
-      <AlertDialog isOpen={isOpen} close={() => setIsOpen(false)}>
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        leastDestructiveRef={cancelRef}>
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
           <AlertDialog.Header>Delete Food</AlertDialog.Header>
