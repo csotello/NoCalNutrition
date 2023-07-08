@@ -34,14 +34,12 @@ const Nutrients = props => {
           style={{
             ...styles.nutrient,
             color: '#d10415',
-            marginLeft: 5,
-            minWidth: '20%',
           }}>
-          P{'\n'}
+          Protein{'  '}
           {props.protein || 0} / {goals?.Protein}
         </Text>
         <Center w="90%">
-          <Box w="70%" marginRight={10} minWidth={'80%'}>
+          <Box w="70%" marginRight={20} maxWidth={'70%'}>
             <Progress
               value={(props.protein / goals?.Protein) * 100}
               _filledTrack={{bg: '#d10415'}}
@@ -55,14 +53,11 @@ const Nutrients = props => {
           style={{
             ...styles.nutrient,
             color: '#0426d1',
-            minWidth: '20%',
-            marginLeft: 5,
           }}>
-          C{'\n'}
-          {props.carbs || 0} / {goals?.Carbs}
+          Carbs{'  '} {props.carbs || 0} / {goals?.Carbs}
         </Text>
         <Center w="90%">
-          <Box w="70%" marginRight={10} minWidth={'80%'}>
+          <Box w="70%" marginRight={20} maxWidth={'70%'}>
             <Progress
               value={(props.carbs / goals?.Carbs) * 100}
               _filledTrack={{bg: '#0426d1'}}
@@ -76,14 +71,12 @@ const Nutrients = props => {
           style={{
             ...styles.nutrient,
             color: '#c7d104',
-            minWidth: '20%',
-            marginLeft: 5,
           }}>
-          F{'\n'}
+          Fat{'  '}
           {props.fat || 0} / {goals?.Fat}
         </Text>
         <Center w="90%">
-          <Box w="70%" marginRight={10} minWidth={'80%'}>
+          <Box w="70%" marginRight={20} maxWidth={'70%'}>
             <Progress
               value={(props.fat / goals?.Fat) * 100}
               _filledTrack={{bg: '#c7d104'}}
