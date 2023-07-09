@@ -4,6 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 export const convertCustomFood = food => {
   ret = {
     description: food.description || '',
+    additionalDescriptions: food.additionalDescriptions || '',
     category: food.category || '',
     brandName: food.brandName || '',
     householdServingFullText: food.householdServingFullText || '',
