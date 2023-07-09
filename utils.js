@@ -16,7 +16,7 @@ export const convertCustomFood = food => {
         unitName: 'G',
       },
       {
-        nutrientName: 'Total Lipid (fat)',
+        nutrientName: 'Total lipid (fat)',
         value: food.totalFat || 0,
         unitName: 'G',
       },
@@ -52,6 +52,7 @@ export const convertCustomFood = food => {
       },
     ],
   };
+  console.log('Converted: ', JSON.stringify(ret));
   return ret;
 };
 
@@ -103,7 +104,7 @@ export const getMainNutrients = food => {
       case 'Carbohydrate, by difference':
         ret.carbs = {...nutrient};
         break;
-      case 'Total Lipid (fat)':
+      case 'Total lipid (fat)':
         ret.totalFat = {...nutrient};
         break;
       default:
