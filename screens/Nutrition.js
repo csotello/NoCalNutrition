@@ -1,21 +1,13 @@
-import {Text, Flex, ScrollView, Spacer, IconButton} from 'native-base';
+import {Text, Flex, ScrollView, Spacer, IconButton, Button} from 'native-base';
 import {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
-import AddFood from './AddFood';
-import uuid from 'uuid-random';
 import styles from '../styles/styles';
 import {retrieve} from '../utils';
 import Nutrients from '../components/Nutrients';
 
-const Nutrition = ({route}) => {
-  const [modal, setModal] = useState({
-    page: 'search',
-    data: {},
-    isVisible: false,
-    isNew: true,
-  });
+const Nutrition = ({route, navigation}) => {
   const [loaded, setLoaded] = useState(false);
   const [totals, setTotals] = useState({
     protein: 0,
@@ -32,10 +24,22 @@ const Nutrition = ({route}) => {
 
   useEffect(() => {
     if (!loaded) {
-      load(food.date);
+      load(date);
     }
     updateTotals();
-  }, [load, food]);
+  }, [loaded, load]);
+
+  useEffect(() => {
+    const handler = navigation.addListener('focus', () => {
+      console.log('focused');
+      load(date);
+    });
+    return handler;
+  }, [navigation]);
+
+  useEffect(() => {
+    updateTotals();
+  }, [food]);
 
   const load = async date => {
     let key = 'nutrition' + '-' + date;
@@ -46,16 +50,14 @@ const Nutrition = ({route}) => {
       );
       if (val) {
         setFood({...val});
-        console.log('Loaded: ' + val);
+        console.log('Loaded: ' + JSON.stringify(val));
       }
     } catch (error) {
       console.log(error);
       console.log('Failed to load');
     }
+    if (!loaded) setLoaded(true);
   };
-  if (!loaded) {
-    setLoaded(true);
-  }
 
   const store = async nutrition => {
     let key = 'nutrition' + '-' + date;
@@ -80,25 +82,6 @@ const Nutrition = ({route}) => {
     setDate(newDate);
   };
 
-  const add = (item, meal) => {
-    cur = {
-      Breakfast: [...food.Breakfast],
-      Lunch: [...food.Lunch],
-      Dinner: [...food.Dinner],
-      Snacks: [...food.Snacks],
-    };
-    Object.entries(cur).forEach(([key, value]) => {
-      item['UUID'] = uuid();
-      if (key === meal) {
-        value = value === undefined ? [item] : [...value, item];
-        console.log('key: ' + key + ' value: ' + value);
-        cur[key] = [...value];
-      }
-    });
-    setFood({...cur});
-    store({...cur});
-  };
-
   const removeFood = (item, section) => {
     let meal = food[`${section}`];
     meal = meal?.filter(cur => item.UUID !== cur.UUID);
@@ -114,28 +97,12 @@ const Nutrition = ({route}) => {
   };
 
   const openEdit = (food, meal) => {
-    setModal({
+    navigation.navigate('AddFood', {
       page: 'edit',
-      data: {...food, meal: meal},
-      isVisible: true,
+      food: {...food, meal: meal},
       isNew: false,
+      date: date,
     });
-  };
-
-  const editFood = (item, meal) => {
-    let cur = {
-      Breakfast: [...food.Breakfast],
-      Lunch: [...food.Lunch],
-      Dinner: [...food.Dinner],
-      Snacks: [...food.Snacks],
-    };
-    Object.entries(cur).forEach(([key, value]) => {
-      value = value?.filter(cur => item.UUID !== cur.UUID);
-      if (key === meal) value.push({...item});
-      cur[key] = [...value];
-    });
-    setFood({...cur});
-    store({...cur});
   };
 
   const updateTotals = () => {
@@ -161,6 +128,9 @@ const Nutrition = ({route}) => {
           }
         });
       });
+    });
+    Object.keys(newTotals).forEach(key => {
+      newTotals[key] = Number(newTotals[key].toFixed(1));
     });
     setTotals({...newTotals});
   };
@@ -211,21 +181,15 @@ const Nutrition = ({route}) => {
         position={'absolute'}
         icon={<Icon name="plus" size={20} />}
         onPress={() =>
-          setModal(() => {
-            return {...modal, isVisible: !modal.isVisible, page: 'search'};
+          navigation.navigate('AddFood', {
+            page: 'search',
+            isNew: true,
+            date: date,
           })
         }
         zIndex={10}
         right={15}
         top={350}
-      />
-      <AddFood
-        testID="AddFood"
-        info={{...modal}}
-        setInfo={setModal}
-        add={add}
-        edit={editFood}
-        close={() => setModal({...modal, isVisible: false})}
       />
     </ScrollView>
   );
