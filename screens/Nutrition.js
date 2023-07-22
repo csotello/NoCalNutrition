@@ -20,22 +20,15 @@ const Nutrition = ({route, navigation}) => {
     Dinner: [],
     Snacks: [],
   });
-  const [date, setDate] = useState(new Date().toDateString());
-
+  const [date, setDate] = useState(
+    route.params?.date || new Date().toDateString(),
+  );
   useEffect(() => {
     if (!loaded) {
       load(date);
     }
     updateTotals();
   }, [loaded, load]);
-
-  useEffect(() => {
-    const handler = navigation.addListener('focus', () => {
-      console.log('focused');
-      load(date);
-    });
-    return handler;
-  }, [navigation]);
 
   useEffect(() => {
     updateTotals();
