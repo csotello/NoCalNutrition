@@ -7,14 +7,18 @@ import {
   Spacer,
   IconButton,
 } from 'native-base';
-import {useEffect, useState} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import uuid from 'uuid-random';
+import {useEffect, useState, useRef} from 'react';
+import {View, Text, ScrollView, Pressable} from 'react-native';
 import WhiteText from '../styledComponents/WhiteText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {convertCustomFood, store, retrieve} from '../utils';
+
 const EditFood = props => {
   const [servings, setServings] = useState({
-    value: 0,
-    unit: props.food.servingSizeUnit || 'g',
+    servingSize: 0,
+    servings: 1,
+    servingSizeUnit: props.food.servingSizeUnit || 'g',
   });
   const [descriptors, setDescriptors] = useState({
     brandName: props.food.brandName || '',
@@ -26,14 +30,28 @@ const EditFood = props => {
     protein: 0,
     carbs: 0,
     fat: 0,
+    sodium: 0,
+    cholesterol: 0,
+    fiber: 0,
+    sugar: 0,
+    saturatedFat: 0,
+    sodium: 0,
   });
-  const [meal, setMeal] = useState(props.food.meal || 'Breakfast');
+  const [meal, setMeal] = useState('Breakfast');
+  const [dropdown, setDropdown] = useState(false);
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    scrollRef.current.scrollToEnd({animated: true});
+  }, [dropdown]);
 
   useEffect(() => {
-    const serving = Number(props.food.servingSize);
-    setServings({...servings, value: serving});
+    var serving = props.food.servingSize || 0;
+    if (props.food.foodMeasures?.length > 0) {
+      serving = props.food.foodMeasures[0].gramWeight || serving;
+    }
+    setServings({...servings, servingSize: serving});
     var cur = {...nutrients};
-    props.food.foodNutrients.map((nutrient, i) => {
+    props.food.foodNutrients?.map((nutrient, i) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
           cur.protein = Number(nutrient.value);
@@ -44,6 +62,21 @@ const EditFood = props => {
         case 'Total lipid (fat)':
           cur.fat = Number(nutrient.value);
           break;
+        case 'Sugars, total including NLEA':
+          cur.sugar = Number(nutrient.value);
+          break;
+        case 'Fiber, total dietary':
+          cur.fiber = Number(nutrient.value);
+          break;
+        case 'Sodium, Na':
+          cur.sodium = Number(nutrient.value);
+          break;
+        case 'Cholesterol':
+          cur.cholesterol = Number(nutrient.value);
+          break;
+        case 'Fatty acids, total saturated':
+          cur.saturatedFat = Number(nutrient.value);
+          break;
         default:
           break;
       }
@@ -51,31 +84,76 @@ const EditFood = props => {
     setNutrients({...cur});
   }, [props.food]);
 
-  const addFood = () => {
+  const addFood = async () => {
     var newFood = {...props.food};
-    newFood.servingSize = servings.value;
-    newFood.servingSizeUnit = servings.unit;
+    newFood.servingSize = servings.servingSize;
+    newFood.servingSizeUnit = servings.servingSizeUnit;
+    newFood.servings = servings.servings;
     newFood.brandName = descriptors.brandName;
     newFood.description = descriptors.description;
     newFood.additionalDescriptions = descriptors.additionalDescriptions;
-    newFood.foodNutrients.map((nutrient, i) => {
+    newFood.category = descriptors.category;
+    newFood.foodNutrients?.map((nutrient, i) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
+          console.log('Protein: ', nutrients.protein);
           nutrient.value = nutrients.protein;
           break;
         case 'Carbohydrate, by difference':
+          console.log('Carbohydrate, by difference: ', nutrients.carbs);
           nutrient.value = nutrients.carbs;
           break;
         case 'Total lipid (fat)':
+          console.log('Total lipid (fat): ', nutrients.fat);
           nutrient.value = nutrients.fat;
+          break;
+        case 'Sugars, total including NLEA':
+          console.log('Sugars, total including NLEA: ', nutrients.sugar);
+          nutrient.value = nutrients.sugar;
+          break;
+        case 'Fiber, total dietary':
+          console.log('Fiber, total dietary: ', nutrients.fiber);
+          nutrient.value = nutrients.fiber;
+          break;
+        case 'Sodium, Na':
+          nutrient.value = nutrients.sodium;
+          break;
+        case 'Cholesterol':
+          nutrient.value = nutrients.cholesterol;
+          break;
+        case 'Fatty acids, total saturated':
+          nutrient.value = nutrients.saturatedFat;
           break;
         default:
           break;
       }
     });
-    if (props.isNew) props.add(newFood, meal);
-    else props.edit(newFood, meal);
-    props.close();
+    if (props.isNew) {
+      // await props.add({...newFood}, meal);
+      if (props.isCustom) {
+        let custom = convertCustomFood({
+          ...nutrients,
+          ...descriptors,
+          ...servings,
+        });
+        newFood = custom;
+        console.log(JSON.stringify(newFood));
+        createCustom(newFood);
+      }
+      await props.add({...newFood}, meal);
+    } else await props.edit({...newFood}, meal);
+  };
+
+  const createCustom = async newFood => {
+    newFood['UUID'] = uuid();
+    console.log('Create');
+    console.log(newFood);
+    var val = JSON.parse(await retrieve('customFood'));
+    if (val) val.push(newFood);
+    else val = [newFood];
+    console.log('Custom After');
+    console.log(val);
+    await store('customFood', JSON.stringify(val));
   };
 
   const displayNutrient = nutrient => {
@@ -122,7 +200,7 @@ const EditFood = props => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView ref={scrollRef}>
       <Flex direction="column" style={{marginBottom: 10}}>
         <WhiteText>Brand Name:</WhiteText>
         <Input
@@ -163,6 +241,7 @@ const EditFood = props => {
           color={'white'}
           style={{fontSize: 15}}
           _selectedItem={{endIcon: <CheckIcon />}}
+          defaultValue="Breakfast"
           onValueChange={itemValue => setMeal(itemValue)}>
           <Select.Item label="Breakfast" value="Breakfast" />
           <Select.Item label="Lunch" value="Lunch" />
@@ -170,14 +249,14 @@ const EditFood = props => {
           <Select.Item label="Snacks" value="Snacks" />
         </Select>
         <WhiteText style={{paddingTop: 10, paddingRight: 10}}>
-          Amount:
+          Serving Size
         </WhiteText>
         <Flex direction="row">
           <Input
             color={'white'}
-            value={servings.value.toString()}
+            value={servings.servingSize.toString()}
             onChangeText={text =>
-              setServings({...servings, value: Number(text) || 0})
+              setServings({...servings, servingSize: Number(text) || 0})
             }
             w={100}
             h={10}
@@ -186,11 +265,11 @@ const EditFood = props => {
             color={'white'}
             w={100}
             h={10}
-            selectedValue={servings.unit}
+            selectedValue={servings.servingSizeUnit}
             style={{fontSize: 15}}
             _selectedItem={{endIcon: <CheckIcon />}}
             onValueChange={itemValue =>
-              setServings({...servings, unit: itemValue})
+              setServings({...servings, servingSizeUnit: itemValue})
             }>
             <Select.Item label="g" value="g" />
             <Select.Item label="ml" value="ml" />
@@ -198,6 +277,16 @@ const EditFood = props => {
             <Select.Item label="oz" value="oz" />
           </Select>
         </Flex>
+        <WhiteText>Number of servings</WhiteText>
+        <Input
+          color={'white'}
+          value={servings.servings.toString()}
+          onChangeText={text =>
+            setServings({...servings, servings: Number(text) || 0})
+          }
+          w={100}
+          h={10}
+        />
       </Flex>
       <Flex direction="row">
         {displayNutrient('Protein')}
@@ -206,9 +295,126 @@ const EditFood = props => {
         <Spacer />
         {displayNutrient('Carbs')}
       </Flex>
-      <Button
+      <Pressable
         onPress={() => {
-          addFood();
+          setDropdown(!dropdown);
+        }}>
+        <Flex
+          direction="row"
+          borderWidth={1}
+          borderColor="gray.300"
+          marginBottom={2}>
+          <Spacer />
+          <WhiteText>Additional Nutrients</WhiteText>
+          <Spacer />
+          <Icon name="caret-down" size={20} />
+          <Spacer />
+        </Flex>
+      </Pressable>
+      <ScrollView
+        style={{
+          flex: 1,
+          width: dropdown ? '100%' : 0,
+          height: dropdown ? '100%' : 0,
+        }}>
+        <Flex direction="row">
+          <WhiteText style={{textAlignVertical: 'center'}}>
+            Saturated Fat
+          </WhiteText>
+          <Spacer />
+          <Input
+            w={'30%'}
+            keyboardType="number-pad"
+            color={'white'}
+            value={nutrients.saturatedFat.toString()}
+            onChangeText={txt =>
+              setNutrients({...nutrients, saturatedFat: Number(txt)})
+            }
+          />
+          <WhiteText
+            style={{
+              marginLeft: 5,
+              marginRight: 5,
+              textAlignVertical: 'center',
+              fontSize: 15,
+            }}>
+            g
+          </WhiteText>
+        </Flex>
+        <Flex direction="row">
+          <WhiteText style={{textAlignVertical: 'center'}}>
+            Cholesterol
+          </WhiteText>
+          <Spacer />
+          <Input
+            w={'30%'}
+            keyboardType="number-pad"
+            color={'white'}
+            value={nutrients.cholesterol.toString()}
+            onChangeText={txt =>
+              setNutrients({...nutrients, cholesterol: Number(txt)})
+            }
+          />
+          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+            mg
+          </WhiteText>
+        </Flex>
+        <Flex direction="row">
+          <WhiteText style={{textAlignVertical: 'center'}}>Sodium</WhiteText>
+          <Spacer />
+          <Input
+            w={'30%'}
+            keyboardType="number-pad"
+            color={'white'}
+            value={nutrients.sodium.toString()}
+            onChangeText={txt =>
+              setNutrients({...nutrients, sodium: Number(txt)})
+            }
+          />
+          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+            mg
+          </WhiteText>
+        </Flex>
+        <Flex direction="row">
+          <WhiteText style={{textAlignVertical: 'center'}}>
+            Dietary Fibers
+          </WhiteText>
+          <Spacer />
+          <Input
+            w={'30%'}
+            keyboardType="number-pad"
+            color={'white'}
+            value={nutrients.fiber.toString()}
+            onChangeText={txt =>
+              setNutrients({...nutrients, fiber: Number(txt)})
+            }
+          />
+          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+            g
+          </WhiteText>
+        </Flex>
+        <Flex direction="row">
+          <WhiteText style={{textAlignVertical: 'center'}}>
+            Total Sugars
+          </WhiteText>
+          <Spacer />
+          <Input
+            w={'30%'}
+            keyboardType="number-pad"
+            color={'white'}
+            value={nutrients.sugar.toString()}
+            onChangeText={txt => {
+              setNutrients({...nutrients, sugar: Number(txt)});
+            }}></Input>
+          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+            g
+          </WhiteText>
+        </Flex>
+      </ScrollView>
+      <Button
+        variant={'ghost'}
+        onPress={async () => {
+          await addFood();
         }}>
         {props.isNew ? 'Add' : 'Apply'}
       </Button>
