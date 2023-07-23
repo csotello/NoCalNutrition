@@ -2,12 +2,15 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 //Convert user input into format used by API
 export const convertCustomFood = food => {
+  console.log('Converting: ' + JSON.stringify(food));
   ret = {
+    UUID: food.UUID || '',
     description: food.description || '',
     additionalDescriptions: food.additionalDescriptions || '',
     category: food.category || '',
     brandName: food.brandName || '',
     householdServingFullText: food.householdServingFullText || '',
+    servings: food.servings || '',
     servingSize: food.servingSize || '',
     servingSizeUnit: `${food.servingSizeUnit || ''}`.toLocaleUpperCase(),
     foodNutrients: [
@@ -18,7 +21,7 @@ export const convertCustomFood = food => {
       },
       {
         nutrientName: 'Total lipid (fat)',
-        value: food.totalFat || 0,
+        value: food.fat || 0,
         unitName: 'G',
       },
       {
