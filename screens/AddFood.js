@@ -1,13 +1,12 @@
 import {Text, View} from 'react-native';
 import {Flex, IconButton, Modal} from 'native-base';
-import EditCustomFood from '../components/EditCustomFood';
 import SearchFood from '../components/SearchFood';
 import CustomFoods from '../components/CustomFoods';
 import EditFood from '../components/EditFood';
 import styles from '../styles/styles';
 import {useEffect, useState} from 'react';
 import uuid from 'uuid-random';
-import {store, retrieve} from '../utils';
+import {store, retrieve, convertCustomFood} from '../utils';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const AddFood = ({navigation, route}) => {
@@ -94,20 +93,40 @@ const AddFood = ({navigation, route}) => {
     });
   };
 
+  const editCustom = async food => {
+    let customs = JSON.parse(await retrieve('customFood'));
+    console.log('customs: ' + JSON.stringify(customs));
+    customs = customs?.filter(cur => food.UUID !== cur.UUID);
+    console.log('Food: ' + JSON.stringify(food));
+    let newFood = {...food};
+    newFood = convertCustomFood(food);
+    customs.push({...newFood});
+    console.log('customs: ' + JSON.stringify(customs));
+    await store('customFood', JSON.stringify(customs));
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'Home',
+          state: {routes: [{name: 'Nutrition', params: {date: date}}]},
+        },
+      ],
+    });
+  };
+
   const displayPage = page => {
     switch (page) {
       case 'search':
         return <SearchFood date={date} />;
       case 'custom':
         return <CustomFoods add={add} date={date} />;
-      case 'editCustom':
-        return <EditCustomFood food={food} isNew={isNew} add={add} />;
       case 'edit':
         return (
           <EditFood
             food={food}
             add={add}
             edit={edit}
+            editCustom={editCustom}
             isNew={isNew}
             isCustom={isCustom}
           />
@@ -150,6 +169,7 @@ const AddFood = ({navigation, route}) => {
               page: 'edit',
               isNew: true,
               food: {},
+              date: date,
               isCustom: true,
             })
           }>
