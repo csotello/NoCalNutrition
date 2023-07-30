@@ -2,6 +2,7 @@ import {View, Button, IconButton, Flex, Spacer, AlertDialog} from 'native-base';
 import WhiteText from '../styledComponents/WhiteText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles/styles';
+import {getMainNutrients} from '../utils';
 import {useState, useRef} from 'react';
 const Food = props => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,11 +40,7 @@ const Food = props => {
     <View style={{padding: 10}}>
       <WhiteText style={{paddingBottom: 10}}>{props.title}</WhiteText>
       {props.meal?.map((item, i) => {
-        let nutrients = item.foodNutrients?.filter(item => {
-          return item.nutrientName.match(
-            /^(Protein|Carbohydrate, by difference|Total lipid \(fat\))$/,
-          );
-        });
+        let nutrients = getMainNutrients({...item});
         return (
           <View
             key={i}
@@ -56,27 +53,33 @@ const Food = props => {
                     {'\n'}
                     Amount: {Number(item.servingSize)} {item.servingSizeUnit}
                   </WhiteText>
-                  {nutrients.map((nutrient, i) => {
-                    return (
-                      <View style={{paddingLeft: 5}} key={i}>
-                        <WhiteText>
-                          {nutrient.nutrientName}
-                          {nutrient.value}
-                          {nutrient.unitName}
-                        </WhiteText>
-                      </View>
-                    );
-                  })}
                 </View>
+                <Flex direction="row">
+                  <WhiteText>
+                    P: {nutrients.protein.value}
+                    {nutrients.protein.unitName}
+                  </WhiteText>
+                  <Spacer />
+                  <WhiteText>
+                    C: {nutrients.carbs.value}
+                    {nutrients.carbs.unitName}
+                  </WhiteText>
+                  <Spacer />
+                  <WhiteText>
+                    F: {nutrients.fat.value}
+                    {nutrients.fat.unitName}
+                  </WhiteText>
+                  <Spacer />
+                </Flex>
               </Flex>
               <Spacer />
               {alertDialog(item, props.title)}
               <IconButton
+                marginRight={5}
                 testID="Delete Icon"
                 icon={<Icon size={16} name="trash-alt" color={'white'} />}
                 onPress={() => setIsOpen(true)}
               />
-              <Spacer />
               <IconButton
                 testID="Edit Icon"
                 icon={<Icon size={16} name="pencil-alt" color={'white'} />}
@@ -84,7 +87,6 @@ const Food = props => {
                   props.edit(item, props.title);
                 }}
               />
-              <Spacer />
             </Flex>
           </View>
         );
