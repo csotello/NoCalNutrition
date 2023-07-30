@@ -7,16 +7,18 @@ import {
   AlertDialog,
   Button,
 } from 'native-base';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import WhiteText from '../styledComponents/WhiteText.js';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {getMainNutrients} from '../utils';
+import {useNavigation} from '@react-navigation/native';
 const CustomFoods = props => {
   const [foods, setFoods] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const cancelRef = useRef(null);
+  const navigation = useNavigation();
   const load = async () => {
     try {
       const customFood = JSON.parse(
@@ -84,18 +86,18 @@ const CustomFoods = props => {
         <Spacer />
         <View>
           <WhiteText>F</WhiteText>
-          <WhiteText>{nutrients.totalFat?.value || 0}</WhiteText>
+          <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
         </View>
         <Spacer />
         <IconButton
           icon={<Icon name="plus" size={10} color={'white'} />}
           variant="ghost"
           onPress={() => {
-            props.setPage({
+            navigation.push('AddFood', {
               page: 'edit',
-              data: {...food},
-              isVisible: true,
+              food: {...food},
               isNew: true,
+              date: props.date,
             });
           }}
         />
@@ -109,11 +111,12 @@ const CustomFoods = props => {
           icon={<Icon size={16} name="pencil-alt" color={'white'} />}
           variant="ghost"
           onPress={() => {
-            props.setPage({
-              page: 'create',
-              data: {...food},
-              isVisible: true,
+            navigation.push('AddFood', {
+              page: 'edit',
+              food: {...food},
               isNew: false,
+              date: props.date,
+              isCustom: true,
             });
           }}
         />
@@ -123,12 +126,15 @@ const CustomFoods = props => {
 
   const alertDialog = food => {
     return (
-      <AlertDialog isOpen={isOpen} close={() => setIsOpen(false)}>
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        leastDestructiveRef={cancelRef}>
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
           <AlertDialog.Header>Delete Custom Food</AlertDialog.Header>
           <AlertDialog.Body>
-            This will permentently delete the custom food. Data cannot be
+            This will permanently delete the custom food. Data cannot be
             recovered.
           </AlertDialog.Body>
           <AlertDialog.Footer>
