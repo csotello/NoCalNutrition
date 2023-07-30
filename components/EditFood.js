@@ -128,6 +128,8 @@ const EditFood = props => {
           break;
       }
     });
+    console.log(props.isNew ? 'New' : 'Edit');
+    console.log(props.isCustom ? 'Custom' : 'Normal');
     if (props.isNew) {
       // await props.add({...newFood}, meal);
       if (props.isCustom) {
@@ -137,11 +139,17 @@ const EditFood = props => {
           ...servings,
         });
         newFood = custom;
-        console.log(JSON.stringify(newFood));
-        createCustom(newFood);
+        console.log('Converted' + JSON.stringify(newFood));
+        await createCustom(newFood);
       }
       await props.add({...newFood}, meal);
-    } else await props.edit({...newFood}, meal);
+    } else {
+      if (props.isCustom) {
+        await props.editCustom({...newFood});
+        return;
+      }
+      await props.edit({...newFood}, meal);
+    }
   };
 
   const createCustom = async newFood => {
