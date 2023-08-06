@@ -19,6 +19,9 @@ const CustomFoods = props => {
   const [isOpen, setIsOpen] = useState(false);
   const cancelRef = useRef(null);
   const navigation = useNavigation();
+  /**
+   * Load function that retrieves custom food from storage and sets it in state.
+   */
   const load = async () => {
     try {
       const customFood = JSON.parse(
@@ -47,12 +50,21 @@ const CustomFoods = props => {
     }
   };
 
+  /**
+   * Removes a food from the list
+   * @param {object} food - The food to be removed
+   */
   const removeFood = food => {
     var cur = foods?.filter(item => item.UUID !== food.UUID);
     setFoods([...cur]);
     store([...cur]);
   };
 
+  /**
+   * Renders each food item
+   *
+   * @param {object} food - The food to be rendered
+   */
   const displayFoods = food => {
     let nutrients = getMainNutrients(food);
     return (
@@ -64,6 +76,7 @@ const CustomFoods = props => {
         }}>
         <View style={{paddingRight: 10, minWidth: 100}}>
           <WhiteText>{food.description || 'Food Description'}</WhiteText>
+          <WhiteText>{food.brandName || ''}</WhiteText>
           {food.householdServingFullText && (
             <WhiteText>{food.householdServingFullText}</WhiteText>
           )}

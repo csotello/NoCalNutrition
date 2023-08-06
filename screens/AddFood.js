@@ -24,6 +24,10 @@ const AddFood = ({navigation, route}) => {
       load();
     }
   }, [loaded]);
+
+  /**
+   * Load the nutrition data based on current date
+   */
   const load = async () => {
     console.log(key);
     const val = JSON.parse(await retrieve('nutrition' + '-' + date));
@@ -34,6 +38,12 @@ const AddFood = ({navigation, route}) => {
     if (!loaded) setLoaded(true);
   };
 
+  /**
+   * Adds an item to the nutrition tracking data for a specific meal.
+   *
+   * @param {object} item - The item to be added.
+   * @param {string} meal - The meal to add the item to.
+   */
   const add = async (item, meal) => {
     // console.log('item: ' + item);
     // console.log('meal: ' + meal);
@@ -68,6 +78,12 @@ const AddFood = ({navigation, route}) => {
     });
   };
 
+  /**
+   * Edits the nutrition data for a specific meal item.
+   *
+   * @param {object} item - The meal item to be edited.
+   * @param {string} meal - The meal category to which the item belongs (e.g., Breakfast, Lunch, Dinner, Snacks).
+   */
   const edit = async (item, meal) => {
     let cur = {
       Breakfast: [...nutrition.Breakfast],
@@ -92,7 +108,11 @@ const AddFood = ({navigation, route}) => {
       ],
     });
   };
-
+  /**
+   * Edits data for a custom food
+   *
+   * @param {object} food - The food to be added.
+   */
   const editCustom = async food => {
     let customs = JSON.parse(await retrieve('customFood'));
     console.log('customs: ' + JSON.stringify(customs));
@@ -113,7 +133,12 @@ const AddFood = ({navigation, route}) => {
       ],
     });
   };
-
+  /**
+   * Displays the current page
+   *
+   * @param {string} page - The page to display
+   * @return {JSX.Element} - The page component
+   */
   const displayPage = page => {
     switch (page) {
       case 'search':

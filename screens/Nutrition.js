@@ -75,6 +75,12 @@ const Nutrition = ({route, navigation}) => {
     setDate(newDate);
   };
 
+  /**
+   * Removes a specific item from a given section of the food object.
+   *
+   * @param {object} item - The item to be removed from the section.
+   * @param {string} section - The section from which the item is to be removed.
+   */
   const removeFood = (item, section) => {
     let meal = food[`${section}`];
     meal = meal?.filter(cur => item.UUID !== cur.UUID);
@@ -89,6 +95,12 @@ const Nutrition = ({route, navigation}) => {
     store({...cur});
   };
 
+  /**
+   * Opens the edit page for a specific food item.
+   *
+   * @param {Object} food - The food item to be edited.
+   * @param {string} meal - The meal category of the food item.
+   */
   const openEdit = (food, meal) => {
     navigation.navigate('AddFood', {
       page: 'edit',
@@ -98,6 +110,9 @@ const Nutrition = ({route, navigation}) => {
     });
   };
 
+  /**
+   * Updates the totals of protein, fat, and carbs based on the food object.
+   */
   const updateTotals = () => {
     let newTotals = {
       protein: 0,
@@ -141,7 +156,13 @@ const Nutrition = ({route, navigation}) => {
           onPress={async () => await changeDate(-1)}
         />
         <Spacer />
-        <Text style={{color: 'white', textAlign: 'center'}}>{date}</Text>
+        <Text
+          style={{
+            color: 'white',
+            textAlignVertical: 'center',
+          }}>
+          {date}
+        </Text>
         <Spacer />
         <IconButton
           variant="ghost"
