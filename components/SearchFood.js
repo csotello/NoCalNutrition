@@ -1,78 +1,88 @@
-import {Button, ScrollView} from 'native-base';
+import {Button, ScrollView, Flex, Spacer, Input, View} from 'native-base';
 import {useState} from 'react';
-import {View, Input} from 'native-base';
 import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import WhiteText from '../styledComponents/WhiteText';
+import {getMainNutrients} from '../utils';
 
 const SearchFood = props => {
   const [searchResults, setSearchResults] = useState([]);
   const [text, setText] = useState('');
+
+  /**
+   * Makes API call to and sets result data
+   *
+   * @param {string} food - User input to search
+   */
   const search = food => {
-    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${API_KEY}&pageSize=1`;
+    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${API_KEY}&pageSize=5&dataType=Branded`;
     fetch(url)
       .then(resp => resp.json())
       .then(data => {
+        console.log(JSON.stringify(data));
         setSearchResults([...data.foods]);
       });
   };
   const navigation = useNavigation();
+  /**
+   * Renders the search results in a list.
+   *
+   * @return {ReactElement} The rendered search results list.
+   */
   const displaySearch = () => {
     return (
-      <>
+      <ScrollView>
         {searchResults &&
           searchResults.map((item, i) => {
-            console.log(item);
+            console.log(JSON.stringify(item));
+            let nutrients = getMainNutrients(item);
             return (
               <View style={{padding: 10}} key={i}>
-                {item.brandName && <WhiteText>{item.brandName}</WhiteText>}
-                {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>}
+                {/* {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>} */}
                 <WhiteText>{item.description}</WhiteText>
-                {item.servingSize && item.servingSizeUnit && (
-                  <WhiteText>
-                    {item.servingSize} {item.servingSizeUnit}
-                  </WhiteText>
+                {item.brandName && (
+                  <WhiteText style={{fontSize: 12}}>{item.brandName}</WhiteText>
                 )}
-                {item.householdServingFullText && (
-                  <WhiteText>{item.householdServingFullText}</WhiteText>
-                )}
-                {item.foodNutrients.map((nutrient, i) => {
-                  if (
-                    nutrient.nutrientName.match(
-                      /^(Protein|Carbohydrate, by difference|Total lipid \(fat\))$/,
-                    )
-                  ) {
-                    return (
-                      <>
-                        <View style={{paddingLeft: 5}} key={i}>
-                          <WhiteText>
-                            {nutrient.nutrientName} {nutrient.value}{' '}
-                            {nutrient.unitName}{' '}
-                          </WhiteText>
-                        </View>
-                      </>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                })}
+                <Flex direction="row">
+                  {item.servingSize && item.servingSizeUnit && (
+                    <WhiteText>
+                      {item.servingSize} {item.servingSizeUnit}
+                    </WhiteText>
+                  )}
+                  {item.householdServingFullText && (
+                    <WhiteText>({item.householdServingFullText})</WhiteText>
+                  )}
+                  <Spacer />
+                  <View style={{marginLeft: 20}}>
+                    <WhiteText>P</WhiteText>
+                    <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
+                  </View>
+                  <View style={{marginLeft: 20}}>
+                    <WhiteText>C</WhiteText>
+                    <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
+                  </View>
+                  <View style={{marginLeft: 20}}>
+                    <WhiteText>F</WhiteText>
+                    <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
+                  </View>
+                </Flex>
                 <Button
                   h={10}
                   w={10}
                   borderRadius={50}
                   onPress={() => {
-                    props.setPage({
+                    navigation.push('AddFood', {
                       page: 'edit',
-                      data: {...item},
-                      isVisible: true,
+                      food: {...item},
                       isNew: true,
+                      date: props.date,
                     });
                   }}
                 />
               </View>
             );
           })}
-      </>
+      </ScrollView>
     );
   };
 
@@ -86,12 +96,7 @@ const SearchFood = props => {
         placeholder={'Cheese'}
       />
       <Button onPress={() => search(text)}>Search</Button>
-      <ScrollView>
-        {searchResults &&
-          searchResults.map(item => {
-            return <>{displaySearch()}</>;
-          })}
-      </ScrollView>
+      <ScrollView>{searchResults && displaySearch()}</ScrollView>
     </View>
   );
 };
