@@ -1,5 +1,6 @@
 import {Text, Flex, ScrollView, Spacer, IconButton, Button} from 'native-base';
 import {useState, useEffect} from 'react';
+import {ToastAndroid} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Food from '../components/Food';
@@ -96,6 +97,19 @@ const Nutrition = ({route, navigation}) => {
   };
 
   /**
+   * Calculates the total number of calories based on the given protein, carbs, and fat values.
+   *
+   * @return {number} The total number of calories.
+   */
+  const getCalCount = () => {
+    let count = 0;
+    count += totals.protein * 4;
+    count += totals.carbs * 4;
+    count += totals.fat * 9;
+    return count.toFixed(2);
+  };
+
+  /**
    * Opens the edit page for a specific food item.
    *
    * @param {Object} food - The food item to be edited.
@@ -176,6 +190,13 @@ const Nutrition = ({route, navigation}) => {
         fat={totals.fat}
         carbs={totals.carbs}
       />
+      <Button
+        variant={'ghost'}
+        onPress={() =>
+          ToastAndroid.show('Calories: ' + getCalCount(), ToastAndroid.SHORT)
+        }>
+        Show Calories
+      </Button>
       {Object.keys(food).map((meal, i) => {
         return (
           <Food
