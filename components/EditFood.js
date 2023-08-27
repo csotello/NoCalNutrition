@@ -84,6 +84,9 @@ const EditFood = props => {
     setNutrients({...cur});
   }, [props.food]);
 
+  /**
+   * Adds or edits food item with current input
+   */
   const addFood = async () => {
     var newFood = {...props.food};
     newFood.servingSize = servings.servingSize;
@@ -152,6 +155,11 @@ const EditFood = props => {
     }
   };
 
+  /**
+   * Creates a custom food
+   *
+   * @param {object} newFood - new food to create
+   */
   const createCustom = async newFood => {
     newFood['UUID'] = uuid();
     console.log('Create');
@@ -164,6 +172,11 @@ const EditFood = props => {
     await store('customFood', JSON.stringify(val));
   };
 
+  /**
+   * Renders a provided nutrient
+   *
+   * @param {object} nutrient - nutrient to display
+   */
   const displayNutrient = nutrient => {
     return (
       <View>
