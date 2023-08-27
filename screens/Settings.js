@@ -1,8 +1,7 @@
 import {useState} from 'react';
-import {View, Text, ScrollView, ToastAndroid, Keyboard} from 'react-native';
-import {Modal, Input, Button} from 'native-base';
-import Icon from 'react-native-vector-icons/EvilIcons';
-import EncryptedStorage from 'react-native-encrypted-storage';
+import {View} from 'react-native';
+import {Modal, Button} from 'native-base';
+import {store} from '../utils';
 import styles from '../styles/styles';
 import Goals from '../components/Goals';
 import FoodCategories from '../components/FoodCategories';
@@ -31,6 +30,13 @@ const Settings = () => {
         }}
         variant={'ghost'}>
         Set Goals
+      </Button>
+      <Button
+        onPress={async () => {
+          await store('customFood', JSON.stringify([]));
+        }}
+        variant={'ghost'}>
+        Reset Custom
       </Button>
       <Modal
         isOpen={visible}
