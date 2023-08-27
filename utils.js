@@ -1,8 +1,18 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-//Convert user input into format used by API
+/**
+ * Convert user input into format used by API
+ * @param {object} food - User input to convert
+ * @return {object} Converted food
+ */
 export const convertCustomFood = food => {
   console.log('Converting: ' + JSON.stringify(food));
+  if (food.foodNutrients) {
+    let nutrients = getMainNutrients(food);
+    Object.keys(nutrients).forEach(key => {
+      food[key] = nutrients[key].value;
+    });
+  }
   ret = {
     UUID: food.UUID || '',
     description: food.description || '',
@@ -81,6 +91,12 @@ export const defaultFood = {
   ],
 };
 
+/**
+ * Stores a value in the encrypted storage.
+ *
+ * @param {string} key - the key to store the value under
+ * @param {string} value - the value to be stored
+ */
 export const store = async (key, value) => {
   try {
     await EncryptedStorage.setItem(key, value);
@@ -89,6 +105,12 @@ export const store = async (key, value) => {
   }
 };
 
+/**
+ * Retrieves a value from the encrypted storage.
+ *
+ * @param {string} key - the key to retrieve the value under
+ * @return {string} the value retrieved
+ */
 export const retrieve = async key => {
   try {
     const val = await EncryptedStorage.getItem(key);
@@ -98,6 +120,12 @@ export const retrieve = async key => {
   }
 };
 
+/**
+ * Retrieves nutrient values from given food object
+ *
+ * @param {object} food - the food object
+ * @returns {object} the nutrient values
+ */
 export const getMainNutrients = food => {
   let ret = {};
   food?.foodNutrients?.map((nutrient, i) => {
@@ -109,7 +137,22 @@ export const getMainNutrients = food => {
         ret.carbs = {...nutrient};
         break;
       case 'Total lipid (fat)':
-        ret.totalFat = {...nutrient};
+        ret.fat = {...nutrient};
+        break;
+      case 'Sugars, total including NLEA':
+        ret.sugar = {...nutrient};
+        break;
+      case 'Fiber, total dietary':
+        ret.fiber = {...nutrient};
+        break;
+      case 'Sodium, Na':
+        ret.sodium = {...nutrient};
+        break;
+      case 'Fatty acids, total saturated':
+        ret.saturatedFat = {...nutrient};
+        break;
+      case 'Cholesterol':
+        ret.cholesterol = {...nutrient};
         break;
       default:
         break;
