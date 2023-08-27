@@ -4,6 +4,7 @@ import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import WhiteText from '../styledComponents/WhiteText';
 import {getMainNutrients} from '../utils';
+import {Pressable} from 'react-native';
 
 const SearchFood = props => {
   const [searchResults, setSearchResults] = useState([]);
@@ -15,7 +16,7 @@ const SearchFood = props => {
    * @param {string} food - User input to search
    */
   const search = food => {
-    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${API_KEY}&pageSize=5&dataType=Branded`;
+    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${API_KEY}&pageSize=8&dataType=Branded`;
     fetch(url)
       .then(resp => resp.json())
       .then(data => {
@@ -37,49 +38,50 @@ const SearchFood = props => {
             console.log(JSON.stringify(item));
             let nutrients = getMainNutrients(item);
             return (
-              <View style={{padding: 10}} key={i}>
-                {/* {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>} */}
-                <WhiteText>{item.description}</WhiteText>
-                {item.brandName && (
-                  <WhiteText style={{fontSize: 12}}>{item.brandName}</WhiteText>
-                )}
-                <Flex direction="row">
-                  {item.servingSize && item.servingSizeUnit && (
-                    <WhiteText>
-                      {item.servingSize} {item.servingSizeUnit}
+              <Pressable
+                onPress={() =>
+                  navigation.push('AddFood', {
+                    page: 'edit',
+                    food: item,
+                    isNew: true,
+                    date: props.date,
+                  })
+                }>
+                <View style={{padding: 10}} key={i}>
+                  {/* {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>} */}
+                  <WhiteText>{item.description}</WhiteText>
+                  {item.brandName && (
+                    <WhiteText style={{fontSize: 12}}>
+                      {item.brandName}
                     </WhiteText>
                   )}
-                  {item.householdServingFullText && (
-                    <WhiteText>({item.householdServingFullText})</WhiteText>
-                  )}
-                  <Spacer />
-                  <View style={{marginLeft: 20}}>
-                    <WhiteText>P</WhiteText>
-                    <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
-                  </View>
-                  <View style={{marginLeft: 20}}>
-                    <WhiteText>C</WhiteText>
-                    <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
-                  </View>
-                  <View style={{marginLeft: 20}}>
-                    <WhiteText>F</WhiteText>
-                    <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
-                  </View>
-                </Flex>
-                <Button
-                  h={10}
-                  w={10}
-                  borderRadius={50}
-                  onPress={() => {
-                    navigation.push('AddFood', {
-                      page: 'edit',
-                      food: {...item},
-                      isNew: true,
-                      date: props.date,
-                    });
-                  }}
-                />
-              </View>
+                  <Flex direction="row">
+                    {item.servingSize && item.servingSizeUnit && (
+                      <WhiteText>
+                        {item.servingSize} {item.servingSizeUnit}
+                      </WhiteText>
+                    )}
+                    {item.householdServingFullText && (
+                      <WhiteText>({item.householdServingFullText})</WhiteText>
+                    )}
+                    <Spacer />
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{marginLeft: 20, minWidth: 28}}>
+                        <WhiteText>P</WhiteText>
+                        <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
+                      </View>
+                      <View style={{marginLeft: 20, minWidth: 28}}>
+                        <WhiteText>C</WhiteText>
+                        <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
+                      </View>
+                      <View style={{marginLeft: 20, minWidth: 28}}>
+                        <WhiteText>F</WhiteText>
+                        <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
+                      </View>
+                    </View>
+                  </Flex>
+                </View>
+              </Pressable>
             );
           })}
       </ScrollView>
@@ -87,7 +89,7 @@ const SearchFood = props => {
   };
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <WhiteText style={{fontSize: 20}}>New Food</WhiteText>
       <Input
         value={text}
@@ -96,7 +98,7 @@ const SearchFood = props => {
         placeholder={'Cheese'}
       />
       <Button onPress={() => search(text)}>Search</Button>
-      <ScrollView>{searchResults && displaySearch()}</ScrollView>
+      {searchResults && displaySearch()}
     </View>
   );
 };
