@@ -47,10 +47,10 @@ const Food = props => {
             style={{paddingLeft: 10, marginBottom: 10, paddingBottom: 10}}>
             <Flex direction="row">
               <Flex direction="column">
-                <View>
+                <View style={{maxWidth: '80%'}}>
                   <WhiteText>
-                    {item.brandName} {item.description}
-                    {'\n'}
+                    {item.brandName} {'\n'}
+                    {item.description} {'\n'}
                     Amount: {Number(item.servingSize)} {item.servingSizeUnit}
                   </WhiteText>
                 </View>
