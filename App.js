@@ -22,6 +22,7 @@ const App = () => {
         <Tab.Screen
           name="Nutrition"
           component={Nutrition}
+          // initialParams={{date: new Date().toDateString()}}
           options={{
             tabBarLabel: 'Nutrition',
             headerShown: false,
@@ -61,8 +62,16 @@ const App = () => {
             component={MainTabs}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Habits" component={Habits} />
-          <Stack.Screen name="AddFood" component={AddFood} />
+          <Stack.Screen
+            name="Habits"
+            component={Habits}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddFood"
+            component={AddFood}
+            // options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
