@@ -14,6 +14,7 @@ export const convertCustomFood = food => {
     });
   }
   ret = {
+    ...food,
     UUID: food.UUID || '',
     description: food.description || '',
     additionalDescriptions: food.additionalDescriptions || '',
