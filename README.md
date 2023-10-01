@@ -29,7 +29,7 @@ npm install
 Then use the appropriate run command for the mobile device
 
 ```bash
-npm android
+npm run android
 or
-npm ios
+npm run ios
 ```
