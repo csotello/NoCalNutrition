@@ -195,6 +195,7 @@ const EditFood = props => {
             color={'white'}
             paddingLeft={10}
             marginRight={3}
+            keyboardType="number-pad"
             value={nutrients[nutrient.toLowerCase()].toString()}
             onChangeText={text => {
               let cur = {...nutrients};
