@@ -4,14 +4,14 @@ import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import WhiteText from '../styledComponents/WhiteText';
 import {getMainNutrients} from '../utils';
-import {Pressable} from 'react-native';
+import {Keyboard, Pressable} from 'react-native';
 
 const SearchFood = props => {
   const [searchResults, setSearchResults] = useState([]);
   const [text, setText] = useState('');
 
   /**
-   * Makes API call to and sets result data
+   * Makes API call and sets resulting data
    *
    * @param {string} food - User input to search
    */
@@ -22,6 +22,7 @@ const SearchFood = props => {
       .then(data => {
         console.log(JSON.stringify(data));
         setSearchResults([...data.foods]);
+        Keyboard.dismiss();
       });
   };
   const navigation = useNavigation();
@@ -47,7 +48,14 @@ const SearchFood = props => {
                     date: props.date,
                   })
                 }>
-                <View style={{padding: 10}} key={i}>
+                <View
+                  style={{
+                    padding: 10,
+                    paddingBottom: 0,
+                    borderColor: 'black',
+                    borderWidth: 1,
+                  }}
+                  key={i}>
                   {/* {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>} */}
                   <WhiteText>{item.description}</WhiteText>
                   {item.brandName && (
@@ -65,7 +73,7 @@ const SearchFood = props => {
                       <WhiteText>({item.householdServingFullText})</WhiteText>
                     )}
                     <Spacer />
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{flexDirection: 'row', top: -20}}>
                       <View style={{marginLeft: 20, minWidth: 28}}>
                         <WhiteText>P</WhiteText>
                         <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
