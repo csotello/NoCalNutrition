@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import React from 'react';
 import {Button, HStack, Input, VStack, InputField} from '@gluestack-ui/themed';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Text} from 'react-native';

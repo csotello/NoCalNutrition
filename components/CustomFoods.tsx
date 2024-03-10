@@ -14,18 +14,19 @@ import {
   HStack,
   VStack,
 } from '@gluestack-ui/themed';
+import React from 'react';
 import {Text} from 'react-native';
 import {useEffect, useRef, useState} from 'react';
 import {WhiteText} from '../styledComponents/WhiteText.tsx';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Food, getMainNutrients} from '../utils.tsx';
+import {FoodItem, getMainNutrients} from '../utils.tsx';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import styles from '../styles/styles.tsx';
 
 export function CustomFoods(props: any): React.JSX.Element {
-  const [foods, setFoods] = useState<Food[]>([]);
+  const [foods, setFoods] = useState<FoodItem[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const cancelRef = useRef(null);

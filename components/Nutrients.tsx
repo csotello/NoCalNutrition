@@ -8,6 +8,7 @@ import {
   VStack,
   HStack,
 } from '@gluestack-ui/themed';
+import React from 'react';
 import {useState, useEffect} from 'react';
 import styles from '../styles/styles';
 import {retrieve} from '../utils';

@@ -17,6 +17,7 @@ import {
   SelectInput,
 } from '@gluestack-ui/themed';
 import uuid from 'uuid-random';
+import React from 'react';
 import {useEffect, useState, useRef} from 'react';
 import {View, Text, ScrollView, Pressable} from 'react-native';
 import {WhiteText} from '../styledComponents/WhiteText';
@@ -25,7 +26,7 @@ import {
   convertCustomFood,
   store,
   retrieve,
-  Food,
+  FoodItem,
   NutrientValues,
 } from '../utils';
 import styles from '../styles/styles';
@@ -175,12 +176,12 @@ export function EditFood(props: any): React.JSX.Element {
    *
    * @param {object} newFood - new food to create
    */
-  async function createCustom(newFood: Food) {
+  async function createCustom(newFood: FoodItem) {
     newFood['UUID'] = uuid();
     console.log('Create');
     console.log(newFood);
     let current = await retrieve('customFood');
-    let val: Food[];
+    let val: FoodItem[];
     if (!current) val = [];
     else val = JSON.parse(current);
     if (val) val.push(newFood);

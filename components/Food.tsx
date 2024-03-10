@@ -13,6 +13,7 @@ import {
   VStack,
   ButtonIcon,
 } from '@gluestack-ui/themed';
+import React from 'react';
 import {Text} from 'react-native';
 import {WhiteText} from '../styledComponents/WhiteText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -98,6 +99,7 @@ export function Food(props: any): React.JSX.Element {
                 style={{alignItems: 'center', justifyContent: 'flex-end'}}>
                 <Icon.Button
                   name="trash-alt"
+                  testID="Delete Icon"
                   color={'white'}
                   backgroundColor={styles.primaryBackgroundColor}
                   onPress={() => setIsOpen(true)}
@@ -105,6 +107,7 @@ export function Food(props: any): React.JSX.Element {
                 />
                 <Icon.Button
                   name="pencil-alt"
+                  testID="Edit Icon"
                   color={'white'}
                   backgroundColor={styles.primaryBackgroundColor}
                   onPress={() => props.edit(item, props.title)}

@@ -7,6 +7,7 @@ import {
   HStack,
 } from '@gluestack-ui/themed';
 import {useState} from 'react';
+import React from 'react';
 // import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import {WhiteText} from '../styledComponents/WhiteText';
@@ -24,8 +25,9 @@ export function SearchFood(props: any) {
    * @param {string} food - User input to search
    */
   function search(food: string) {
-    let api_key = process.env.API_KEY;
-    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
+    // let api_key = process.env.API_KEY;
+    // let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
+    let url = '';
     fetch(url)
       .then(resp => resp.json())
       .then(data => {

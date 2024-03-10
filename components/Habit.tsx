@@ -1,4 +1,5 @@
 import {ScrollView, Text} from 'react-native';
+import React from 'react';
 import {Box, Button, ButtonIcon, HStack} from '@gluestack-ui/themed';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {useState} from 'react';
