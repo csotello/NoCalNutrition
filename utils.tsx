@@ -11,7 +11,7 @@ export type NutrientValues = {
   saturatedFat: Nutrient;
   cholesterol: Nutrient;
 };
-export type Food = {
+export type FoodItem = {
   UUID?: string;
   description?: string;
   additionalDescriptions?: string;
@@ -35,7 +35,7 @@ export type Nutrient = {
  * @param {object} food - User input to convert
  * @return {object} Converted food
  */
-export function convertCustomFood(food: any): Food {
+export function convertCustomFood(food: any): FoodItem {
   console.log('Converting: ' + JSON.stringify(food));
   if (food.foodNutrients) {
     let nutrients: NutrientValues = getMainNutrients(food);
@@ -158,7 +158,7 @@ export async function retrieve(key: string): Promise<string | null> {
  * @param {object} food - the food object
  * @returns {object} the nutrient values
  */
-export function getMainNutrients(food: Food): NutrientValues {
+export function getMainNutrients(food: FoodItem): NutrientValues {
   let ret: NutrientValues = {
     protein: {value: 0},
     carbs: {value: 0},
