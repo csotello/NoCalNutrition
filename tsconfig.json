@@ -2,7 +2,16 @@
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "jsx": "react-jsx"
+    "jsx": "react-native",
+    "allowJs": true,
+    "types": ["jest"],
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["."]
+  // "include": ["."]
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
 }
