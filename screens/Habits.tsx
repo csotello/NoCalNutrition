@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import React from 'react';
 import {ScrollView, View, Text, Keyboard, ToastAndroid} from 'react-native';
 import {Habit} from '../components/Habit';
 import {

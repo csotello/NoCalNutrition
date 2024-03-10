@@ -1,4 +1,5 @@
 import {Text, View} from 'react-native';
+import React from 'react';
 import {HStack, Modal} from '@gluestack-ui/themed';
 import {SearchFood} from '../components/SearchFood';
 import {CustomFoods} from '../components/CustomFoods';
@@ -10,7 +11,7 @@ import {store, retrieve, convertCustomFood} from '../utils';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export function AddFood({navigation, route}: any) {
-  const {page, isNew, food, date, isCustom} = route.params;
+  const {page, isNew, food, date, isCustom} = route?.params;
   const [loaded, setLoaded] = useState(false);
   const [nutrition, setNutrition] = useState({
     Breakfast: [],

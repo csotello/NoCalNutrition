@@ -1,17 +1,19 @@
 import {
   Text,
-  ScrollView,
+  // ScrollView,
   Button,
   HStack,
   ButtonIcon,
 } from '@gluestack-ui/themed';
+import {ScrollView} from 'react-native';
+import React from 'react';
 import {useState, useEffect} from 'react';
 import {ToastAndroid, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Food} from '../components/Food';
 import styles from '../styles/styles';
-import {retrieve} from '../utils';
+import {retrieve, FoodItem} from '../utils';
 import Nutrients from '../components/Nutrients';
 
 export function Nutrition({route, navigation}: any): JSX.Element {
@@ -21,7 +23,7 @@ export function Nutrition({route, navigation}: any): JSX.Element {
     carbs: 0,
     fat: 0,
   });
-  const [food, setFood] = useState<{[key: string]: any}>({
+  const [food, setFood] = useState<{[key: string]: any[]}>({
     Breakfast: [],
     Lunch: [],
     Dinner: [],
@@ -204,17 +206,19 @@ export function Nutrition({route, navigation}: any): JSX.Element {
         }>
         <Text style={{color: 'white', textAlign: 'center'}}>Show Calories</Text>
       </Button>
-      {Object.keys(food).map((meal, i) => {
-        return (
-          <Food
-            meal={[...food[meal]]}
-            title={meal}
-            key={i}
-            remove={removeFood}
-            edit={openEdit}
-          />
-        );
-      })}
+      {food &&
+        Object.keys(food || {})?.map((meal, i) => {
+          let info: FoodItem[] = food[meal];
+          return (
+            <Food
+              meal={[...info]}
+              title={meal}
+              key={i}
+              remove={removeFood}
+              edit={openEdit}
+            />
+          );
+        })}
       <View style={{position: 'absolute', top: 450, left: 350}}>
         <Icon.Button
           name="plus"
