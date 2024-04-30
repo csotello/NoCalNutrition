@@ -1,4 +1,4 @@
-const styles = {
+const styles: any = {
   primaryBackgroundColor: '#3d3c3a',
   header: {
     textAlign: 'center',
