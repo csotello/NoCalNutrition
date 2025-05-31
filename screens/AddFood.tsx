@@ -1,6 +1,6 @@
 import {Text, View} from 'react-native';
 import React from 'react';
-import {HStack, Modal} from '@gluestack-ui/themed';
+import {HStack, Modal, Button, ButtonIcon} from '@gluestack-ui/themed';
 import {SearchFood} from '../components/SearchFood';
 import {CustomFoods} from '../components/CustomFoods';
 import {EditFood} from '../components/EditFood';
@@ -8,7 +8,6 @@ import styles from '../styles/styles';
 import {useEffect, useState} from 'react';
 import uuid from 'uuid-random';
 import {store, retrieve, convertCustomFood} from '../utils';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export function AddFood({navigation, route}: any) {
   const {page, isNew, food, date, isCustom} = route?.params;
@@ -147,7 +146,7 @@ export function AddFood({navigation, route}: any) {
    * @param {string} page - The page to display
    * @return {JSX.Element} - The page component
    */
-  function displayPage(page: string): JSX.Element {
+  function displayPage(page: string): React.JSX.Element {
     switch (page) {
       case 'search':
         return <SearchFood date={date} />;
