@@ -7,7 +7,7 @@ module.exports = {
   preset: 'react-native',
   workerIdleMemoryLimit: '5120MB',
 
-  setupFilesAfterEnv: ['<rootDir>/setup-jest.js'],
+  // setupFilesAfterEnv: ['<rootDir>/setup-jest.js'],
 
   fakeTimers: {
     enableGlobally: true,

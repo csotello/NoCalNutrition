@@ -8,7 +8,7 @@ import {
 import {ScrollView} from 'react-native';
 import React from 'react';
 import {useState, useEffect} from 'react';
-import {ToastAndroid, View} from 'react-native';
+import {ToastAndroid, View, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Food} from '../components/Food';
@@ -165,7 +165,8 @@ export function Nutrition({route, navigation}: any): JSX.Element {
     });
     setTotals({...newTotals});
   }
-
+  let width = Dimensions.get('window').width;
+  let height = Dimensions.get('window').height;
   return (
     <ScrollView
       style={{backgroundColor: styles.primaryBackgroundColor}}
@@ -219,7 +220,8 @@ export function Nutrition({route, navigation}: any): JSX.Element {
             />
           );
         })}
-      <View style={{position: 'absolute', top: 450, left: 350}}>
+      <View
+        style={{position: 'absolute', top: height - 450, left: width - 350}}>
         <Icon.Button
           name="plus"
           backgroundColor={styles.primaryBackgroundColor}

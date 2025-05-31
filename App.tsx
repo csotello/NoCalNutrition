@@ -6,12 +6,11 @@ import {Habits} from './screens/Habits';
 import {Nutrition} from './screens/Nutrition';
 import {Settings} from './screens/Settings';
 import {AddFood} from './screens/AddFood';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {AddIcon, Icon, SettingsIcon} from '@gluestack-ui/themed';
 import styles from './styles/styles';
 import {GluestackUIProvider} from '@gluestack-ui/themed';
 import {config} from '@gluestack-ui/config';
 import {NavigationContainer} from '@react-navigation/native';
-
 import {Task} from './components/Task';
 import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -37,11 +36,7 @@ function App(): React.JSX.Element {
             tabBarLabel: 'Nutrition',
             // headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="nutrition"
-                color={focused ? 'black' : 'white'}
-                size={26}
-              />
+              <Icon as={AddIcon} color={focused ? 'black' : 'white'} m={1} />
             ),
           }}
         />
@@ -51,11 +46,7 @@ function App(): React.JSX.Element {
           options={{
             tabBarLabel: 'Settings',
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="build"
-                color={focused ? 'black' : 'white'}
-                size={26}
-              />
+              <Icon as={SettingsIcon} color={focused ? 'black' : 'white'} />
             ),
           }}
         />

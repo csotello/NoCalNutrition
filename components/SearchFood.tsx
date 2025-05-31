@@ -6,18 +6,21 @@ import {
   View,
   HStack,
 } from '@gluestack-ui/themed';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import React from 'react';
-// import {API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import {WhiteText} from '../styledComponents/WhiteText';
 import {getMainNutrients} from '../utils';
 import {Keyboard, Pressable, Text} from 'react-native';
+const Config = require('../config.json');
 import {StackNavigationProp} from '@react-navigation/stack';
-
 export function SearchFood(props: any) {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [text, setText] = useState('');
+
+  // useEffect(() => {
+  //   search(text);
+  // }, [text]);
 
   /**
    * Makes API call and sets resulting data
@@ -25,16 +28,21 @@ export function SearchFood(props: any) {
    * @param {string} food - User input to search
    */
   function search(food: string) {
-    // let api_key = process.env.API_KEY;
-    // let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
-    let url = '';
+    console.log(JSON.stringify(process.env));
+    let api_key = Config.API_KEY;
+    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
+    console.log(url);
     fetch(url)
-      .then(resp => resp.json())
+      .then(resp => {
+        console.log('response');
+        return resp.json();
+      })
       .then(data => {
         console.log(JSON.stringify(data));
         setSearchResults([...data.foods]);
         Keyboard.dismiss();
-      });
+      })
+      .catch(error => console.error(error));
   }
   const navigation = useNavigation<StackNavigationProp<any>>();
   /**
