@@ -6,14 +6,16 @@ import {
   View,
   HStack,
 } from '@gluestack-ui/themed';
-import {useState, useEffect} from 'react';
+import { API_KEY } from '@env';
+import { useState, useEffect } from 'react';
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {WhiteText} from '../styledComponents/WhiteText';
-import {getMainNutrients} from '../utils';
-import {Keyboard, Pressable, Text} from 'react-native';
-const Config = require('../config.json');
-import {StackNavigationProp} from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { WhiteText } from '../styledComponents/WhiteText';
+import { getMainNutrients } from '../utils';
+import { Keyboard, Pressable, Text } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import axios from 'axios';
+import { time } from 'console';
 export function SearchFood(props: any) {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [text, setText] = useState('');
@@ -28,8 +30,7 @@ export function SearchFood(props: any) {
    * @param {string} food - User input to search
    */
   function search(food: string) {
-    console.log(JSON.stringify(process.env));
-    let api_key = Config.API_KEY;
+    let api_key = API_KEY;
     let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
     console.log(url);
     fetch(url)
@@ -66,7 +67,8 @@ export function SearchFood(props: any) {
                     isNew: true,
                     date: props.date,
                   })
-                }>
+                }
+              >
                 <View
                   style={{
                     padding: 10,
@@ -74,11 +76,12 @@ export function SearchFood(props: any) {
                     borderColor: 'black',
                     borderWidth: 1,
                   }}
-                  key={i}>
+                  key={i}
+                >
                   {/* {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>} */}
                   <WhiteText>{item.description}</WhiteText>
                   {item.brandName && (
-                    <WhiteText style={{fontSize: 12}}>
+                    <WhiteText style={{ fontSize: 12 }}>
                       {item.brandName}
                     </WhiteText>
                   )}
@@ -91,16 +94,16 @@ export function SearchFood(props: any) {
                     {item.householdServingFullText && (
                       <WhiteText>({item.householdServingFullText})</WhiteText>
                     )}
-                    <View style={{flexDirection: 'row', top: -20}}>
-                      <View style={{marginLeft: 20, minWidth: 28}}>
+                    <View style={{ flexDirection: 'row', top: -20 }}>
+                      <View style={{ marginLeft: 20, minWidth: 28 }}>
                         <WhiteText>P</WhiteText>
                         <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
                       </View>
-                      <View style={{marginLeft: 20, minWidth: 28}}>
+                      <View style={{ marginLeft: 20, minWidth: 28 }}>
                         <WhiteText>C</WhiteText>
                         <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
                       </View>
-                      <View style={{marginLeft: 20, minWidth: 28}}>
+                      <View style={{ marginLeft: 20, minWidth: 28 }}>
                         <WhiteText>F</WhiteText>
                         <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
                       </View>
@@ -115,8 +118,8 @@ export function SearchFood(props: any) {
   }
 
   return (
-    <View style={{flex: 1}}>
-      <WhiteText style={{fontSize: 20}}>New Food</WhiteText>
+    <View style={{ flex: 1 }}>
+      <WhiteText style={{ fontSize: 20 }}>New Food</WhiteText>
       <Input>
         <InputField
           value={text}

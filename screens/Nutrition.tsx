@@ -4,21 +4,19 @@ import {
   Button,
   HStack,
   ButtonIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  AddIcon,
 } from '@gluestack-ui/themed';
 import {ScrollView} from 'react-native';
 import React from 'react';
 import {useState, useEffect} from 'react';
 import {ToastAndroid, View, Dimensions} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Food} from '../components/Food';
 import styles from '../styles/styles';
 import {retrieve, FoodItem} from '../utils';
 import Nutrients from '../components/Nutrients';
 
-export function Nutrition({route, navigation}: any): React.JSX.Element {
+export function Nutrition({route, navigation}: any): JSX.Element {
   const [loaded, setLoaded] = useState(false);
   const [totals, setTotals] = useState<{[key: string]: number}>({
     protein: 0,
@@ -175,13 +173,13 @@ export function Nutrition({route, navigation}: any): React.JSX.Element {
       contentContainerStyle={{flexGrow: 1}}>
       <Text style={{color: 'white', textAlign: 'center'}}>Nutrition</Text>
       <HStack style={{padding: 10, justifyContent: 'center'}}>
-        <Button
-          variant="link"
-          size={'md'}
+        <Icon.Button
+          name="chevron-left"
+          size={20}
           backgroundColor={styles.primaryBackgroundColor}
-          onPress={() => changeDate(-1)}>
-          <ButtonIcon as={ArrowLeftIcon} />
-        </Button>
+          style={{color: 'white'}}
+          onPress={() => changeDate(-1)}
+        />
         <Text
           style={{
             color: 'white',
@@ -189,13 +187,12 @@ export function Nutrition({route, navigation}: any): React.JSX.Element {
           }}>
           {date}
         </Text>
-        <Button
-          variant="link"
-          size={'md'}
+        <Icon.Button
+          name="chevron-right"
+          size={20}
           backgroundColor={styles.primaryBackgroundColor}
-          onPress={() => changeDate(1)}>
-          <ButtonIcon as={ArrowRightIcon} />
-        </Button>
+          onPress={() => changeDate(1)}
+        />
       </HStack>
       <Nutrients
         protein={totals.protein}
@@ -225,26 +222,21 @@ export function Nutrition({route, navigation}: any): React.JSX.Element {
         })}
       <View
         style={{position: 'absolute', top: height - 450, left: width - 350}}>
-        <Button
-          variant="link"
-          size={'md'}
+        <Icon.Button
+          name="plus"
           backgroundColor={styles.primaryBackgroundColor}
+          size={30}
+          style={{
+            zIndex: 10,
+          }}
           onPress={() => {
             navigation.navigate('AddFood', {
               page: 'search',
               isNew: true,
               date: date,
             });
-          }}>
-          <ButtonIcon
-            as={AddIcon}
-            backgroundColor={styles.primaryBackgroundColor}
-            size={'md'}
-            style={{
-              zIndex: 10,
-            }}
-          />
-        </Button>
+          }}
+        />
       </View>
     </ScrollView>
   );
