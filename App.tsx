@@ -1,19 +1,19 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {useColorScheme} from 'react-native';
-import {Habits} from './screens/Habits';
-import {Nutrition} from './screens/Nutrition';
-import {Settings} from './screens/Settings';
-import {AddFood} from './screens/AddFood';
-import {AddIcon, Icon, SettingsIcon} from '@gluestack-ui/themed';
+import type { PropsWithChildren } from 'react';
+import { useColorScheme } from 'react-native';
+import { Habits } from './screens/Habits';
+import { Nutrition } from './screens/Nutrition';
+import { Settings } from './screens/Settings';
+import { AddFood } from './screens/AddFood';
+import { AddIcon, Icon, SettingsIcon } from '@gluestack-ui/themed';
 import styles from './styles/styles';
-import {GluestackUIProvider} from '@gluestack-ui/themed';
-import {config} from '@gluestack-ui/config';
-import {NavigationContainer} from '@react-navigation/native';
-import {Task} from './components/Task';
-import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '@gluestack-ui/config';
+import { NavigationContainer } from '@react-navigation/native';
+import { Task } from './components/Task';
+import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -27,7 +27,8 @@ function App(): React.JSX.Element {
     return (
       <Tab.Navigator
         activeColor={styles.navigator.activeColor}
-        barStyle={{backgroundColor: styles.navigator.backgroundColor}}>
+        barStyle={{ backgroundColor: styles.navigator.backgroundColor }}
+      >
         <Tab.Screen
           name="Nutrition"
           component={Nutrition}
@@ -35,7 +36,7 @@ function App(): React.JSX.Element {
           options={{
             tabBarLabel: 'Nutrition',
             // headerShown: false,
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <Icon as={AddIcon} color={focused ? 'black' : 'white'} m={1} />
             ),
           }}
@@ -45,7 +46,7 @@ function App(): React.JSX.Element {
           component={Settings}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <Icon as={SettingsIcon} color={focused ? 'black' : 'white'} />
             ),
           }}
@@ -61,12 +62,12 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="Home"
             component={MainTabs}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Habits"
             component={Habits}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="AddFood"
@@ -77,40 +78,6 @@ function App(): React.JSX.Element {
       </NavigationContainer>
     </GluestackUIProvider>
   );
-
-  //         {/* <Tab.Screen
-  //           name="Tasks"
-  //           component={Tasks}
-  //           options={{
-  //             tabBarLabel: 'Tasks',
-  //             tabBarIcon: ({focused}) => (
-  //               <Icon
-  //                 name="clipboard"
-  //                 color={focused ? 'black' : 'white'}
-  //                 size={26}
-  //               />
-  //             ),
-  //           }}
-  //         /> */}
-  //         {/*<Tab.Screen
-  //           name="Habits"
-  //           component={Habits}
-  //           options={{
-  //             tabBarLabel: 'Habits',
-  //             tabBarIcon: ({color}) => (
-  //               <Icon name="calendar" color={color} size={26} />
-  //             ),
-  //           }}
-  //         /> */}
 }
-
-//   return (
-//     <NavigationContainer>
-//       <GluestackUIProvider config={config}>
-
-//       </GluestackUIProvider>
-//     </NavigationContainer>
-//   );
-// }
 
 export default App;

@@ -12,13 +12,11 @@ import {
   HStack,
   VStack,
   ButtonIcon,
-  TrashIcon,
-  set,
-  EditIcon,
 } from '@gluestack-ui/themed';
 import React from 'react';
 import {Text} from 'react-native';
 import {WhiteText} from '../styledComponents/WhiteText';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles/styles';
 import {getMainNutrients} from '../utils';
 import {useState, useRef} from 'react';
@@ -99,21 +97,22 @@ export function Food(props: any): React.JSX.Element {
               {alertDialog(item, props.title)}
               <HStack
                 style={{alignItems: 'center', justifyContent: 'flex-end'}}>
-                <Button
+                <Icon.Button
+                  name="trash-alt"
+                  testID="Delete Icon"
+                  color={'white'}
                   backgroundColor={styles.primaryBackgroundColor}
-                  onPress={() => setIsOpen(true)}>
-                  <ButtonIcon as={TrashIcon} size={'md'} />
-                </Button>
-                <Button
+                  onPress={() => setIsOpen(true)}
+                  style={{marginLeft: 10}}
+                />
+                <Icon.Button
+                  name="pencil-alt"
+                  testID="Edit Icon"
+                  color={'white'}
+                  backgroundColor={styles.primaryBackgroundColor}
                   onPress={() => props.edit(item, props.title)}
-                  backgroundColor={styles.primaryBackgroundColor}>
-                  <ButtonIcon
-                    as={EditIcon}
-                    testID="Edit Icon"
-                    color={'white'}
-                    style={{marginLeft: 10}}
-                  />
-                </Button>
+                  style={{marginLeft: 10}}
+                />
               </HStack>
             </HStack>
           </View>

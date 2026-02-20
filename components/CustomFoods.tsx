@@ -13,15 +13,13 @@ import {
   AlertDialogContent,
   HStack,
   VStack,
-  AddIcon,
-  TrashIcon,
-  EditIcon,
 } from '@gluestack-ui/themed';
 import React from 'react';
 import {Text} from 'react-native';
 import {useEffect, useRef, useState} from 'react';
 import {WhiteText} from '../styledComponents/WhiteText.tsx';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {FoodItem, getMainNutrients} from '../utils.tsx';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
@@ -108,7 +106,9 @@ export function CustomFoods(props: any): React.JSX.Element {
           <WhiteText>F</WhiteText>
           <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
         </View>
-        <Button
+        <Icon.Button
+          name="plus"
+          size={20}
           backgroundColor={styles.primaryBackgroundColor}
           onPress={() => {
             navigation.push('AddFood', {
@@ -117,35 +117,29 @@ export function CustomFoods(props: any): React.JSX.Element {
               isNew: true,
               date: props.date,
             });
-          }}>
-          <ButtonIcon
-            as={AddIcon}
-            size={'md'}
-            backgroundColor={styles.primaryBackgroundColor}
-          />
-        </Button>
-        <Button
+          }}
+        />
+        <Icon.Button
+          name="trash-alt"
+          size={20}
           backgroundColor={styles.primaryBackgroundColor}
-          onPress={() => {
-            setIsOpen(true);
-          }}>
-          <ButtonIcon as={TrashIcon} size={'md'} />
-        </Button>
-
+          onPress={() => setIsOpen(true)}
+        />
         {alertDialog(food)}
-        <Button
+        <Icon.Button
+          name="pencil-alt"
+          size={20}
           backgroundColor={styles.primaryBackgroundColor}
-          onPress={() => {
+          onPress={() =>
             navigation.push('AddFood', {
               page: 'edit',
               food: {...food},
               isNew: false,
               date: props.date,
               isCustom: true,
-            });
-          }}>
-          <ButtonIcon as={EditIcon} size={'md'} />
-        </Button>
+            })
+          }
+        />
       </HStack>
     );
   }

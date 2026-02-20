@@ -6,9 +6,10 @@ import {
   Touchable,
   TouchableOpacity,
 } from 'react-native';
-import {Button, ButtonIcon, CheckIcon, TrashIcon} from '@gluestack-ui/themed';
+import Icon from 'react-native-vector-icons/EvilIcons';
+
 export function Task(props: any): React.JSX.Element {
-  return (
+    return(
     <View style={props.style}>
       <Text
         id="1"
@@ -25,7 +26,7 @@ export function Task(props: any): React.JSX.Element {
         }}
         style={{width: 50, alignSelf: 'flex-end', top: -20, left: -50}}>
         <View>
-          <ButtonIcon size={'md'} color="0x900" as={CheckIcon} />
+          <Icon size={30} color="0x900" name="check" />
         </View>
       </TouchableOpacity>
       <TouchableOpacity
@@ -34,9 +35,10 @@ export function Task(props: any): React.JSX.Element {
         }}
         style={{width: 50, alignSelf: 'flex-end', top: -45, left: -10}}>
         <View>
-          <ButtonIcon size={'md'} color="0x900" as={TrashIcon} />
+          <Icon size={30} color="0x900" name="trash" />
         </View>
       </TouchableOpacity>
     </View>
   );
 }
+

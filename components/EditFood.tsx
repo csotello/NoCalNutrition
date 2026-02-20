@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonIcon,
   Input,
   Select,
   ChevronDownIcon,
@@ -16,14 +15,13 @@ import {
   SelectDragIndicatorWrapper,
   SelectTrigger,
   SelectInput,
-  ArrowUpIcon,
-  ArrowDownIcon,
 } from '@gluestack-ui/themed';
 import uuid from 'uuid-random';
 import React from 'react';
 import {useEffect, useState, useRef} from 'react';
 import {View, Text, ScrollView, Pressable} from 'react-native';
 import {WhiteText} from '../styledComponents/WhiteText';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
   convertCustomFood,
   store,
@@ -203,18 +201,16 @@ export function EditFood(props: any): React.JSX.Element {
       <HStack alignItems={'center'}>
         <WhiteText>{nutrient}: </WhiteText>
         <VStack alignItems="center" pl={2} pr={2}>
-          <Button
+          <Icon.Button
+            name="caret-up"
+            size={10}
+            backgroundColor={styles.primaryBackgroundColor}
             onPress={() => {
               let cur: {[key: string]: number} = {...nutrients};
               cur[nutrient.toLowerCase()] += 1;
               setNutrients({...cur});
-            }}>
-            <ButtonIcon
-              as={ArrowUpIcon}
-              size={'md'}
-              backgroundColor={styles.primaryBackgroundColor}
-            />
-          </Button>
+            }}
+          />
           <HStack>
             <Input width={60}>
               <InputField
@@ -230,15 +226,16 @@ export function EditFood(props: any): React.JSX.Element {
               />
             </Input>
           </HStack>
-          <Button
+          <Icon.Button
+            name="caret-down"
+            size={10}
             backgroundColor={styles.primaryBackgroundColor}
             onPress={() => {
               let cur: {[key: string]: number} = {...nutrients};
               cur[nutrient.toLowerCase()] -= 1;
               setNutrients({...cur});
-            }}>
-            <ButtonIcon as={ArrowDownIcon} size={'md'} />
-          </Button>
+            }}
+          />
         </VStack>
         <WhiteText style={{fontSize: 15, alignSelf: 'center'}}>g</WhiteText>
       </HStack>
@@ -380,7 +377,7 @@ export function EditFood(props: any): React.JSX.Element {
           marginBottom={2}
           justifyContent="center">
           <WhiteText>Additional Nutrients</WhiteText>
-          <ButtonIcon as={ArrowDownIcon} size={'md'} />
+          <Icon name="caret-down" size={20} />
         </HStack>
       </Pressable>
       <ScrollView

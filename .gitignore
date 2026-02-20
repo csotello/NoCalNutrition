@@ -1,7 +1,6 @@
 .env
-.cache
-.jest/cache
-config.json
+.yarn/*
+.cache/*
 # OSX
 #
 .DS_Store
