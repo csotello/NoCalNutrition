@@ -5,25 +5,25 @@ import {
   HStack,
   ButtonIcon,
 } from '@gluestack-ui/themed';
-import {ScrollView} from 'react-native';
+import { ScrollView } from 'react-native';
 import React from 'react';
-import {useState, useEffect} from 'react';
-import {ToastAndroid, View, Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useState, useEffect } from 'react';
+import { ToastAndroid, View, Dimensions } from 'react-native';
+import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {Food} from '../components/Food';
+import { Food } from '../components/Food';
 import styles from '../styles/styles';
-import {retrieve, FoodItem} from '../utils';
+import { retrieve, FoodItem } from '../utils';
 import Nutrients from '../components/Nutrients';
 
-export function Nutrition({route, navigation}: any): JSX.Element {
+export function Nutrition({ route, navigation }: any): JSX.Element {
   const [loaded, setLoaded] = useState(false);
-  const [totals, setTotals] = useState<{[key: string]: number}>({
+  const [totals, setTotals] = useState<{ [key: string]: number }>({
     protein: 0,
     carbs: 0,
     fat: 0,
   });
-  const [food, setFood] = useState<{[key: string]: any[]}>({
+  const [food, setFood] = useState<{ [key: string]: any[] }>({
     Breakfast: [],
     Lunch: [],
     Dinner: [],
@@ -77,10 +77,10 @@ export function Nutrition({route, navigation}: any): JSX.Element {
   }
 
   async function changeDate(value: number) {
+    await store({ ...food });
     let newDate = new Date(date);
     newDate.setDate(newDate.getDate() + value);
     let ret = newDate.toDateString();
-    await store({...food});
     await load(ret);
     setDate(newDate.toDateString());
   }
@@ -94,15 +94,15 @@ export function Nutrition({route, navigation}: any): JSX.Element {
   function removeFood(item: any, section: string) {
     let meal = food[`${section}`];
     meal = meal?.filter((cur: any) => item.UUID !== cur.UUID);
-    let cur: {[key: string]: any} = {
+    let cur: { [key: string]: any } = {
       Breakfast: [...food.Breakfast],
       Lunch: [...food.Lunch],
       Dinner: [...food.Dinner],
       Snacks: [...food.Snacks],
     };
     cur[`${section}`] = [...meal];
-    setFood({...cur});
-    store({...cur});
+    setFood({ ...cur });
+    store({ ...cur });
   }
 
   /**
@@ -127,7 +127,7 @@ export function Nutrition({route, navigation}: any): JSX.Element {
   function openEdit(food: any, meal: string) {
     navigation.navigate('AddFood', {
       page: 'edit',
-      food: {...food, meal: meal},
+      food: { ...food, meal: meal },
       isNew: false,
       date: date,
     });
@@ -137,7 +137,7 @@ export function Nutrition({route, navigation}: any): JSX.Element {
    * Updates the totals of protein, fat, and carbs based on the food object.
    */
   function updateTotals() {
-    let newTotals: {[key: string]: number} = {
+    let newTotals: { [key: string]: number } = {
       protein: 0,
       fat: 0,
       carbs: 0,
@@ -163,34 +163,40 @@ export function Nutrition({route, navigation}: any): JSX.Element {
     Object.keys(newTotals).forEach(key => {
       newTotals[key] = Number(newTotals[key].toFixed(1));
     });
-    setTotals({...newTotals});
+    setTotals({ ...newTotals });
   }
   let width = Dimensions.get('window').width;
   let height = Dimensions.get('window').height;
   return (
     <ScrollView
-      style={{backgroundColor: styles.primaryBackgroundColor}}
-      contentContainerStyle={{flexGrow: 1}}>
-      <Text style={{color: 'white', textAlign: 'center'}}>Nutrition</Text>
-      <HStack style={{padding: 10, justifyContent: 'center'}}>
-        <Icon.Button
+      style={{ backgroundColor: styles.primaryBackgroundColor }}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <Text style={{ color: 'white', textAlign: 'center' }}>Nutrition</Text>
+      <HStack style={{ padding: 10, justifyContent: 'center' }}>
+        <FontAwesome5
           name="chevron-left"
           size={20}
-          backgroundColor={styles.primaryBackgroundColor}
-          style={{color: 'white'}}
+          iconStyle="solid"
+          color={styles.primaryBackgroundColor}
+          style={{ color: 'white' }}
           onPress={() => changeDate(-1)}
         />
         <Text
           style={{
             color: 'white',
             textAlignVertical: 'center',
-          }}>
+            paddingLeft: 20,
+            paddingRight: 20,
+          }}
+        >
           {date}
         </Text>
-        <Icon.Button
+        <FontAwesome5
           name="chevron-right"
           size={20}
-          backgroundColor={styles.primaryBackgroundColor}
+          iconStyle="solid"
+          color={'white'}
           onPress={() => changeDate(1)}
         />
       </HStack>
@@ -200,12 +206,15 @@ export function Nutrition({route, navigation}: any): JSX.Element {
         carbs={totals.carbs}
       />
       <Button
-        style={{margin: 10}}
+        style={{ margin: 10 }}
         variant="link"
         onPress={() =>
           ToastAndroid.show('Calories: ' + getCalCount(), ToastAndroid.SHORT)
-        }>
-        <Text style={{color: 'white', textAlign: 'center'}}>Show Calories</Text>
+        }
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Show Calories
+        </Text>
       </Button>
       {food &&
         Object.keys(food || {})?.map((meal, i) => {
@@ -221,10 +230,12 @@ export function Nutrition({route, navigation}: any): JSX.Element {
           );
         })}
       <View
-        style={{position: 'absolute', top: height - 450, left: width - 350}}>
-        <Icon.Button
+        style={{ position: 'absolute', top: height - 400, left: width - 50 }}
+      >
+        <FontAwesome5
           name="plus"
-          backgroundColor={styles.primaryBackgroundColor}
+          iconStyle="solid"
+          color="white"
           size={30}
           style={{
             zIndex: 10,

@@ -14,12 +14,12 @@ import {
   ButtonIcon,
 } from '@gluestack-ui/themed';
 import React from 'react';
-import {Text} from 'react-native';
-import {WhiteText} from '../styledComponents/WhiteText';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Text } from 'react-native';
+import { WhiteText } from '../styledComponents/WhiteText';
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import styles from '../styles/styles';
-import {getMainNutrients} from '../utils';
-import {useState, useRef} from 'react';
+import { getMainNutrients } from '../utils';
+import { useState, useRef } from 'react';
 export function Food(props: any): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const cancelRef = useRef(null);
@@ -28,7 +28,8 @@ export function Food(props: any): React.JSX.Element {
       <AlertDialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        leastDestructiveRef={cancelRef}>
+        leastDestructiveRef={cancelRef}
+      >
         <AlertDialogBackdrop />
         <AlertDialogContent>
           <AlertDialogCloseButton />
@@ -47,7 +48,8 @@ export function Food(props: any): React.JSX.Element {
               onPress={() => {
                 props.remove(food, section);
                 setIsOpen(false);
-              }}>
+              }}
+            >
               <WhiteText>Delete</WhiteText>
             </Button>
           </AlertDialogFooter>
@@ -57,17 +59,18 @@ export function Food(props: any): React.JSX.Element {
   };
 
   return (
-    <View style={{padding: 10}}>
-      <WhiteText style={{paddingBottom: 10}}>{props.title}</WhiteText>
+    <View style={{ padding: 10 }}>
+      <WhiteText style={{ paddingBottom: 10 }}>{props.title}</WhiteText>
       {props.meal?.map((item: any, i: any) => {
-        let nutrients = getMainNutrients({...item});
+        let nutrients = getMainNutrients({ ...item });
         return (
           <View
             key={i}
-            style={{paddingLeft: 10, marginBottom: 10, paddingBottom: 10}}>
+            style={{ paddingLeft: 10, marginBottom: 10, paddingBottom: 10 }}
+          >
             <HStack space={'4xl'}>
               <VStack justifyContent="flex-start" paddingRight={'30%'}>
-                <View style={{maxWidth: '80%'}}>
+                <View style={{ maxWidth: '80%' }}>
                   <WhiteText>
                     {item.brandName} {'\n'}
                     {item.description} {'\n'}
@@ -79,7 +82,8 @@ export function Food(props: any): React.JSX.Element {
                   style={{
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                  }}>
+                  }}
+                >
                   <WhiteText>
                     P: {nutrients.protein.value}
                     {nutrients.protein.unitName}
@@ -96,22 +100,23 @@ export function Food(props: any): React.JSX.Element {
               </VStack>
               {alertDialog(item, props.title)}
               <HStack
-                style={{alignItems: 'center', justifyContent: 'flex-end'}}>
-                <Icon.Button
+                style={{ alignItems: 'center', justifyContent: 'flex-end' }}
+              >
+                <FontAwesome5
                   name="trash-alt"
                   testID="Delete Icon"
+                  iconStyle="solid"
                   color={'white'}
-                  backgroundColor={styles.primaryBackgroundColor}
                   onPress={() => setIsOpen(true)}
-                  style={{marginLeft: 10}}
+                  style={{ marginLeft: 10 }}
                 />
-                <Icon.Button
+                <FontAwesome5
                   name="pencil-alt"
                   testID="Edit Icon"
+                  iconStyle="solid"
                   color={'white'}
-                  backgroundColor={styles.primaryBackgroundColor}
                   onPress={() => props.edit(item, props.title)}
-                  style={{marginLeft: 10}}
+                  style={{ marginLeft: 10 }}
                 />
               </HStack>
             </HStack>

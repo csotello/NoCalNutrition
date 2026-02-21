@@ -18,10 +18,10 @@ import {
 } from '@gluestack-ui/themed';
 import uuid from 'uuid-random';
 import React from 'react';
-import {useEffect, useState, useRef} from 'react';
-import {View, Text, ScrollView, Pressable} from 'react-native';
-import {WhiteText} from '../styledComponents/WhiteText';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useEffect, useState, useRef } from 'react';
+import { View, Text, ScrollView, Pressable } from 'react-native';
+import { WhiteText } from '../styledComponents/WhiteText';
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import {
   convertCustomFood,
   store,
@@ -43,7 +43,7 @@ export function EditFood(props: any): React.JSX.Element {
     additionalDescriptions: props.food.additionalDescriptions || '',
     category: props.food.category || '',
   });
-  const [nutrients, setNutrients] = useState<{[key: string]: number}>({
+  const [nutrients, setNutrients] = useState<{ [key: string]: number }>({
     protein: 0,
     carbs: 0,
     fat: 0,
@@ -57,7 +57,7 @@ export function EditFood(props: any): React.JSX.Element {
   const [dropdown, setDropdown] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
   useEffect(() => {
-    scrollRef.current?.scrollToEnd({animated: true});
+    scrollRef.current?.scrollToEnd({ animated: true });
   }, [dropdown]);
 
   useEffect(() => {
@@ -65,8 +65,8 @@ export function EditFood(props: any): React.JSX.Element {
     if (props.food.foodMeasures?.length > 0) {
       serving = props.food.foodMeasures[0].gramWeight || serving;
     }
-    setServings({...servings, servingSize: serving});
-    var cur = {...nutrients};
+    setServings({ ...servings, servingSize: serving });
+    var cur = { ...nutrients };
     props.food.foodNutrients?.map((nutrient: any, i: any) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
@@ -97,14 +97,14 @@ export function EditFood(props: any): React.JSX.Element {
           break;
       }
     });
-    setNutrients({...cur});
+    setNutrients({ ...cur });
   }, [props.food]);
 
   /**
    * Adds or edits food item with current input
    */
   async function addFood() {
-    var newFood = {...props.food};
+    var newFood = { ...props.food };
     newFood.servingSize = servings.servingSize;
     newFood.servingSizeUnit = servings.servingSizeUnit;
     newFood.servings = servings.servings;
@@ -161,13 +161,13 @@ export function EditFood(props: any): React.JSX.Element {
         console.log('Converted' + JSON.stringify(newFood));
         await createCustom(newFood);
       }
-      await props.add({...newFood}, meal);
+      await props.add({ ...newFood }, meal);
     } else {
       if (props.isCustom) {
-        await props.editCustom({...newFood});
+        await props.editCustom({ ...newFood });
         return;
       }
-      await props.edit({...newFood}, meal);
+      await props.edit({ ...newFood }, meal);
     }
   }
 
@@ -201,14 +201,15 @@ export function EditFood(props: any): React.JSX.Element {
       <HStack alignItems={'center'}>
         <WhiteText>{nutrient}: </WhiteText>
         <VStack alignItems="center" pl={2} pr={2}>
-          <Icon.Button
+          <FontAwesome5
             name="caret-up"
             size={10}
-            backgroundColor={styles.primaryBackgroundColor}
+            iconStyle="solid"
+            color={styles.primaryBackgroundColor}
             onPress={() => {
-              let cur: {[key: string]: number} = {...nutrients};
+              let cur: { [key: string]: number } = { ...nutrients };
               cur[nutrient.toLowerCase()] += 1;
-              setNutrients({...cur});
+              setNutrients({ ...cur });
             }}
           />
           <HStack>
@@ -218,40 +219,41 @@ export function EditFood(props: any): React.JSX.Element {
                 keyboardType={'numeric'}
                 value={nutrients[nutrient.toLowerCase()].toString()}
                 onChangeText={(text: string) => {
-                  let cur: {[key: string]: number} = {...nutrients};
+                  let cur: { [key: string]: number } = { ...nutrients };
                   cur[nutrient.toLowerCase()] =
                     Number(parseFloat(text).toPrecision(4)) || 0;
-                  setNutrients({...cur});
+                  setNutrients({ ...cur });
                 }}
               />
             </Input>
           </HStack>
-          <Icon.Button
+          <FontAwesome5
             name="caret-down"
             size={10}
-            backgroundColor={styles.primaryBackgroundColor}
+            iconStyle="solid"
+            color={styles.primaryBackgroundColor}
             onPress={() => {
-              let cur: {[key: string]: number} = {...nutrients};
+              let cur: { [key: string]: number } = { ...nutrients };
               cur[nutrient.toLowerCase()] -= 1;
-              setNutrients({...cur});
+              setNutrients({ ...cur });
             }}
           />
         </VStack>
-        <WhiteText style={{fontSize: 15, alignSelf: 'center'}}>g</WhiteText>
+        <WhiteText style={{ fontSize: 15, alignSelf: 'center' }}>g</WhiteText>
       </HStack>
     );
   }
 
   return (
     <ScrollView ref={scrollRef}>
-      <VStack style={{marginBottom: 10}}>
+      <VStack style={{ marginBottom: 10 }}>
         <WhiteText>Brand Name:</WhiteText>
         <Input>
           <InputField
             color={'white'}
             value={descriptors.brandName}
             onChangeText={text =>
-              setDescriptors({...descriptors, brandName: text})
+              setDescriptors({ ...descriptors, brandName: text })
             }
           />
         </Input>
@@ -261,7 +263,7 @@ export function EditFood(props: any): React.JSX.Element {
             color={'white'}
             value={descriptors.description}
             onChangeText={text =>
-              setDescriptors({...descriptors, description: text})
+              setDescriptors({ ...descriptors, description: text })
             }
           />
         </Input>
@@ -271,7 +273,7 @@ export function EditFood(props: any): React.JSX.Element {
             color={'white'}
             value={descriptors.additionalDescriptions}
             onChangeText={text =>
-              setDescriptors({...descriptors, additionalDescriptions: text})
+              setDescriptors({ ...descriptors, additionalDescriptions: text })
             }
           />
         </Input>
@@ -281,7 +283,7 @@ export function EditFood(props: any): React.JSX.Element {
             color={'white'}
             value={descriptors.category}
             onChangeText={text =>
-              setDescriptors({...descriptors, category: text})
+              setDescriptors({ ...descriptors, category: text })
             }
           />
         </Input>
@@ -289,9 +291,10 @@ export function EditFood(props: any): React.JSX.Element {
         <Select
           selectedValue={meal}
           defaultValue="Breakfast"
-          onValueChange={itemValue => setMeal(itemValue)}>
+          onValueChange={itemValue => setMeal(itemValue)}
+        >
           <SelectTrigger variant="outline">
-            <SelectInput style={{color: 'white'}} />
+            <SelectInput style={{ color: 'white' }} />
             <SelectIcon>
               <ChevronDownIcon size={'sm'} color={'white'} />
             </SelectIcon>
@@ -309,7 +312,7 @@ export function EditFood(props: any): React.JSX.Element {
             </SelectContent>
           </SelectPortal>
         </Select>
-        <WhiteText style={{paddingTop: 10, paddingRight: 10}}>
+        <WhiteText style={{ paddingTop: 10, paddingRight: 10 }}>
           Serving Size
         </WhiteText>
         <HStack>
@@ -318,7 +321,7 @@ export function EditFood(props: any): React.JSX.Element {
               color={'white'}
               value={servings.servingSize.toString()}
               onChangeText={text =>
-                setServings({...servings, servingSize: Number(text) || 0})
+                setServings({ ...servings, servingSize: Number(text) || 0 })
               }
             />
           </Input>
@@ -327,10 +330,11 @@ export function EditFood(props: any): React.JSX.Element {
             h={10}
             selectedValue={servings.servingSizeUnit}
             onValueChange={itemValue =>
-              setServings({...servings, servingSizeUnit: itemValue})
-            }>
+              setServings({ ...servings, servingSizeUnit: itemValue })
+            }
+          >
             <SelectTrigger variant="outline">
-              <SelectInput style={{color: 'white'}} />
+              <SelectInput style={{ color: 'white' }} />
               <SelectIcon>
                 <ChevronDownIcon size={'sm'} color={'white'} />
               </SelectIcon>
@@ -355,7 +359,7 @@ export function EditFood(props: any): React.JSX.Element {
             color={'white'}
             value={servings.servings.toString()}
             onChangeText={text =>
-              setServings({...servings, servings: Number(text) || 0})
+              setServings({ ...servings, servings: Number(text) || 0 })
             }
             w={50}
             h={10}
@@ -370,14 +374,16 @@ export function EditFood(props: any): React.JSX.Element {
       <Pressable
         onPress={() => {
           setDropdown(!dropdown);
-        }}>
+        }}
+      >
         <HStack
           borderWidth={1}
           borderColor="gray.300"
           marginBottom={2}
-          justifyContent="center">
+          justifyContent="center"
+        >
           <WhiteText>Additional Nutrients</WhiteText>
-          <Icon name="caret-down" size={20} />
+          <FontAwesome5 name="caret-down" iconStyle="solid" size={20} />
         </HStack>
       </Pressable>
       <ScrollView
@@ -385,9 +391,10 @@ export function EditFood(props: any): React.JSX.Element {
           flex: 1,
           width: dropdown ? '100%' : 0,
           height: dropdown ? '100%' : 0,
-        }}>
+        }}
+      >
         <HStack>
-          <WhiteText style={{textAlignVertical: 'center'}}>
+          <WhiteText style={{ textAlignVertical: 'center' }}>
             Saturated Fat
           </WhiteText>
           <Input>
@@ -397,7 +404,7 @@ export function EditFood(props: any): React.JSX.Element {
               color={'white'}
               value={nutrients.saturatedFat.toString()}
               onChangeText={txt =>
-                setNutrients({...nutrients, saturatedFat: Number(txt)})
+                setNutrients({ ...nutrients, saturatedFat: Number(txt) })
               }
             />
           </Input>
@@ -407,12 +414,13 @@ export function EditFood(props: any): React.JSX.Element {
               marginRight: 5,
               textAlignVertical: 'center',
               fontSize: 15,
-            }}>
+            }}
+          >
             g
           </WhiteText>
         </HStack>
         <HStack>
-          <WhiteText style={{textAlignVertical: 'center'}}>
+          <WhiteText style={{ textAlignVertical: 'center' }}>
             Cholesterol
           </WhiteText>
           <Input>
@@ -422,16 +430,16 @@ export function EditFood(props: any): React.JSX.Element {
               color={'white'}
               value={nutrients.cholesterol.toString()}
               onChangeText={txt =>
-                setNutrients({...nutrients, cholesterol: Number(txt)})
+                setNutrients({ ...nutrients, cholesterol: Number(txt) })
               }
             />
           </Input>
-          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
             mg
           </WhiteText>
         </HStack>
         <HStack>
-          <WhiteText style={{textAlignVertical: 'center'}}>Sodium</WhiteText>
+          <WhiteText style={{ textAlignVertical: 'center' }}>Sodium</WhiteText>
           <Input>
             <InputField
               w={'30%'}
@@ -439,16 +447,16 @@ export function EditFood(props: any): React.JSX.Element {
               color={'white'}
               value={nutrients.sodium.toString()}
               onChangeText={txt =>
-                setNutrients({...nutrients, sodium: Number(txt)})
+                setNutrients({ ...nutrients, sodium: Number(txt) })
               }
             />
           </Input>
-          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
             mg
           </WhiteText>
         </HStack>
         <HStack>
-          <WhiteText style={{textAlignVertical: 'center'}}>
+          <WhiteText style={{ textAlignVertical: 'center' }}>
             Dietary Fibers
           </WhiteText>
           <Input>
@@ -458,16 +466,16 @@ export function EditFood(props: any): React.JSX.Element {
               color={'white'}
               value={nutrients.fiber.toString()}
               onChangeText={txt =>
-                setNutrients({...nutrients, fiber: Number(txt)})
+                setNutrients({ ...nutrients, fiber: Number(txt) })
               }
             />
           </Input>
-          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
             g
           </WhiteText>
         </HStack>
         <HStack>
-          <WhiteText style={{textAlignVertical: 'center'}}>
+          <WhiteText style={{ textAlignVertical: 'center' }}>
             Total Sugars
           </WhiteText>
           <Input>
@@ -477,11 +485,11 @@ export function EditFood(props: any): React.JSX.Element {
               color={'white'}
               value={nutrients.sugar.toString()}
               onChangeText={txt => {
-                setNutrients({...nutrients, sugar: Number(txt)});
+                setNutrients({ ...nutrients, sugar: Number(txt) });
               }}
             />
           </Input>
-          <WhiteText style={{marginLeft: 5, marginRight: 5, fontSize: 15}}>
+          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
             g
           </WhiteText>
         </HStack>
@@ -490,8 +498,9 @@ export function EditFood(props: any): React.JSX.Element {
         onPress={async () => {
           await addFood();
         }}
-        variant="link">
-        <Text style={{color: 'white'}}>{props.isNew ? 'Add' : 'Apply'}</Text>
+        variant="link"
+      >
+        <Text style={{ color: 'white' }}>{props.isNew ? 'Add' : 'Apply'}</Text>
       </Button>
     </ScrollView>
   );

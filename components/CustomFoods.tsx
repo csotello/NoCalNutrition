@@ -15,14 +15,14 @@ import {
   VStack,
 } from '@gluestack-ui/themed';
 import React from 'react';
-import {Text} from 'react-native';
-import {useEffect, useRef, useState} from 'react';
-import {WhiteText} from '../styledComponents/WhiteText.tsx';
+import { Text } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { WhiteText } from '../styledComponents/WhiteText.tsx';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {FoodItem, getMainNutrients} from '../utils.tsx';
-import {useNavigation} from '@react-navigation/native';
-import type {StackNavigationProp} from '@react-navigation/stack';
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
+import { FoodItem, getMainNutrients } from '../utils.tsx';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import styles from '../styles/styles.tsx';
 
 export function CustomFoods(props: any): React.JSX.Element {
@@ -81,8 +81,8 @@ export function CustomFoods(props: any): React.JSX.Element {
   function displayFoods(food: any): React.JSX.Element {
     let nutrients = getMainNutrients(food);
     return (
-      <HStack space="md">
-        <View style={{paddingRight: 10, minWidth: 100}}>
+      <HStack space="xl">
+        <View style={{ paddingRight: 10, minWidth: 100 }}>
           <WhiteText>{food.description || 'Food Description'}</WhiteText>
           <WhiteText>{food.brandName || ''}</WhiteText>
           {food.householdServingFullText && (
@@ -102,38 +102,41 @@ export function CustomFoods(props: any): React.JSX.Element {
           <WhiteText>C</WhiteText>
           <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
         </View>
-        <View>
+        <View style={{ marginRight: 20 }}>
           <WhiteText>F</WhiteText>
           <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
         </View>
-        <Icon.Button
+        <FontAwesome5
           name="plus"
           size={20}
-          backgroundColor={styles.primaryBackgroundColor}
+          iconStyle="solid"
+          color={'white'}
           onPress={() => {
             navigation.push('AddFood', {
               page: 'edit',
-              food: {...food},
+              food: { ...food },
               isNew: true,
               date: props.date,
             });
           }}
         />
-        <Icon.Button
+        <FontAwesome5
           name="trash-alt"
           size={20}
-          backgroundColor={styles.primaryBackgroundColor}
+          iconStyle="solid"
+          color={'white'}
           onPress={() => setIsOpen(true)}
         />
         {alertDialog(food)}
-        <Icon.Button
+        <FontAwesome5
           name="pencil-alt"
           size={20}
-          backgroundColor={styles.primaryBackgroundColor}
+          iconStyle="solid"
+          color={'white'}
           onPress={() =>
             navigation.push('AddFood', {
               page: 'edit',
-              food: {...food},
+              food: { ...food },
               isNew: false,
               date: props.date,
               isCustom: true,
@@ -149,7 +152,8 @@ export function CustomFoods(props: any): React.JSX.Element {
       <AlertDialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        leastDestructiveRef={cancelRef}>
+        leastDestructiveRef={cancelRef}
+      >
         <AlertDialogBackdrop />
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -165,7 +169,8 @@ export function CustomFoods(props: any): React.JSX.Element {
               onPress={() => {
                 removeFood(food);
                 setIsOpen(false);
-              }}>
+              }}
+            >
               <Text>Delete</Text>
             </Button>
           </AlertDialogFooter>

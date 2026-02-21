@@ -8,7 +8,7 @@ import styles from '../styles/styles';
 import {useEffect, useState} from 'react';
 import uuid from 'uuid-random';
 import {store, retrieve, convertCustomFood} from '../utils';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from "@react-native-vector-icons/fontawesome5";
 
 export function AddFood({navigation, route}: any) {
   const {page, isNew, food, date, isCustom} = route?.params;

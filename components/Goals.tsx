@@ -1,13 +1,28 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
-import {Button, HStack, Input, VStack, InputField} from '@gluestack-ui/themed';
+import {
+  Button,
+  HStack,
+  Input,
+  VStack,
+  InputField,
+  Box,
+  View,
+} from '@gluestack-ui/themed';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {Text} from 'react-native';
+import { Text, ScrollView } from 'react-native';
 import styles from '../styles/styles';
-import {WhiteText} from '../styledComponents/WhiteText';
+import { WhiteText } from '../styledComponents/WhiteText';
+
+interface Goals {
+  [key: string]: string;
+  Protein: string;
+  Fat: string;
+  Carbs: string;
+}
 
 function Goals(props: any) {
-  const [goals, setGoals] = useState({
+  const [goals, setGoals] = useState<Goals>({
     Protein: '0',
     Fat: '0',
     Carbs: '0',
@@ -43,58 +58,39 @@ function Goals(props: any) {
 
   function handleInput(name: string, value: string) {
     value = value.replaceAll(/[^0-9.]/g, '');
-    setGoals({...goals, [name]: value});
+    setGoals({ ...goals, [name]: value });
     console.log(goals);
   }
 
+  function displayInput(nutrient: string) {
+    return (
+      <HStack space="xl" paddingBottom={20}>
+        <WhiteText style={{ textAlignVertical: 'center', fontSize: 16 }}>
+          {nutrient}
+        </WhiteText>
+        <Input width={'35%'} position="absolute" right={0}>
+          <InputField
+            value={goals[nutrient]}
+            color={'white'}
+            keyboardType="numeric"
+            onChangeText={txt => {
+              handleInput(nutrient, txt);
+            }}
+          />
+        </Input>
+      </HStack>
+    );
+  }
+
   return (
-    <VStack>
-      <HStack>
-        <WhiteText style={{textAlignVertical: 'center'}}>Protein</WhiteText>
-        <Input>
-          <InputField
-            value={goals.Protein}
-            color={'white'}
-            keyboardType="numeric"
-            w={'50%'}
-            onChangeText={txt => {
-              handleInput('Protein', txt);
-            }}
-          />
-        </Input>
-      </HStack>
-      <HStack>
-        <WhiteText style={{textAlignVertical: 'center'}}>Carbs</WhiteText>
-        <Input>
-          <InputField
-            value={goals.Carbs}
-            keyboardType="numeric"
-            color={'white'}
-            w={'50%'}
-            onChangeText={txt => {
-              handleInput('Carbs', txt);
-            }}
-          />
-        </Input>
-      </HStack>
-      <HStack>
-        <WhiteText style={{textAlignVertical: 'center'}}>Fat</WhiteText>
-        <Input>
-          <InputField
-            value={goals.Fat}
-            color={'white'}
-            w={'50%'}
-            keyboardType="numeric"
-            onChangeText={txt => {
-              handleInput('Fat', txt);
-            }}
-          />
-        </Input>
-      </HStack>
-      <Button onPress={update} marginTop={2}>
+    <ScrollView>
+      {displayInput('Protein')}
+      {displayInput('Carbs')}
+      {displayInput('Fat')}
+      <Button onPress={update} marginTop={20}>
         <Text>Update</Text>
       </Button>
-    </VStack>
+    </ScrollView>
   );
 }
 
