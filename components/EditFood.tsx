@@ -203,9 +203,9 @@ export function EditFood(props: any): React.JSX.Element {
         <VStack alignItems="center" pl={2} pr={2}>
           <FontAwesome5
             name="caret-up"
-            size={10}
+            size={20}
             iconStyle="solid"
-            color={styles.primaryBackgroundColor}
+            color={'white'}
             onPress={() => {
               let cur: { [key: string]: number } = { ...nutrients };
               cur[nutrient.toLowerCase()] += 1;
@@ -229,9 +229,9 @@ export function EditFood(props: any): React.JSX.Element {
           </HStack>
           <FontAwesome5
             name="caret-down"
-            size={10}
+            size={20}
             iconStyle="solid"
-            color={styles.primaryBackgroundColor}
+            color={'white'}
             onPress={() => {
               let cur: { [key: string]: number } = { ...nutrients };
               cur[nutrient.toLowerCase()] -= 1;
@@ -243,6 +243,41 @@ export function EditFood(props: any): React.JSX.Element {
       </HStack>
     );
   }
+
+  const displayAdditionalNutrients = (nutrient: string, unit: string) => {
+    let title = nutrient.charAt(0).toUpperCase() + nutrient.slice(1);
+    if (title.includes('Sugar')) title = 'Total Sugars';
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 1, alignSelf: 'center' }}>
+          <WhiteText style={{ textAlignVertical: 'center' }}>{title}</WhiteText>
+        </View>
+        <View
+          style={{
+            width: '30%',
+            justifyContent: 'flex-end',
+            marginLeft: 5,
+            marginRight: 5,
+          }}
+        >
+          <Input justifyContent="flex-end">
+            <InputField
+              w={'30%'}
+              keyboardType="number-pad"
+              color={'white'}
+              value={nutrients.fiber.toString()}
+              onChangeText={txt =>
+                setNutrients({ ...nutrients, nutrient: Number(txt) })
+              }
+            />
+          </Input>
+        </View>
+        <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
+          {unit}
+        </WhiteText>
+      </View>
+    );
+  };
 
   return (
     <ScrollView ref={scrollRef}>
@@ -354,15 +389,13 @@ export function EditFood(props: any): React.JSX.Element {
           </Select>
         </HStack>
         <WhiteText>Number of servings</WhiteText>
-        <Input>
+        <Input h={'10%'}>
           <InputField
             color={'white'}
             value={servings.servings.toString()}
             onChangeText={text =>
               setServings({ ...servings, servings: Number(text) || 0 })
             }
-            w={50}
-            h={10}
           />
         </Input>
       </VStack>
@@ -391,9 +424,10 @@ export function EditFood(props: any): React.JSX.Element {
           flex: 1,
           width: dropdown ? '100%' : 0,
           height: dropdown ? '100%' : 0,
+          paddingBottom: 20,
         }}
       >
-        <HStack>
+        {/* <HStack>
           <WhiteText style={{ textAlignVertical: 'center' }}>
             Saturated Fat
           </WhiteText>
@@ -455,34 +489,46 @@ export function EditFood(props: any): React.JSX.Element {
             mg
           </WhiteText>
         </HStack>
-        <HStack>
-          <WhiteText style={{ textAlignVertical: 'center' }}>
-            Dietary Fibers
-          </WhiteText>
-          <Input>
-            <InputField
-              w={'30%'}
-              keyboardType="number-pad"
-              color={'white'}
-              value={nutrients.fiber.toString()}
-              onChangeText={txt =>
-                setNutrients({ ...nutrients, fiber: Number(txt) })
-              }
-            />
-          </Input>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1, alignSelf: 'center' }}>
+            <WhiteText style={{ textAlignVertical: 'center' }}>
+              Dietary Fibers
+            </WhiteText>
+          </View>
+          <View
+            style={{
+              width: '30%',
+              justifyContent: 'flex-end',
+              marginLeft: 5,
+              marginRight: 5,
+            }}
+          >
+            <Input justifyContent="flex-end">
+              <InputField
+                w={'30%'}
+                keyboardType="number-pad"
+                color={'white'}
+                value={nutrients.fiber.toString()}
+                onChangeText={txt =>
+                  setNutrients({ ...nutrients, fiber: Number(txt) })
+                }
+              />
+            </Input>
+          </View>
           <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
             g
           </WhiteText>
-        </HStack>
+        </View>
         <HStack>
           <WhiteText style={{ textAlignVertical: 'center' }}>
             Total Sugars
           </WhiteText>
-          <Input>
+          <Input position="absolute" right={0} marginBottom={20}>
             <InputField
-              w={'30%'}
+              w={'90%'}
               keyboardType="number-pad"
-              color={'white'}
+              // color={'white'}
+              style={styles.additionalNutrients}
               value={nutrients.sugar.toString()}
               onChangeText={txt => {
                 setNutrients({ ...nutrients, sugar: Number(txt) });
@@ -492,7 +538,12 @@ export function EditFood(props: any): React.JSX.Element {
           <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
             g
           </WhiteText>
-        </HStack>
+        </HStack> */}
+        {displayAdditionalNutrients('saturatedFat', 'g')}
+        {displayAdditionalNutrients('cholesterol', 'mg')}
+        {displayAdditionalNutrients('sodium', 'mg')}
+        {displayAdditionalNutrients('fiber', 'g')}
+        {displayAdditionalNutrients('sugar', 'g')}
       </ScrollView>
       <Button
         onPress={async () => {
