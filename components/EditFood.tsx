@@ -22,13 +22,8 @@ import { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WhiteText } from '../styledComponents/WhiteText';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-import {
-  convertCustomFood,
-  store,
-  retrieve,
-  FoodItem,
-  NutrientValues,
-} from '../utils';
+import { convertCustomFood, store, retrieve } from '../utils';
+import { FoodItem } from '../types';
 import styles from '../styles/styles';
 
 export function EditFood(props: any): React.JSX.Element {
@@ -427,118 +422,6 @@ export function EditFood(props: any): React.JSX.Element {
           paddingBottom: 20,
         }}
       >
-        {/* <HStack>
-          <WhiteText style={{ textAlignVertical: 'center' }}>
-            Saturated Fat
-          </WhiteText>
-          <Input>
-            <InputField
-              w={'30%'}
-              keyboardType="number-pad"
-              color={'white'}
-              value={nutrients.saturatedFat.toString()}
-              onChangeText={txt =>
-                setNutrients({ ...nutrients, saturatedFat: Number(txt) })
-              }
-            />
-          </Input>
-          <WhiteText
-            style={{
-              marginLeft: 5,
-              marginRight: 5,
-              textAlignVertical: 'center',
-              fontSize: 15,
-            }}
-          >
-            g
-          </WhiteText>
-        </HStack>
-        <HStack>
-          <WhiteText style={{ textAlignVertical: 'center' }}>
-            Cholesterol
-          </WhiteText>
-          <Input>
-            <InputField
-              w={'30%'}
-              keyboardType="number-pad"
-              color={'white'}
-              value={nutrients.cholesterol.toString()}
-              onChangeText={txt =>
-                setNutrients({ ...nutrients, cholesterol: Number(txt) })
-              }
-            />
-          </Input>
-          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
-            mg
-          </WhiteText>
-        </HStack>
-        <HStack>
-          <WhiteText style={{ textAlignVertical: 'center' }}>Sodium</WhiteText>
-          <Input>
-            <InputField
-              w={'30%'}
-              keyboardType="number-pad"
-              color={'white'}
-              value={nutrients.sodium.toString()}
-              onChangeText={txt =>
-                setNutrients({ ...nutrients, sodium: Number(txt) })
-              }
-            />
-          </Input>
-          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
-            mg
-          </WhiteText>
-        </HStack>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1, alignSelf: 'center' }}>
-            <WhiteText style={{ textAlignVertical: 'center' }}>
-              Dietary Fibers
-            </WhiteText>
-          </View>
-          <View
-            style={{
-              width: '30%',
-              justifyContent: 'flex-end',
-              marginLeft: 5,
-              marginRight: 5,
-            }}
-          >
-            <Input justifyContent="flex-end">
-              <InputField
-                w={'30%'}
-                keyboardType="number-pad"
-                color={'white'}
-                value={nutrients.fiber.toString()}
-                onChangeText={txt =>
-                  setNutrients({ ...nutrients, fiber: Number(txt) })
-                }
-              />
-            </Input>
-          </View>
-          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
-            g
-          </WhiteText>
-        </View>
-        <HStack>
-          <WhiteText style={{ textAlignVertical: 'center' }}>
-            Total Sugars
-          </WhiteText>
-          <Input position="absolute" right={0} marginBottom={20}>
-            <InputField
-              w={'90%'}
-              keyboardType="number-pad"
-              // color={'white'}
-              style={styles.additionalNutrients}
-              value={nutrients.sugar.toString()}
-              onChangeText={txt => {
-                setNutrients({ ...nutrients, sugar: Number(txt) });
-              }}
-            />
-          </Input>
-          <WhiteText style={{ marginLeft: 5, marginRight: 5, fontSize: 15 }}>
-            g
-          </WhiteText>
-        </HStack> */}
         {displayAdditionalNutrients('saturatedFat', 'g')}
         {displayAdditionalNutrients('cholesterol', 'mg')}
         {displayAdditionalNutrients('sodium', 'mg')}

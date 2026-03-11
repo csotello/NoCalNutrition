@@ -13,10 +13,11 @@ import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { Food } from '../components/Food';
 import styles from '../styles/styles';
-import { retrieve, FoodItem } from '../utils';
+import { retrieve } from '../utils';
+import { FoodItem } from '../types';
 import Nutrients from '../components/Nutrients';
 
-export function Nutrition({ route, navigation }: any): JSX.Element {
+export function Nutrition({ route, navigation }: any): React.JSX.Element {
   const [loaded, setLoaded] = useState(false);
   const [totals, setTotals] = useState<{ [key: string]: number }>({
     protein: 0,

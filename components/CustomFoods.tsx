@@ -20,10 +20,11 @@ import { useEffect, useRef, useState } from 'react';
 import { WhiteText } from '../styledComponents/WhiteText.tsx';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-import { FoodItem, getMainNutrients } from '../utils.tsx';
+import { getMainNutrients } from '../utils.tsx';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import styles from '../styles/styles.tsx';
+import { FoodItem } from '../types.ts';
 
 export function CustomFoods(props: any): React.JSX.Element {
   const [foods, setFoods] = useState<FoodItem[]>([]);
