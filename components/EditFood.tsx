@@ -26,7 +26,16 @@ import { convertCustomFood, store, retrieve } from '../utils';
 import { FoodItem } from '../types';
 import styles from '../styles/styles';
 
-export function EditFood(props: any): React.JSX.Element {
+interface EditFoodProps {
+  food: FoodItem;
+  isNew: boolean;
+  isCustom: boolean;
+  add: (food: FoodItem, meal: string) => Promise<void>;
+  edit: (food: FoodItem, meal: string) => Promise<void>;
+  editCustom: (food: FoodItem) => Promise<void>;
+}
+
+export function EditFood(props: EditFoodProps): React.JSX.Element {
   const [servings, setServings] = useState({
     servingSize: 0,
     servings: 1,
@@ -57,9 +66,6 @@ export function EditFood(props: any): React.JSX.Element {
 
   useEffect(() => {
     var serving = props.food.servingSize || 0;
-    if (props.food.foodMeasures?.length > 0) {
-      serving = props.food.foodMeasures[0].gramWeight || serving;
-    }
     setServings({ ...servings, servingSize: serving });
     var cur = { ...nutrients };
     props.food.foodNutrients?.map((nutrient: any, i: any) => {
@@ -102,7 +108,7 @@ export function EditFood(props: any): React.JSX.Element {
     var newFood = { ...props.food };
     newFood.servingSize = servings.servingSize;
     newFood.servingSizeUnit = servings.servingSizeUnit;
-    newFood.servings = servings.servings;
+    newFood.servings = servings.servings.toString();
     newFood.brandName = descriptors.brandName;
     newFood.description = descriptors.description;
     newFood.additionalDescriptions = descriptors.additionalDescriptions;
