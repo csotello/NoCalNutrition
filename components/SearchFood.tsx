@@ -14,8 +14,6 @@ import { WhiteText } from '../styledComponents/WhiteText';
 import { getMainNutrients } from '../utils';
 import { Keyboard, Pressable, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import axios from 'axios';
-import { time } from 'console';
 export function SearchFood(props: any) {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [text, setText] = useState('');
@@ -72,7 +70,7 @@ export function SearchFood(props: any) {
                 <View
                   style={{
                     padding: 10,
-                    paddingBottom: 0,
+                    paddingBottom: 10,
                     borderColor: 'black',
                     borderWidth: 1,
                   }}
@@ -88,13 +86,20 @@ export function SearchFood(props: any) {
                   <HStack>
                     {item.servingSize && item.servingSizeUnit && (
                       <WhiteText>
-                        {item.servingSize} {item.servingSizeUnit}
+                        {item.servingSize.toFixed(2)} {item.servingSizeUnit}
                       </WhiteText>
                     )}
                     {item.householdServingFullText && (
                       <WhiteText>({item.householdServingFullText})</WhiteText>
                     )}
-                    <View style={{ flexDirection: 'row', top: -20 }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        top: -20,
+                        position: 'absolute',
+                        right: 0,
+                      }}
+                    >
                       <View style={{ marginLeft: 20, minWidth: 28 }}>
                         <WhiteText>P</WhiteText>
                         <WhiteText>{nutrients.protein?.value || 0}</WhiteText>

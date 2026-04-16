@@ -1,17 +1,17 @@
-import {Text, View} from 'react-native';
+import { Text, View } from 'react-native';
 import React from 'react';
-import {HStack, Modal} from '@gluestack-ui/themed';
-import {SearchFood} from '../components/SearchFood';
-import {CustomFoods} from '../components/CustomFoods';
-import {EditFood} from '../components/EditFood';
+import { HStack, Modal } from '@gluestack-ui/themed';
+import { SearchFood } from '../components/SearchFood';
+import { CustomFoods } from '../components/CustomFoods';
+import { EditFood } from '../components/EditFood';
 import styles from '../styles/styles';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import uuid from 'uuid-random';
-import {store, retrieve, convertCustomFood} from '../utils';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { store, retrieve, convertCustomFood } from '../utils';
+import Icon from '@react-native-vector-icons/fontawesome5';
 
-export function AddFood({navigation, route}: any) {
-  const {page, isNew, food, date, isCustom} = route?.params;
+export function AddFood({ navigation, route }: any) {
+  const { page, isNew, food, date, isCustom } = route?.params;
   const [loaded, setLoaded] = useState(false);
   const [nutrition, setNutrition] = useState({
     Breakfast: [],
@@ -37,7 +37,7 @@ export function AddFood({navigation, route}: any) {
       ret = JSON.parse(val);
     }
     if (ret) {
-      setNutrition({...ret});
+      setNutrition({ ...ret });
       console.log('Loaded: ' + val);
     }
     if (!loaded) setLoaded(true);
@@ -55,7 +55,7 @@ export function AddFood({navigation, route}: any) {
     // let key = 'nutrition' + '-' + date;
     // let cur = await retrieve(key);
     // cur = JSON.parse(cur);
-    let cur: {[key: string]: any} = {
+    let cur: { [key: string]: any } = {
       Breakfast: [...nutrition.Breakfast],
       Lunch: [...nutrition.Lunch],
       Dinner: [...nutrition.Dinner],
@@ -77,7 +77,7 @@ export function AddFood({navigation, route}: any) {
       routes: [
         {
           name: 'Home',
-          state: {routes: [{name: 'Nutrition', params: {date: date}}]},
+          state: { routes: [{ name: 'Nutrition', params: { date: date } }] },
         },
       ],
     });
@@ -90,7 +90,7 @@ export function AddFood({navigation, route}: any) {
    * @param {string} meal - The meal category to which the item belongs (e.g., Breakfast, Lunch, Dinner, Snacks).
    */
   async function edit(item: any, meal: string) {
-    let cur: {[key: string]: any} = {
+    let cur: { [key: string]: any } = {
       Breakfast: [...nutrition.Breakfast],
       Lunch: [...nutrition.Lunch],
       Dinner: [...nutrition.Dinner],
@@ -98,7 +98,7 @@ export function AddFood({navigation, route}: any) {
     };
     Object.entries(cur).forEach(([key, value]) => {
       value = value?.filter((cur: any) => item.UUID !== cur.UUID);
-      if (key === meal) value.push({...item});
+      if (key === meal) value.push({ ...item });
       cur[key] = [...value];
     });
     await store(key, JSON.stringify(cur));
@@ -108,7 +108,7 @@ export function AddFood({navigation, route}: any) {
       routes: [
         {
           name: 'Home',
-          state: {routes: [{name: 'Nutrition', params: {date: date}}]},
+          state: { routes: [{ name: 'Nutrition', params: { date: date } }] },
         },
       ],
     });
@@ -126,9 +126,9 @@ export function AddFood({navigation, route}: any) {
     console.log('customs: ' + JSON.stringify(customs));
     customs = customs?.filter((cur: any) => food.UUID !== cur.UUID);
     console.log('Food: ' + JSON.stringify(food));
-    let newFood = {...food};
+    let newFood = { ...food };
     newFood = convertCustomFood(food);
-    customs.push({...newFood});
+    customs.push({ ...newFood });
     console.log('customs: ' + JSON.stringify(customs));
     await store('customFood', JSON.stringify(customs));
     navigation.reset({
@@ -136,7 +136,7 @@ export function AddFood({navigation, route}: any) {
       routes: [
         {
           name: 'Home',
-          state: {routes: [{name: 'Nutrition', params: {date: date}}]},
+          state: { routes: [{ name: 'Nutrition', params: { date: date } }] },
         },
       ],
     });
@@ -147,7 +147,7 @@ export function AddFood({navigation, route}: any) {
    * @param {string} page - The page to display
    * @return {JSX.Element} - The page component
    */
-  function displayPage(page: string): JSX.Element {
+  function displayPage(page: string): React.JSX.Element {
     switch (page) {
       case 'search':
         return <SearchFood date={date} />;
@@ -171,7 +171,8 @@ export function AddFood({navigation, route}: any) {
 
   return (
     <View
-      style={{backgroundColor: styles.primaryBackgroundColor, height: '100%'}}>
+      style={{ backgroundColor: styles.primaryBackgroundColor, height: '100%' }}
+    >
       <HStack>
         <Text
           style={{
@@ -190,7 +191,8 @@ export function AddFood({navigation, route}: any) {
               isNew: true,
               date: date,
             })
-          }>
+          }
+        >
           Search
         </Text>
         <Text
@@ -210,7 +212,8 @@ export function AddFood({navigation, route}: any) {
               isNew: true,
               date: date,
             })
-          }>
+          }
+        >
           Custom Foods
         </Text>
         <Text
@@ -232,7 +235,8 @@ export function AddFood({navigation, route}: any) {
               date: date,
               isCustom: true,
             })
-          }>
+          }
+        >
           Create
         </Text>
       </HStack>

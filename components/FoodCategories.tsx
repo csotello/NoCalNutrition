@@ -1,11 +1,11 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import React from 'react';
-import {View, Text, ScrollView, ToastAndroid, Keyboard} from 'react-native';
-import {Modal, Input, Button, InputField} from '@gluestack-ui/themed';
-import Icon from 'react-native-vector-icons/EvilIcons';
+import { View, Text, ScrollView, ToastAndroid, Keyboard } from 'react-native';
+import { Modal, Input, Button, InputField } from '@gluestack-ui/themed';
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import styles from '../styles/styles';
-import {WhiteText} from '../styledComponents/WhiteText';
+import { WhiteText } from '../styledComponents/WhiteText';
 
 function FoodCategories(): React.JSX.Element {
   const [categories, setCategories] = useState<string[]>([]);
@@ -57,12 +57,13 @@ function FoodCategories(): React.JSX.Element {
           return (
             <View key={i}>
               <WhiteText>{cat}</WhiteText>
-              <Icon
+              <FontAwesome5
                 size={20}
                 name="trash"
+                iconStyle="solid"
                 color="white"
                 onPress={() => remove(cat)}
-                style={{alignSelf: 'flex-end', top: -20}}
+                style={{ alignSelf: 'flex-end', top: -20 }}
               />
             </View>
           );

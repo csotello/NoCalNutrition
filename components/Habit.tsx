@@ -1,11 +1,11 @@
-import {ScrollView, Text} from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import React from 'react';
-import {Box, Button, ButtonIcon, HStack} from '@gluestack-ui/themed';
-import Icon from 'react-native-vector-icons/EvilIcons';
-import {useState} from 'react';
+import { Box, Button, ButtonIcon, HStack } from '@gluestack-ui/themed';
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
+import { useState } from 'react';
 export function Habit(props: any) {
-  const [days, setDays] = useState<{[key: string]: string}>(props.habit.days);
-  const dayText: {[key: string]: string} = {
+  const [days, setDays] = useState<{ [key: string]: string }>(props.habit.days);
+  const dayText: { [key: string]: string } = {
     Monday: 'M',
     Tuesday: 'T',
     Wednesday: 'W',
@@ -36,22 +36,28 @@ export function Habit(props: any) {
 
   return (
     <ScrollView>
-      <Box style={{borderRadius: 10}}>
+      <Box style={{ borderRadius: 10 }}>
         <HStack w={'100%'}>
-          <Text style={{paddingLeft: 20, fontSize: 20}}>
+          <Text style={{ paddingLeft: 20, fontSize: 20 }}>
             {props.habit.title}
           </Text>
-          <Text style={{marginLeft: 40, fontSize: 20}}>
+          <Text style={{ marginLeft: 40, fontSize: 20 }}>
             {props.habit.catagory}
           </Text>
           <Button onPress={() => props.edit(props.habit)}>
-            <ButtonIcon as={<Icon name="pencil" size={30} />} />
+            <ButtonIcon
+              as={<FontAwesome5 iconStyle="solid" name="edit" size={30} />}
+            />
           </Button>
           <Button onPress={() => props.remove(props.habit.title)}>
-            <ButtonIcon as={<Icon name="trash" size={30} />} />
+            <ButtonIcon
+              as={<FontAwesome5 iconStyle="solid" name="trash" size={30} />}
+            />
           </Button>
           <Button onPress={() => reset()}>
-            <ButtonIcon as={<Icon name="undo" size={30} />} />
+            <ButtonIcon
+              as={<FontAwesome5 iconStyle="solid" name="undo" size={30} />}
+            />
           </Button>
         </HStack>
         <HStack w={'100%'}>
@@ -67,7 +73,8 @@ export function Habit(props: any) {
                 h={10}
                 key={i}
                 onPress={evt => handleClick(day)}
-                bg={days[day] == 'Default' ? '#6fdc6f' : '#178237'}>
+                bg={days[day] == 'Default' ? '#6fdc6f' : '#178237'}
+              >
                 {dayText[day]}
               </Button>
             );

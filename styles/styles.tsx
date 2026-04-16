@@ -33,6 +33,10 @@ const styles: any = {
     elevation: 1,
     color: 'white',
   },
+  additionalNutrients: {
+    width: '100%',
+    color: 'white',
+  },
 };
 
 export default styles;

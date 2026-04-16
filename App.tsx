@@ -15,9 +15,15 @@ import { Task } from './components/Task';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const headerStyle = {
+  headerStyle: {
+    backgroundColor: styles.navigator.backgroundColor,
+  },
+  headerTitleStyle: {
+    color: 'white',
+  },
+  headerTintColor: 'white',
+};
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -36,7 +42,7 @@ function App(): React.JSX.Element {
           options={{
             tabBarLabel: 'Nutrition',
             // headerShown: false,
-            tabBarIcon: ({ focused }) => (
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
               <Icon as={AddIcon} color={focused ? 'black' : 'white'} m={1} />
             ),
           }}
@@ -46,7 +52,7 @@ function App(): React.JSX.Element {
           component={Settings}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: ({ focused }) => (
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
               <Icon as={SettingsIcon} color={focused ? 'black' : 'white'} />
             ),
           }}
@@ -73,6 +79,7 @@ function App(): React.JSX.Element {
             name="AddFood"
             component={AddFood}
             // options={{headerShown: false}}
+            options={headerStyle}
           />
         </Stack.Navigator>
       </NavigationContainer>

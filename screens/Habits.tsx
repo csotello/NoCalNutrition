@@ -1,7 +1,7 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
-import {ScrollView, View, Text, Keyboard, ToastAndroid} from 'react-native';
-import {Habit} from '../components/Habit';
+import { ScrollView, View, Text, Keyboard, ToastAndroid } from 'react-native';
+import { Habit } from '../components/Habit';
 import {
   Modal,
   Input,
@@ -14,7 +14,7 @@ import {
   ModalCloseButton,
   ModalContent,
 } from '@gluestack-ui/themed';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 export function Habits() {
   const [visible, setVisible] = useState(false);
@@ -117,14 +117,14 @@ export function Habits() {
   }
 
   function openEditor(habit: any) {
-    setEdit({...habit});
+    setEdit({ ...habit });
     setEditTitle(habit.title);
   }
 
   return (
     <View>
       <Box>
-        <Text style={{fontSize: 20, alignSelf: 'center', paddingBottom: 10}}>
+        <Text style={{ fontSize: 20, alignSelf: 'center', paddingBottom: 10 }}>
           Habits
         </Text>
         <ScrollView>
@@ -135,35 +135,40 @@ export function Habits() {
                 setDays={setDays}
                 key={i}
                 remove={remove}
-                edit={openEditor}></Habit>
+                edit={openEditor}
+              ></Habit>
             );
           })}
         </ScrollView>
         <Modal
           isOpen={visible}
           onClose={() => setVisible(prev => !prev)}
-          size="lg">
+          size="lg"
+        >
           <ModalBackdrop />
           <ModalContent
             h={'80%'}
-            style={{backgroundColor: '#6fdc6f'}}
-            paddingTop={10}>
+            style={{ backgroundColor: '#6fdc6f' }}
+            paddingTop={10}
+          >
             <ModalHeader>
               <ModalCloseButton />
             </ModalHeader>
-            <Text style={{fontSize: 20}}>New Habit</Text>
+            <Text style={{ fontSize: 20 }}>New Habit</Text>
             <Input>
               <InputField
                 value={text}
                 onChangeText={txt => setText(txt)}
-                placeholder={'habit'}></InputField>
+                placeholder={'habit'}
+              ></InputField>
             </Input>
-            <Text style={{fontSize: 20}}>Catagory</Text>
+            <Text style={{ fontSize: 20 }}>Catagory</Text>
             <Input>
               <InputField
                 value={catagory}
                 onChangeText={txt => setCatagory(txt)}
-                placeholder={'catagory'}></InputField>
+                placeholder={'catagory'}
+              ></InputField>
             </Input>
             <Button onPress={() => add(text)}>Add</Button>
           </ModalContent>
@@ -172,8 +177,11 @@ export function Habits() {
           position={'absolute'}
           onPress={() => setVisible(prev => !prev)}
           right={15}
-          top={450}>
-          <ButtonIcon as={<Icon name="plus" size={20} />} />
+          top={450}
+        >
+          <ButtonIcon
+            as={<FontAwesome5 name="plus" iconStyle="solid" size={20} />}
+          />
         </Button>
         {edit && (
           <View
@@ -187,12 +195,13 @@ export function Habits() {
               top: -200,
               backgroundColor: 'white',
               alignSelf: 'center',
-            }}>
+            }}
+          >
             <Text>Habit title</Text>
             <Input>
               <InputField
                 value={edit.title}
-                onChangeText={txt => setEdit({...edit, title: txt})}
+                onChangeText={txt => setEdit({ ...edit, title: txt })}
                 size={'sm'}
                 placeholder="Title"
               />
@@ -201,7 +210,7 @@ export function Habits() {
             <Input>
               <InputField
                 value={edit.catagory}
-                onChangeText={txt => setEdit({...edit, catagory: txt})}
+                onChangeText={txt => setEdit({ ...edit, catagory: txt })}
                 size={'sm'}
                 placeholder="New Task"
               />
@@ -217,7 +226,8 @@ export function Habits() {
                 setHabits(prev => [...habits]);
                 setEdit(null);
                 store(habits);
-              }}>
+              }}
+            >
               Change
             </Button>
           </View>

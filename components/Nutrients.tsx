@@ -9,12 +9,19 @@ import {
   HStack,
 } from '@gluestack-ui/themed';
 import React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/styles';
-import {retrieve} from '../utils';
+import { retrieve } from '../utils';
 
-export function Nutrients(props: any) {
-  const [goals, setGoals] = useState({
+interface Nutrients {
+  [key: string]: string;
+  Protein: string;
+  Fat: string;
+  Carbs: string;
+}
+
+export function Nutrients(props: Nutrients) {
+  const [goals, setGoals] = useState<Nutrients>({
     Protein: '0',
     Fat: '0',
     Carbs: '0',
@@ -24,69 +31,51 @@ export function Nutrients(props: any) {
   }, [props]);
   async function load() {
     let val = await retrieve('goals');
-    let ret;
-    if (val) ret = JSON.parse(val);
-    else
-      ret = {
-        Protein: '0',
-        Fat: '0',
-        Carbs: '0',
-      };
+    let ret = val ? JSON.parse(val) : { Protein: '0', Fat: '0', Carbs: '0' };
     setGoals(ret);
+  }
+
+  function nutrient(name: string) {
+    let color;
+    switch (name) {
+      case 'Protein':
+        color = '#d10415';
+        break;
+      case 'Fat':
+        color = '#c7d104';
+        break;
+      case 'Carbs':
+        color = '#0426d1';
+        break;
+    }
+    return (
+      <HStack>
+        <Text
+          style={{
+            ...styles.nutrient,
+            color: color,
+          }}
+        >
+          {name}
+          {'  '}
+          {props[name] || 0} / {goals[name]}
+        </Text>
+        <Center w="80%">
+          <Box w="70%" marginRight={30}>
+            <Progress value={(Number(props[name]) / Number(goals[name])) * 100}>
+              <Progress.FilledTrack bg={color} />
+            </Progress>
+          </Box>
+        </Center>
+      </HStack>
+    );
   }
 
   return (
     <VStack>
-      <HStack>
-        <Text
-          style={{
-            ...styles.nutrient,
-            color: '#d10415',
-          }}>
-          Protein{'  '}
-          {props.protein || 0} / {goals?.Protein}
-        </Text>
-        <Center w="80%">
-          <Box w="70%" marginRight={30}>
-            <Progress value={(props.protein / Number(goals?.Protein)) * 100}>
-              <Progress.FilledTrack bg="#d10415" />
-            </Progress>
-          </Box>
-        </Center>
-      </HStack>
-      <HStack>
-        <Text
-          style={{
-            ...styles.nutrient,
-            color: '#0426d1',
-          }}>
-          Carbs{'  '} {props.carbs || 0} / {goals?.Carbs}
-        </Text>
-        <Center w="80%">
-          <Box w="70%" marginRight={30}>
-            <Progress value={(props.carbs / Number(goals?.Carbs)) * 100}>
-              <Progress.FilledTrack bg="#0426d1" />
-            </Progress>
-          </Box>
-        </Center>
-      </HStack>
-      <HStack>
-        <Text
-          style={{
-            ...styles.nutrient,
-            color: '#c7d104',
-          }}>
-          Fat{'  '}
-          {props.fat || 0} / {goals?.Fat}
-        </Text>
-        <Center w="80%">
-          <Box w="70%" marginRight={30}>
-            <Progress value={(props.fat / Number(goals?.Fat)) * 100}>
-              <Progress.FilledTrack bg="#c7d104" />
-            </Progress>
-          </Box>
-        </Center>
-      </HStack>
+      {nutrient('Protein')}
+      {nutrient('Fat')}
+      {nutrient('Carbs')}
     </VStack>
   );
 }

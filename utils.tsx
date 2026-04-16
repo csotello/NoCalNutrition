@@ -1,34 +1,5 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
-
-export type NutrientValues = {
-  [key: string]: Nutrient;
-  protein: Nutrient;
-  carbs: Nutrient;
-  fat: Nutrient;
-  sugar: Nutrient;
-  fiber: Nutrient;
-  sodium: Nutrient;
-  saturatedFat: Nutrient;
-  cholesterol: Nutrient;
-};
-export type FoodItem = {
-  UUID?: string;
-  description?: string;
-  additionalDescriptions?: string;
-  category?: string;
-  brandName?: string;
-  householdServingFullText?: string;
-  servings?: string;
-  servingSize?: number;
-  servingSizeUnit?: string;
-  foodNutrients?: Nutrient[];
-};
-
-export type Nutrient = {
-  nutrientName?: string;
-  value?: number;
-  unitName?: string;
-};
+import { FoodItem, NutrientValues } from './types.ts';
 
 /**
  * Convert user input into format used by API
@@ -160,44 +131,44 @@ export async function retrieve(key: string): Promise<string | null> {
  */
 export function getMainNutrients(food: FoodItem): NutrientValues {
   let ret: NutrientValues = {
-    protein: {value: 0},
-    carbs: {value: 0},
-    fat: {value: 0},
-    sugar: {value: 0},
-    fiber: {value: 0},
-    sodium: {value: 0},
-    saturatedFat: {value: 0},
-    cholesterol: {value: 0},
+    protein: { value: 0 },
+    carbs: { value: 0 },
+    fat: { value: 0 },
+    sugar: { value: 0 },
+    fiber: { value: 0 },
+    sodium: { value: 0 },
+    saturatedFat: { value: 0 },
+    cholesterol: { value: 0 },
   };
   food?.foodNutrients?.map((nutrient, i) => {
     switch (nutrient.nutrientName) {
       case 'Protein':
-        ret.protein = {...nutrient};
+        ret.protein = { ...nutrient };
         break;
       case 'Carbohydrate, by difference':
-        ret.carbs = {...nutrient};
+        ret.carbs = { ...nutrient };
         break;
       case 'Total lipid (fat)':
-        ret.fat = {...nutrient};
+        ret.fat = { ...nutrient };
         break;
       case 'Sugars, total including NLEA':
-        ret.sugar = {...nutrient};
+        ret.sugar = { ...nutrient };
         break;
       case 'Fiber, total dietary':
-        ret.fiber = {...nutrient};
+        ret.fiber = { ...nutrient };
         break;
       case 'Sodium, Na':
-        ret.sodium = {...nutrient};
+        ret.sodium = { ...nutrient };
         break;
       case 'Fatty acids, total saturated':
-        ret.saturatedFat = {...nutrient};
+        ret.saturatedFat = { ...nutrient };
         break;
       case 'Cholesterol':
-        ret.cholesterol = {...nutrient};
+        ret.cholesterol = { ...nutrient };
         break;
       default:
         break;
     }
   });
-  return {...ret};
+  return { ...ret };
 }
