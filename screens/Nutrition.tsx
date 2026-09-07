@@ -202,9 +202,9 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
         />
       </HStack>
       <Nutrients
-        protein={totals.protein}
-        fat={totals.fat}
-        carbs={totals.carbs}
+        Protein={totals.protein}
+        Fat={totals.fat}
+        Carbs={totals.carbs}
       />
       <Button
         style={{ margin: 10 }}
