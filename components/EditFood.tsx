@@ -61,7 +61,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
   const [dropdown, setDropdown] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
   useEffect(() => {
-    scrollRef.current?.scrollToEnd({ animated: true });
+    if (dropdown) scrollRef.current?.scrollToEnd({ animated: true });
   }, [dropdown]);
 
   useEffect(() => {
@@ -281,93 +281,57 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
   };
 
   return (
-    <ScrollView ref={scrollRef}>
-      <VStack style={{ marginBottom: 10 }}>
-        <WhiteText>Brand Name:</WhiteText>
-        <Input>
-          <InputField
-            color={'white'}
-            value={descriptors.brandName}
-            onChangeText={text =>
-              setDescriptors({ ...descriptors, brandName: text })
-            }
-          />
-        </Input>
-        <WhiteText>Description:</WhiteText>
-        <Input>
-          <InputField
-            color={'white'}
-            value={descriptors.description}
-            onChangeText={text =>
-              setDescriptors({ ...descriptors, description: text })
-            }
-          />
-        </Input>
-        <WhiteText>Additional Description:</WhiteText>
-        <Input>
-          <InputField
-            color={'white'}
-            value={descriptors.additionalDescriptions}
-            onChangeText={text =>
-              setDescriptors({ ...descriptors, additionalDescriptions: text })
-            }
-          />
-        </Input>
-        <WhiteText>Category:</WhiteText>
-        <Input>
-          <InputField
-            color={'white'}
-            value={descriptors.category}
-            onChangeText={text =>
-              setDescriptors({ ...descriptors, category: text })
-            }
-          />
-        </Input>
-        <WhiteText>Meal:</WhiteText>
-        <Select
-          selectedValue={meal}
-          defaultValue="Breakfast"
-          onValueChange={itemValue => setMeal(itemValue)}
-        >
-          <SelectTrigger variant="outline">
-            <SelectInput style={{ color: 'white' }} />
-            <SelectIcon>
-              <ChevronDownIcon size={'sm'} color={'white'} />
-            </SelectIcon>
-          </SelectTrigger>
-          <SelectPortal>
-            <SelectBackdrop />
-            <SelectContent>
-              <SelectDragIndicatorWrapper>
-                <SelectDragIndicator />
-              </SelectDragIndicatorWrapper>
-              <SelectItem label="Breakfast" value="Breakfast" />
-              <SelectItem label="Lunch" value="Lunch" />
-              <SelectItem label="Dinner" value="Dinner" />
-              <SelectItem label="Snacks" value="Snacks" />
-            </SelectContent>
-          </SelectPortal>
-        </Select>
-        <WhiteText style={{ paddingTop: 10, paddingRight: 10 }}>
-          Serving Size
-        </WhiteText>
-        <HStack>
-          <Input width={60}>
+    <View style={{ flex: 1, paddingBottom: 30 }}>
+      <ScrollView
+        ref={scrollRef}
+        style={{ height: '100%', overflow: 'scroll' }}
+      >
+        <VStack style={{ marginBottom: 10 }}>
+          <WhiteText>Brand Name:</WhiteText>
+          <Input>
             <InputField
               color={'white'}
-              value={servings.servingSize.toString()}
+              value={descriptors.brandName}
               onChangeText={text =>
-                setServings({ ...servings, servingSize: Number(text) || 0 })
+                setDescriptors({ ...descriptors, brandName: text })
               }
             />
           </Input>
+          <WhiteText>Description:</WhiteText>
+          <Input>
+            <InputField
+              color={'white'}
+              value={descriptors.description}
+              onChangeText={text =>
+                setDescriptors({ ...descriptors, description: text })
+              }
+            />
+          </Input>
+          <WhiteText>Additional Description:</WhiteText>
+          <Input>
+            <InputField
+              color={'white'}
+              value={descriptors.additionalDescriptions}
+              onChangeText={text =>
+                setDescriptors({ ...descriptors, additionalDescriptions: text })
+              }
+            />
+          </Input>
+          <WhiteText>Category:</WhiteText>
+          <Input>
+            <InputField
+              color={'white'}
+              value={descriptors.category}
+              onChangeText={text =>
+                setDescriptors({ ...descriptors, category: text })
+              }
+            />
+          </Input>
+          <WhiteText>Meal:</WhiteText>
           <Select
-            w={100}
-            h={10}
-            selectedValue={servings.servingSizeUnit}
-            onValueChange={itemValue =>
-              setServings({ ...servings, servingSizeUnit: itemValue })
-            }
+            selectedValue={meal}
+            defaultValue="Breakfast"
+            onValueChange={itemValue => setMeal(itemValue)}
           >
             <SelectTrigger variant="outline">
               <SelectInput style={{ color: 'white' }} />
@@ -381,67 +345,126 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
                 <SelectDragIndicatorWrapper>
                   <SelectDragIndicator />
                 </SelectDragIndicatorWrapper>
-                <Select.Item label="g" value="g" />
-                <Select.Item label="ml" value="ml" />
-                <Select.Item label="lbs" value="lbs" />
-                <Select.Item label="oz" value="oz" />
+                <SelectItem label="Breakfast" value="Breakfast" />
+                <SelectItem label="Lunch" value="Lunch" />
+                <SelectItem label="Dinner" value="Dinner" />
+                <SelectItem label="Snacks" value="Snacks" />
               </SelectContent>
             </SelectPortal>
           </Select>
+          <WhiteText style={{ paddingTop: 10, paddingRight: 10 }}>
+            Serving Size
+          </WhiteText>
+          <HStack>
+            <Input width={60}>
+              <InputField
+                color={'white'}
+                value={servings.servingSize.toString()}
+                onChangeText={text =>
+                  setServings({ ...servings, servingSize: Number(text) || 0 })
+                }
+              />
+            </Input>
+            <Select
+              w={100}
+              h={10}
+              selectedValue={servings.servingSizeUnit}
+              onValueChange={itemValue =>
+                setServings({ ...servings, servingSizeUnit: itemValue })
+              }
+            >
+              <SelectTrigger variant="outline">
+                <SelectInput style={{ color: 'white' }} />
+                <SelectIcon>
+                  <ChevronDownIcon size={'sm'} color={'white'} />
+                </SelectIcon>
+              </SelectTrigger>
+              <SelectPortal>
+                <SelectBackdrop />
+                <SelectContent>
+                  <SelectDragIndicatorWrapper>
+                    <SelectDragIndicator />
+                  </SelectDragIndicatorWrapper>
+                  <Select.Item label="g" value="g" />
+                  <Select.Item label="ml" value="ml" />
+                  <Select.Item label="lbs" value="lbs" />
+                  <Select.Item label="oz" value="oz" />
+                </SelectContent>
+              </SelectPortal>
+            </Select>
+          </HStack>
+          <WhiteText>Number of servings</WhiteText>
+          <Input h={'10%'}>
+            <InputField
+              color={'white'}
+              value={servings.servings.toString()}
+              onChangeText={text =>
+                setServings({ ...servings, servings: Number(text) || 0 })
+              }
+            />
+          </Input>
+        </VStack>
+        <HStack justifyContent="space-evenly">
+          {displayNutrient('Protein')}
+          {displayNutrient('Fat')}
+          {displayNutrient('Carbs')}
         </HStack>
-        <WhiteText>Number of servings</WhiteText>
-        <Input h={'10%'}>
-          <InputField
-            color={'white'}
-            value={servings.servings.toString()}
-            onChangeText={text =>
-              setServings({ ...servings, servings: Number(text) || 0 })
-            }
-          />
-        </Input>
-      </VStack>
-      <HStack justifyContent="space-evenly">
-        {displayNutrient('Protein')}
-        {displayNutrient('Fat')}
-        {displayNutrient('Carbs')}
-      </HStack>
-      <Pressable
-        onPress={() => {
-          setDropdown(!dropdown);
-        }}
-      >
-        <HStack
-          borderWidth={1}
-          borderColor="gray.300"
-          marginBottom={2}
-          justifyContent="center"
-        >
-          <WhiteText>Additional Nutrients</WhiteText>
-          <FontAwesome5 name="caret-down" iconStyle="solid" size={20} />
-        </HStack>
-      </Pressable>
-      <ScrollView
-        style={{
-          flex: 1,
-          width: dropdown ? '100%' : 0,
-          height: dropdown ? '100%' : 0,
-          paddingBottom: 20,
-        }}
-      >
-        {displayAdditionalNutrients('saturatedFat', 'g')}
-        {displayAdditionalNutrients('cholesterol', 'mg')}
-        {displayAdditionalNutrients('sodium', 'mg')}
-        {displayAdditionalNutrients('fiber', 'g')}
-        {displayAdditionalNutrients('sugar', 'g')}
+        <VStack style={{ marginBottom: 30 }}>
+          <Pressable
+            onPress={() => {
+              setDropdown(!dropdown);
+            }}
+          >
+            <HStack
+              borderWidth={1}
+              borderColor="gray.300"
+              marginBottom={2}
+              justifyContent="center"
+            >
+              <WhiteText>Additional Nutrients</WhiteText>
+              <FontAwesome5 name="caret-down" iconStyle="solid" size={20} />
+            </HStack>
+          </Pressable>
+          <ScrollView
+            style={{
+              flex: 1,
+              height: dropdown ? '100%' : 0,
+              paddingBottom: dropdown ? 20 : 0,
+              paddingLeft: 10,
+              paddingRight: 10,
+              marginBottom: 100,
+            }}
+          >
+            {displayAdditionalNutrients('saturatedFat', 'g')}
+            {displayAdditionalNutrients('cholesterol', 'mg')}
+            {displayAdditionalNutrients('sodium', 'mg')}
+            {displayAdditionalNutrients('fiber', 'g')}
+            {displayAdditionalNutrients('sugar', 'g')}
+          </ScrollView>
+          <View
+            style={{
+              alignItems: 'center',
+              backgroundColor: 'green',
+              padding: 5,
+              position: 'absolute',
+              right: 0,
+              left: 0,
+              bottom: 0,
+            }}
+          >
+            <Button
+              onPress={async () => {
+                await addFood();
+              }}
+              variant="link"
+            >
+              <Text style={{ color: 'white', backgroundColor: 'green' }}>
+                {props.isNew ? 'Add' : 'Apply'}
+              </Text>
+            </Button>
+          </View>
+        </VStack>
       </ScrollView>
-      <Button
-        onPress={async () => {
-          await addFood();
-        }}
-        variant="link"
-      >
-        <Text style={{ color: 'white' }}>{props.isNew ? 'Add' : 'Apply'}</Text>
-      </Button>
-    </ScrollView>
+    </View>
   );
 }
