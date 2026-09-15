@@ -7,7 +7,6 @@ module.exports = {
         root: ['./'],
         alias: {
           '@': './',
-          'tailwind.config': './tailwind.config.js',
         },
       },
     ],
