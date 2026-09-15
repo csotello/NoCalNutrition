@@ -15,6 +15,9 @@ import { Task } from './components/Task';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import '@/global.css';
+
 const headerStyle = {
   headerStyle: {
     backgroundColor: styles.navigator.backgroundColor,
@@ -31,6 +34,8 @@ function App(): React.JSX.Element {
   const Stack = createNativeStackNavigator();
   const MainTabs = () => {
     return (
+      
+    <GluestackUIProvider mode="dark">
       <Tab.Navigator
         activeColor={styles.navigator.activeColor}
         barStyle={{ backgroundColor: styles.navigator.backgroundColor }}
@@ -38,7 +43,9 @@ function App(): React.JSX.Element {
         <Tab.Screen
           name="Nutrition"
           component={Nutrition}
-          // initialParams={{date: new Date().toDateString()}}
+          // initialParams={{date: new Date().toDateString(
+    </GluestackUIProvider>
+  )}}
           options={{
             tabBarLabel: 'Nutrition',
             // headerShown: false,

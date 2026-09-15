@@ -1,9 +1,25 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["node"],
-    "jsx": "react"
+    "types": [
+      "node"
+    ],
+    "jsx": "react",
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "tailwind.config": [
+        "./tailwind.config.js"
+      ]
+    }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/Pods"
+  ]
 }
