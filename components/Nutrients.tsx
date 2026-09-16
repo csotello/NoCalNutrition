@@ -1,13 +1,11 @@
-import {
-  Text,
-  ScrollView,
-  View,
-  Center,
-  Box,
-  Progress,
-  VStack,
-  HStack,
-} from '@gluestack-ui/themed';
+import {View} from '@/components/ui/view'
+import {HStack} from '@/components/ui/hstack'
+import {VStack} from '@/components/ui/vstack'
+import {Progress, ProgressFilledTrack} from '@/components/ui/progress'
+import {Box} from '@/components/ui/box'
+import {Center} from '@/components/ui/center'
+import {Text} from '@/components/ui/text'
+import {ScrollView} from '@/components/ui/scroll-view'
 import React from 'react';
 import { useState, useEffect } from 'react';
 import styles from '../styles/styles';
@@ -61,9 +59,9 @@ export function Nutrients(props: Nutrients) {
           {props[name] || 0} / {goals[name]}
         </Text>
         <Center w="80%">
-          <Box w="70%" marginRight={30}>
+          <Box className="w-70 mr-30">
             <Progress value={(Number(props[name]) / Number(goals[name])) * 100}>
-              <Progress.FilledTrack bg={color} />
+              <ProgressFilledTrack className={`bg-${color?.replace('#', '')}`} />
             </Progress>
           </Box>
         </Center>

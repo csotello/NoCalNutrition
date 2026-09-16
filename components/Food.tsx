@@ -1,18 +1,9 @@
-import {
-  View,
-  Button,
-  AlertDialog,
-  Heading,
-  AlertDialogBackdrop,
-  AlertDialogContent,
-  AlertDialogCloseButton,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
-  HStack,
-  VStack,
-  ButtonIcon,
-} from '@gluestack-ui/themed';
+import {View} from '@/components/ui/view'
+import {HStack} from '@/components/ui/hstack'
+import {VStack} from '@/components/ui/vstack'
+import {Button, ButtonIcon} from '@/components/ui/button'
+import {Heading} from '@/components/ui/heading'
+import {AlertDialog, AlertDialogBackdrop, AlertDialogContent, AlertDialogCloseButton, AlertDialogHeader, AlertDialogBody, AlertDialogFooter} from '@/components/ui/alert-dialog'
 import React from 'react';
 import { Text } from 'react-native';
 import { WhiteText } from '../styledComponents/WhiteText';
@@ -69,7 +60,7 @@ export function Food(props: any): React.JSX.Element {
             style={{ paddingLeft: 10, marginBottom: 10, paddingBottom: 10 }}
           >
             <HStack space={'4xl'}>
-              <VStack justifyContent="flex-start" paddingRight={'30%'}>
+              <VStack className="justify-start pr-30">
                 <View style={{ maxWidth: '80%' }}>
                   <WhiteText>
                     {item.brandName} {'\n'}

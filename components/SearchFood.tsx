@@ -1,16 +1,14 @@
-import {
-  Button,
-  ScrollView,
-  Input,
-  InputField,
-  View,
-  HStack,
-} from '@gluestack-ui/themed';
+
 import { API_KEY } from '@env';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { WhiteText } from '../styledComponents/WhiteText';
+import {HStack} from '@/components/ui/hstack'
+import {View} from '@/components/ui/view'
+import {Input, InputField} from '@/components/ui/input'
+import {ScrollView} from '@/components/ui/scroll-view'
+import {Button} from '@/components/ui/button'
 import { getMainNutrients } from '../utils';
 import { Keyboard, Pressable, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';

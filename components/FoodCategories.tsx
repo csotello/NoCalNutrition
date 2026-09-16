@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import React from 'react';
 import { View, Text, ScrollView, ToastAndroid, Keyboard } from 'react-native';
-import { Modal, Input, Button, InputField } from '@gluestack-ui/themed';
+import {Modal} from '@/components/ui/modal'
+import {Input, InputField} from '@/components/ui/input'
+import {Button} from '@/components/ui/button'
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import styles from '../styles/styles';
@@ -72,13 +74,12 @@ function FoodCategories(): React.JSX.Element {
       <Input>
         <InputField
           value={text}
-          onChangeText={txt => setText(txt)}
-          size={'sm'}
-          color={'white'}
+          onChangeText={txt => setText(txt)}         
+          className="bg-white text-black"
           placeholder="New Category"
         />
       </Input>
-      <Button w={'100%'} alignSelf={'center'} onPress={() => add(text)}>
+      <Button className="w-100 center" onPress={() => add(text)}>
         <Text>Add</Text>
       </Button>
     </View>

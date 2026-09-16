@@ -1,30 +1,29 @@
 import {
-  ScrollView,
-  View,
   AlertDialog,
-  Button,
-  ButtonIcon,
   AlertDialogBackdrop,
-  Heading,
   AlertDialogHeader,
   AlertDialogCloseButton,
   AlertDialogBody,
   AlertDialogFooter,
   AlertDialogContent,
-  HStack,
-  VStack,
 } from '@gluestack-ui/themed';
+import { VStack } from '@/components/ui/vstack';
+import { HStack } from '@/components/ui/hstack';
+import { Button, ButtonIcon } from '@/components/ui/button';
+import { Heading } from '@/components/ui/heading';
+import { ScrollView } from '@/components/ui/scroll-view';
+import { View } from '@/components/ui/view';
 import React from 'react';
 import { Text } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { WhiteText } from '../styledComponents/WhiteText.tsx';
+import { WhiteText } from '../styledComponents/WhiteText';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-import { getMainNutrients } from '../utils.tsx';
+import { getMainNutrients } from '../utils';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import styles from '../styles/styles.tsx';
-import { FoodItem } from '../types.ts';
+import styles from '../styles/styles';
+import type { FoodItem } from '../types';
 
 export function CustomFoods(props: any): React.JSX.Element {
   const [foods, setFoods] = useState<FoodItem[]>([]);
@@ -68,8 +67,8 @@ export function CustomFoods(props: any): React.JSX.Element {
    * Removes a food from the list
    * @param {object} food - The food to be removed
    */
-  async function removeFood(food: any) {
-    var cur = foods?.filter(item => item.UUID !== food.UUID);
+  async function removeFood(food: FoodItem) {
+    const cur = foods.filter(item => item.UUID !== food.UUID);
     setFoods([...cur]);
     store([...cur]);
   }
@@ -79,8 +78,8 @@ export function CustomFoods(props: any): React.JSX.Element {
    *
    * @param {object} food - The food to be rendered
    */
-  function displayFoods(food: any): React.JSX.Element {
-    let nutrients = getMainNutrients(food);
+  function displayFoods(food: FoodItem): React.JSX.Element {
+    const nutrients = getMainNutrients(food);
     return (
       <HStack space="xl">
         <View style={{ paddingRight: 10, minWidth: 100 }}>
@@ -91,7 +90,7 @@ export function CustomFoods(props: any): React.JSX.Element {
           )}
           {food.servingSize && (
             <WhiteText>
-              {food.servingSize} {food.servingSizeUnit.toLocaleLowerCase()}
+              {food.servingSize} {food.servingSizeUnit?.toLocaleLowerCase() ?? ''}
             </WhiteText>
           )}
         </View>
@@ -148,7 +147,7 @@ export function CustomFoods(props: any): React.JSX.Element {
     );
   }
 
-  function alertDialog(food: any): React.JSX.Element {
+  function alertDialog(food: FoodItem): React.JSX.Element {
     return (
       <AlertDialog
         isOpen={isOpen}
@@ -183,7 +182,7 @@ export function CustomFoods(props: any): React.JSX.Element {
   return (
     <ScrollView>
       <WhiteText>Custom Foods</WhiteText>
-      {foods?.map((item, i) => {
+      {foods?.map((item: FoodItem, i: number) => {
         return <View key={i}>{displayFoods(item)}</View>;
       })}
     </ScrollView>

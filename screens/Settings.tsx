@@ -1,16 +1,9 @@
 import { useState } from 'react';
 import { View, Text } from 'react-native';
 import React from 'react';
-import {
-  Modal,
-  Button,
-  ModalBackdrop,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
-  ModalBody,
-  Heading,
-} from '@gluestack-ui/themed';
+import {Modal, ModalBackdrop, ModalContent, ModalCloseButton, ModalHeader, ModalBody} from '@/components/ui/modal'
+import {Heading} from '@/components/ui/heading'
+import {Button} from '@/components/ui/button'
 import { store } from '../utils';
 import styles from '../styles/styles';
 import Goals from '../components/Goals';
@@ -25,7 +18,7 @@ export function Settings() {
       style={{ backgroundColor: styles.primaryBackgroundColor, height: '100%' }}
     >
       <Button
-        size={'md'}
+        size={'default'}
         onPress={() => {
           setVisible(prev => !prev);
           setSelected('catagories');
@@ -34,7 +27,7 @@ export function Settings() {
         <Text>Customize Catagories</Text>
       </Button>
       <Button
-        size={'md'}
+        size={'default'}
         onPress={() => {
           setVisible(prev => !prev);
           setSelected('goals');
@@ -55,13 +48,13 @@ export function Settings() {
         size="lg"
       >
         <ModalBackdrop />
-        <ModalContent h={'80%'} backgroundColor={styles.primaryBackgroundColor}>
+        <ModalContent className={`h-80 bg-${styles.primaryBackgroundColor}`} >
           <ModalHeader>
-            <Heading size="lg" color="white">
+            <Heading size="lg" className="bg-white">
               {selected === 'catagories' ? 'Catagories' : 'Set Nutrient Goals'}
             </Heading>
             <ModalCloseButton
-              bgColor="white"
+              className="bg-white"
               style={{ alignContent: 'center' }}
             />
             {selected === 'catagories' ? 'Catagories' : 'Goals'}

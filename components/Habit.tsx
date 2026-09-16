@@ -1,8 +1,11 @@
 import { ScrollView, Text } from 'react-native';
 import React from 'react';
-import { Box, Button, ButtonIcon, HStack } from '@gluestack-ui/themed';
+import {Box} from '@/components/ui/box'
+import {Button, ButtonIcon} from '@/components/ui/button'
+import {HStack} from '@/components/ui/hstack'
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { useState } from 'react';
+import { ChevronLeftIcon, EditIcon, TrashIcon } from './ui/icon';
 export function Habit(props: any) {
   const [days, setDays] = useState<{ [key: string]: string }>(props.habit.days);
   const dayText: { [key: string]: string } = {
@@ -37,7 +40,7 @@ export function Habit(props: any) {
   return (
     <ScrollView>
       <Box style={{ borderRadius: 10 }}>
-        <HStack w={'100%'}>
+        <HStack className="w-100">
           <Text style={{ paddingLeft: 20, fontSize: 20 }}>
             {props.habit.title}
           </Text>
@@ -45,35 +48,27 @@ export function Habit(props: any) {
             {props.habit.catagory}
           </Text>
           <Button onPress={() => props.edit(props.habit)}>
-            <ButtonIcon
-              as={<FontAwesome5 iconStyle="solid" name="edit" size={30} />}
-            />
+            <ButtonIcon as={EditIcon}/>
           </Button>
           <Button onPress={() => props.remove(props.habit.title)}>
             <ButtonIcon
-              as={<FontAwesome5 iconStyle="solid" name="trash" size={30} />}
+              as={TrashIcon}
             />
           </Button>
           <Button onPress={() => reset()}>
             <ButtonIcon
-              as={<FontAwesome5 iconStyle="solid" name="undo" size={30} />}
+              as={ChevronLeftIcon}
             />
           </Button>
         </HStack>
-        <HStack w={'100%'}>
+        <HStack className="w-100">
           {Object.keys(days).map((day, i) => {
+            let color = days[day] == 'Default' ? '#6fdc6f' : '#178237';
             return (
-              <Button
-                borderRadius={100}
-                variant="outline"
-                borderColor={'amber.100'}
-                marginBottom={10}
-                marginRight={2}
-                w={'12%'}
-                h={10}
+              <Button className={`w-12 h-10 mr-2 mb-10 rounded-full border-amber-100 bg-${color?.replace('#', '')}`} 
                 key={i}
                 onPress={evt => handleClick(day)}
-                bg={days[day] == 'Default' ? '#6fdc6f' : '#178237'}
+                // bg={days[day] == 'Default' ? '#6fdc6f' : '#178237'}
               >
                 {dayText[day]}
               </Button>

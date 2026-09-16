@@ -1,21 +1,9 @@
-import {
-  Button,
-  Input,
-  Select,
-  ChevronDownIcon,
-  HStack,
-  InputField,
-  VStack,
-  SelectIcon,
-  SelectBackdrop,
-  SelectItem,
-  SelectContent,
-  SelectPortal,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectTrigger,
-  SelectInput,
-} from '@gluestack-ui/themed';
+import {Button} from '@/components/ui/button'
+import {Input, InputField} from '@/components/ui/input'
+import {Select, SelectTrigger, SelectInput, SelectIcon, SelectBackdrop, SelectContent, SelectItem, SelectPortal, SelectDragIndicatorWrapper, SelectDragIndicator} from '@/components/ui/select'
+import {HStack} from '@/components/ui/hstack'
+import {VStack} from '@/components/ui/vstack'
+import {ChevronDownIcon} from '@/components/ui/icon'
 import uuid from 'uuid-random';
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
@@ -60,9 +48,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
   const [meal, setMeal] = useState('Breakfast');
   const [dropdown, setDropdown] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
-  useEffect(() => {
-    if (dropdown) scrollRef.current?.scrollToEnd({ animated: true });
-  }, [dropdown]);
+  // useEffect(() => {
+  //   if (dropdown) scrollRef.current?.scrollToEnd({ animated: true });
+  // }, [dropdown]);
 
   useEffect(() => {
     var serving = props.food.servingSize || 0;
@@ -199,9 +187,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
    */
   function displayNutrient(nutrient: any) {
     return (
-      <HStack alignItems={'center'}>
+      <HStack className="justify-center" space={"md"}>
         <WhiteText>{nutrient}: </WhiteText>
-        <VStack alignItems="center" pl={2} pr={2}>
+        <VStack className="align-center pl-2 pr-2">
           <FontAwesome5
             name="caret-up"
             size={20}
@@ -214,9 +202,8 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             }}
           />
           <HStack>
-            <Input width={60}>
+            <Input className="w-60 bg-white">
               <InputField
-                color={'white'}
                 keyboardType={'numeric'}
                 value={nutrients[nutrient.toLowerCase()].toString()}
                 onChangeText={(text: string) => {
@@ -261,11 +248,10 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             marginRight: 5,
           }}
         >
-          <Input justifyContent="flex-end">
+          <Input  className="justify-end bg-white">
             <InputField
-              w={'30%'}
               keyboardType="number-pad"
-              color={'white'}
+              className="w-30"
               value={nutrients.fiber.toString()}
               onChangeText={txt =>
                 setNutrients({ ...nutrients, nutrient: Number(txt) })
@@ -283,14 +269,14 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
   return (
     <View style={{ flex: 1, paddingBottom: 30 }}>
       <ScrollView
-        ref={scrollRef}
+        // ref={scrollRef}
         style={{ height: '100%', overflow: 'scroll' }}
       >
         <VStack style={{ marginBottom: 10 }}>
           <WhiteText>Brand Name:</WhiteText>
           <Input>
             <InputField
-              color={'white'}
+              className="bg-white text-black"
               value={descriptors.brandName}
               onChangeText={text =>
                 setDescriptors({ ...descriptors, brandName: text })
@@ -300,7 +286,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
           <WhiteText>Description:</WhiteText>
           <Input>
             <InputField
-              color={'white'}
+              className="bg-white text-black"
               value={descriptors.description}
               onChangeText={text =>
                 setDescriptors({ ...descriptors, description: text })
@@ -310,7 +296,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
           <WhiteText>Additional Description:</WhiteText>
           <Input>
             <InputField
-              color={'white'}
+              className="bg-white text-black"
               value={descriptors.additionalDescriptions}
               onChangeText={text =>
                 setDescriptors({ ...descriptors, additionalDescriptions: text })
@@ -320,7 +306,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
           <WhiteText>Category:</WhiteText>
           <Input>
             <InputField
-              color={'white'}
+              className="bg-white text-black"
               value={descriptors.category}
               onChangeText={text =>
                 setDescriptors({ ...descriptors, category: text })
@@ -335,8 +321,8 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
           >
             <SelectTrigger variant="outline">
               <SelectInput style={{ color: 'white' }} />
-              <SelectIcon>
-                <ChevronDownIcon size={'sm'} color={'white'} />
+              <SelectIcon size={'sm'} color={'white'}>
+                <ChevronDownIcon />
               </SelectIcon>
             </SelectTrigger>
             <SelectPortal>
@@ -356,9 +342,8 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             Serving Size
           </WhiteText>
           <HStack>
-            <Input width={60}>
+            <Input className="bg-white w-60">
               <InputField
-                color={'white'}
                 value={servings.servingSize.toString()}
                 onChangeText={text =>
                   setServings({ ...servings, servingSize: Number(text) || 0 })
@@ -366,8 +351,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               />
             </Input>
             <Select
-              w={100}
-              h={10}
+              className="w-100 h-10"
               selectedValue={servings.servingSizeUnit}
               onValueChange={itemValue =>
                 setServings({ ...servings, servingSizeUnit: itemValue })
@@ -375,8 +359,8 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             >
               <SelectTrigger variant="outline">
                 <SelectInput style={{ color: 'white' }} />
-                <SelectIcon>
-                  <ChevronDownIcon size={'sm'} color={'white'} />
+                <SelectIcon size={'sm'} color={'white'}>
+                  <ChevronDownIcon  />
                 </SelectIcon>
               </SelectTrigger>
               <SelectPortal>
@@ -385,18 +369,17 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
                   <SelectDragIndicatorWrapper>
                     <SelectDragIndicator />
                   </SelectDragIndicatorWrapper>
-                  <Select.Item label="g" value="g" />
-                  <Select.Item label="ml" value="ml" />
-                  <Select.Item label="lbs" value="lbs" />
-                  <Select.Item label="oz" value="oz" />
+                  <SelectItem label="g" value="g" />
+                  <SelectItem label="ml" value="ml" />
+                  <SelectItem label="lbs" value="lbs" />
+                  <SelectItem label="oz" value="oz" />
                 </SelectContent>
               </SelectPortal>
             </Select>
           </HStack>
           <WhiteText>Number of servings</WhiteText>
-          <Input h={'10%'}>
+          <Input className="bg-white h-10">
             <InputField
-              color={'white'}
               value={servings.servings.toString()}
               onChangeText={text =>
                 setServings({ ...servings, servings: Number(text) || 0 })
@@ -404,7 +387,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             />
           </Input>
         </VStack>
-        <HStack justifyContent="space-evenly">
+        <HStack className="justify-evenly">
           {displayNutrient('Protein')}
           {displayNutrient('Fat')}
           {displayNutrient('Carbs')}
@@ -415,12 +398,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               setDropdown(!dropdown);
             }}
           >
-            <HStack
-              borderWidth={1}
-              borderColor="gray.300"
-              marginBottom={2}
-              justifyContent="center"
-            >
+            <HStack className="justify-center border-1 border-gray-300 mb-2">
               <WhiteText>Additional Nutrients</WhiteText>
               <FontAwesome5 name="caret-down" iconStyle="solid" size={20} />
             </HStack>

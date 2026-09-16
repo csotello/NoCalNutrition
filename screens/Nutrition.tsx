@@ -1,10 +1,6 @@
-import {
-  Text,
-  // ScrollView,
-  Button,
-  HStack,
-  ButtonIcon,
-} from '@gluestack-ui/themed';
+import {Text} from '@/components/ui/text'
+import {Button, ButtonIcon} from '@/components/ui/button'
+import {HStack} from '@/components/ui/hstack'
 import { ScrollView } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';

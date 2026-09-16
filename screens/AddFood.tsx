@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import React from 'react';
-import { HStack, Modal } from '@gluestack-ui/themed';
+import {HStack} from '@/components/ui/hstack'
+import {Modal} from '@/components/ui/modal'
 import { SearchFood } from '../components/SearchFood';
 import { CustomFoods } from '../components/CustomFoods';
 import { EditFood } from '../components/EditFood';
@@ -175,16 +176,17 @@ export function AddFood({ navigation, route }: any) {
     >
       <HStack>
         <Text
-          style={{
-            width: '34%',
-            padding: 10,
-            justifyContent: 'center',
-            marginBottom: 10,
-            textAlign: 'center',
-            borderColor: 'grey',
-            elevation: 1,
-            color: 'white',
-          }}
+          // style={{
+          //   width: '34%',
+          //   padding: 10,
+          //   justifyContent: 'center',
+          //   marginBottom: 10,
+          //   textAlign: 'center',
+          //   borderColor: 'grey',
+          //   elevation: 1,
+          //   color: 'white',
+          // }}
+          className="w-34 p-10 justify-center mb-10 text-center border-gray-500 shadow-md text-white"
           onPress={() =>
             navigation.navigate('AddFood', {
               page: 'search',
@@ -196,16 +198,17 @@ export function AddFood({ navigation, route }: any) {
           Search
         </Text>
         <Text
-          style={{
-            width: '34%',
-            padding: 10,
-            justifyContent: 'center',
-            marginBottom: 10,
-            textAlign: 'center',
-            borderColor: 'grey',
-            elevation: 1,
-            color: 'white',
-          }}
+          // style={{
+          //   width: '34%',
+          //   padding: 10,
+          //   justifyContent: 'center',
+          //   marginBottom: 10,
+          //   textAlign: 'center',
+          //   borderColor: 'grey',
+          //   elevation: 1,
+          //   color: 'white',
+          // }}
+          className="w-34 p-10 justify-center mb-10 text-center border-gray-500 shadow-md text-white"
           onPress={() =>
             navigation.navigate('AddFood', {
               page: 'custom',
@@ -217,16 +220,17 @@ export function AddFood({ navigation, route }: any) {
           Custom Foods
         </Text>
         <Text
-          style={{
-            width: '34%',
-            padding: 10,
-            justifyContent: 'center',
-            marginBottom: 10,
-            textAlign: 'center',
-            borderColor: 'grey',
-            elevation: 1,
-            color: 'white',
-          }}
+          // style={{
+          //   width: '34%',
+          //   padding: 10,
+          //   justifyContent: 'center',
+          //   marginBottom: 10,
+          //   textAlign: 'center',
+          //   borderColor: 'grey',
+          //   elevation: 1,
+          //   color: 'white',
+          // }}
+          className="w-34 p-10 justify-center mb-10 text-center border-gray-500 shadow-md text-white"
           onPress={() =>
             navigation.navigate('AddFood', {
               page: 'edit',

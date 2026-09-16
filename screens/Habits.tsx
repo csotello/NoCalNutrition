@@ -2,20 +2,14 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { ScrollView, View, Text, Keyboard, ToastAndroid } from 'react-native';
 import { Habit } from '../components/Habit';
-import {
-  Modal,
-  Input,
-  InputField,
-  Button,
-  Box,
-  ModalBackdrop,
-  ModalHeader,
-  ButtonIcon,
-  ModalCloseButton,
-  ModalContent,
-} from '@gluestack-ui/themed';
+import {Modal, ModalBackdrop, ModalContent, ModalCloseButton, ModalHeader, ModalBody} from '@/components/ui/modal'
+import {Input, InputField} from '@/components/ui/input'
+import {Button, ButtonIcon} from '@/components/ui/button'
+import {Box} from '@/components/ui/box'
+import {HStack} from '@/components/ui/hstack'
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { AddIcon } from '@/components/ui/icon';
 export function Habits() {
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
@@ -147,9 +141,8 @@ export function Habits() {
         >
           <ModalBackdrop />
           <ModalContent
-            h={'80%'}
+            className="h-80 pt-10"
             style={{ backgroundColor: '#6fdc6f' }}
-            paddingTop={10}
           >
             <ModalHeader>
               <ModalCloseButton />
@@ -174,13 +167,11 @@ export function Habits() {
           </ModalContent>
         </Modal>
         <Button
-          position={'absolute'}
+          className="absolute right-15 top-450"
           onPress={() => setVisible(prev => !prev)}
-          right={15}
-          top={450}
         >
           <ButtonIcon
-            as={<FontAwesome5 name="plus" iconStyle="solid" size={20} />}
+            as={AddIcon}
           />
         </Button>
         {edit && (
@@ -202,7 +193,6 @@ export function Habits() {
               <InputField
                 value={edit.title}
                 onChangeText={txt => setEdit({ ...edit, title: txt })}
-                size={'sm'}
                 placeholder="Title"
               />
             </Input>
@@ -211,7 +201,6 @@ export function Habits() {
               <InputField
                 value={edit.catagory}
                 onChangeText={txt => setEdit({ ...edit, catagory: txt })}
-                size={'sm'}
                 placeholder="New Task"
               />
             </Input>
