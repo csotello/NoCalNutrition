@@ -33,8 +33,8 @@ it('renders', () => {
   );
 });
 
-it('Has functional edit icon', () => {
-  let {rerender} = render(
+it('Has functional edit icon', async () => {
+  await render(
     <Food
       edit={props.edit}
       remove={props.remove}
