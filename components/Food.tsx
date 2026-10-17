@@ -28,6 +28,7 @@ export function Food(props: any): React.JSX.Element {
       <AlertDialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
+        testID="modal"
         leastDestructiveRef={cancelRef}
       >
         <AlertDialogBackdrop />
