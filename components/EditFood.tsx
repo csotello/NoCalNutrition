@@ -457,6 +457,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
                 await addFood();
               }}
               variant="link"
+              testID="SaveButton"
             >
               <Text style={{ color: 'white', backgroundColor: 'green' }}>
                 {props.isNew ? 'Add' : 'Apply'}
