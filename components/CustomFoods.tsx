@@ -111,6 +111,7 @@ export function CustomFoods(props: any): React.JSX.Element {
           name="plus"
           size={20}
           iconStyle="solid"
+          testID="Add Icon"
           color={'white'}
           onPress={() => {
             navigation.push('AddFood', {
@@ -124,6 +125,7 @@ export function CustomFoods(props: any): React.JSX.Element {
         <FontAwesome5
           name="trash-alt"
           size={20}
+          testID="Delete Icon"
           iconStyle="solid"
           color={'white'}
           onPress={() => setIsOpen(true)}
@@ -133,6 +135,7 @@ export function CustomFoods(props: any): React.JSX.Element {
           name="pencil-alt"
           size={20}
           iconStyle="solid"
+          testID="Edit Icon"
           color={'white'}
           onPress={() =>
             navigation.push('AddFood', {
