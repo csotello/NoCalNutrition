@@ -16,6 +16,7 @@ import {
 } from '@gluestack-ui/themed';
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
+
 export function Habits() {
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
@@ -180,7 +181,10 @@ export function Habits() {
           top={450}
         >
           <ButtonIcon
-            as={<FontAwesome5 name="plus" iconStyle="solid" size={20} />}
+            as={FontAwesome5}
+            name="plus"
+            iconStyle="solid"
+            size={20}
           />
         </Button>
         {edit && (
