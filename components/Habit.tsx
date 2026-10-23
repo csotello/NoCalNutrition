@@ -44,19 +44,31 @@ export function Habit(props: any) {
           <Text style={{ marginLeft: 40, fontSize: 20 }}>
             {props.habit.catagory}
           </Text>
-          <Button onPress={() => props.edit(props.habit)}>
+          <Button testID="Edit Habit" onPress={() => props.edit(props.habit)}>
             <ButtonIcon
-              as={<FontAwesome5 iconStyle="solid" name="edit" size={30} />}
+              as={FontAwesome5}
+              iconStyle="solid"
+              name="edit"
+              size={30}
             />
           </Button>
-          <Button onPress={() => props.remove(props.habit.title)}>
+          <Button
+            testID="Remove Habit"
+            onPress={() => props.remove(props.habit.title)}
+          >
             <ButtonIcon
-              as={<FontAwesome5 iconStyle="solid" name="trash" size={30} />}
+              as={FontAwesome5}
+              iconStyle="solid"
+              name="trash"
+              size={30}
             />
           </Button>
-          <Button onPress={() => reset()}>
+          <Button testID="Reset Habit" onPress={() => reset()}>
             <ButtonIcon
-              as={<FontAwesome5 iconStyle="solid" name="undo" size={30} />}
+              as={FontAwesome5}
+              iconStyle="solid"
+              name="undo"
+              size={30}
             />
           </Button>
         </HStack>
@@ -64,6 +76,7 @@ export function Habit(props: any) {
           {Object.keys(days).map((day, i) => {
             return (
               <Button
+                testID={`Habit Day ${day}`}
                 borderRadius={100}
                 variant="outline"
                 borderColor={'amber.100'}
@@ -72,10 +85,10 @@ export function Habit(props: any) {
                 w={'12%'}
                 h={10}
                 key={i}
-                onPress={evt => handleClick(day)}
+                onPress={() => handleClick(day)}
                 bg={days[day] == 'Default' ? '#6fdc6f' : '#178237'}
               >
-                {dayText[day]}
+                <Text>{dayText[day]}</Text>
               </Button>
             );
           })}
