@@ -152,7 +152,7 @@ export function AddFood({ navigation, route }: any) {
       case 'search':
         return <SearchFood date={date} />;
       case 'custom':
-        return <CustomFoods add={add} date={date} />;
+        return <CustomFoods date={date} />;
       case 'edit':
         return (
           <EditFood
