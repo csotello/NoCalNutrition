@@ -14,19 +14,15 @@ import { WhiteText } from '../styledComponents/WhiteText';
 import { getMainNutrients } from '../utils';
 import { Keyboard, Pressable, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-export function SearchFood(props: any) {
+
+interface SearchFoodProps {
+  date: string;
+}
+
+export function SearchFood(props: SearchFoodProps): React.JSX.Element {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [text, setText] = useState('');
 
-  // useEffect(() => {
-  //   search(text);
-  // }, [text]);
-
-  /**
-   * Makes API call and sets resulting data
-   *
-   * @param {string} food - User input to search
-   */
   function search(food: string) {
     let api_key = API_KEY;
     let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
