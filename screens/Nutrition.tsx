@@ -177,6 +177,7 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
       <HStack style={{ padding: 10, justifyContent: 'center' }}>
         <FontAwesome5
           name="chevron-left"
+          testID="Previous Day"
           size={20}
           iconStyle="solid"
           color={styles.primaryBackgroundColor}
@@ -195,6 +196,7 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
         </Text>
         <FontAwesome5
           name="chevron-right"
+          testID="Next Day"
           size={20}
           iconStyle="solid"
           color={'white'}
@@ -202,9 +204,9 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
         />
       </HStack>
       <Nutrients
-        protein={totals.protein}
-        fat={totals.fat}
-        carbs={totals.carbs}
+        Protein={totals.protein}
+        Fat={totals.fat}
+        Carbs={totals.carbs}
       />
       <Button
         style={{ margin: 10 }}
@@ -235,6 +237,7 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
       >
         <FontAwesome5
           name="plus"
+          testID="Add Food"
           iconStyle="solid"
           color="white"
           size={30}

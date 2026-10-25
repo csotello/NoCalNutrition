@@ -22,6 +22,7 @@ export function Task(props: any): React.JSX.Element {
         {props.task.title}
       </Text>
       <TouchableOpacity
+        testID="Complete Task"
         onPress={() => {
           props.complete(props.task.id);
         }}
@@ -37,6 +38,7 @@ export function Task(props: any): React.JSX.Element {
         </View>
       </TouchableOpacity>
       <TouchableOpacity
+        testID="Delete Task"
         onPress={() => {
           props.delete(props.task.id);
         }}

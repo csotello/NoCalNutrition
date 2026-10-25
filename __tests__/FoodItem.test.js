@@ -1,50 +1,77 @@
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-} from '@testing-library/react-native';
+import {render, fireEvent} from '@testing-library/react-native';
+import {GluestackUIProvider} from '@gluestack-ui/themed';
+import {config} from '@gluestack-ui/config';
 import {Food} from '../components/Food';
 import {defaultFood} from '../utils';
 
-afterEach(cleanup);
-const inset = {
-  frame: {x: 0, y: 0, width: 0, height: 0},
-  insets: {top: 0, left: 0, right: 0, bottom: 0},
-};
-
-let props = {
-  meal: [],
-  title: 'Breakfast',
-  key: 0,
-  remove: jest.fn(),
-  edit: jest.fn(),
-};
-
-it('renders', () => {
-  render(
-    <Food
-      meal={props.meal}
-      title={props.title}
-      key={props.key}
-      remove={props.remove}
-      edit={props.edit}
-    />,
+async function renderFood(overrides = {}) {
+  const food = {
+    ...defaultFood,
+    brandName: 'Kroger',
+    foodNutrients: defaultFood.foodNutrients.map(nutrient => ({
+      ...nutrient,
+      unitName: 'G',
+    })),
+  };
+  const props = {
+    meal: [food],
+    title: 'Breakfast',
+    remove: jest.fn(),
+    edit: jest.fn(),
+    ...overrides,
+  };
+  const rendered = await render(
+    <GluestackUIProvider config={config}>
+      <Food {...props} />
+    </GluestackUIProvider>,
   );
+
+  return {...rendered, props, food};
+}
+
+it('renders an empty meal without food details', async () => {
+  const {getByText, queryByTestId} = await renderFood({meal: []});
+
+  expect(getByText('Breakfast')).toBeTruthy();
+  expect(queryByTestId('Edit Icon')).toBeNull();
+  expect(queryByTestId('Delete Icon')).toBeNull();
 });
 
-it('Has functional edit icon', () => {
-  let {rerender} = render(
-    <Food
-      edit={props.edit}
-      remove={props.remove}
-      meal={[{...defaultFood}]}
-      title="Breakfast"
-    />,
-  );
+it('renders food details and nutrient amounts', async () => {
+  const {getByText} = await renderFood();
 
-  const editIcon = screen.getByTestId('Edit Icon');
-  fireEvent.press(editIcon);
+  expect(getByText(/Kroger Mexican Cheese/)).toBeTruthy();
+  expect(getByText(/Amount: 28 G/)).toBeTruthy();
+  expect(getByText(/P:\s*12\s*G/)).toBeTruthy();
+  expect(getByText(/C:\s*10\s*G/)).toBeTruthy();
+  expect(getByText(/F:\s*8\s*G/)).toBeTruthy();
+});
 
-  expect(props.edit).toHaveBeenCalled();
+it('calls edit with the selected food and meal name', async () => {
+  const {getByTestId, props, food} = await renderFood();
+
+  await fireEvent.press(getByTestId('Edit Icon'));
+
+  expect(props.edit).toHaveBeenCalledWith(food, 'Breakfast');
+});
+
+it('opens a delete confirmation without removing the food', async () => {
+  const {getByTestId, getByText, props} = await renderFood();
+
+  expect(() => getByText('Delete Food')).toThrow();
+  await fireEvent.press(getByTestId('Delete Icon'));
+
+  expect(getByText('Delete Food')).toBeTruthy();
+  expect(getByText(/permanently delete the food item/i)).toBeTruthy();
+  expect(props.remove).not.toHaveBeenCalled();
+});
+
+it('removes the selected food after confirming deletion', async () => {
+  const {getByTestId, queryByText, props, food} = await renderFood();
+
+  await fireEvent.press(getByTestId('Delete Icon'));
+  await fireEvent.press(getByTestId('Delete Button'));
+
+  expect(props.remove).toHaveBeenCalledWith(food, 'Breakfast');
+  expect(queryByText('Delete Food')).toBeNull();
 });
