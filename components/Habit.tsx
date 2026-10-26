@@ -16,7 +16,7 @@ export function Habit(props: any) {
   };
   function handleClick(day: string) {
     let cur = days[day];
-    days[day] = cur == 'Default' ? 'Complete' : 'Default';
+    days[day] = cur === 'Default' ? 'Complete' : 'Default';
     setDays({
       ...days,
     });
@@ -86,7 +86,7 @@ export function Habit(props: any) {
                 h={10}
                 key={i}
                 onPress={() => handleClick(day)}
-                bg={days[day] == 'Default' ? '#6fdc6f' : '#178237'}
+                bg={days[day] === 'Default' ? '#6fdc6f' : '#178237'}
               >
                 <Text>{dayText[day]}</Text>
               </Button>

@@ -1,7 +1,5 @@
 import {
   Text,
-  ScrollView,
-  View,
   Center,
   Box,
   Progress,

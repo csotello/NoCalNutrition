@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import React from 'react';
 import { ScrollView, View, Text, Keyboard, ToastAndroid } from 'react-native';
 import { Habit } from '../components/Habit';
@@ -81,7 +81,7 @@ export function Habits() {
     };
     let has = false;
     habits.forEach(habit => {
-      if (habit.title == cur.title) has = true;
+      if (habit.title === cur.title) has = true;
     });
     if (!has) {
       store([...habits, cur]);
@@ -95,7 +95,7 @@ export function Habits() {
   }
 
   function remove(title: string) {
-    let cur = habits.filter(x => x.title != title);
+    let cur = habits.filter(x => x.title !== title);
     store(cur);
     setHabits(cur);
   }
@@ -137,7 +137,7 @@ export function Habits() {
                 key={i}
                 remove={remove}
                 edit={openEditor}
-              ></Habit>
+              />
             );
           })}
         </ScrollView>

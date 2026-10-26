@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import type { PropsWithChildren } from 'react';
 import { useColorScheme } from 'react-native';
 import { Habits } from './screens/Habits';
 import { Nutrition } from './screens/Nutrition';
@@ -11,7 +10,7 @@ import styles from './styles/styles';
 import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { NavigationContainer } from '@react-navigation/native';
-import { Task } from './components/Task';
+// import { Task } from './components/Task';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -26,7 +25,7 @@ const headerStyle = {
 };
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
   const Tab = createMaterialBottomTabNavigator();
   const Stack = createNativeStackNavigator();
   const MainTabs = () => {

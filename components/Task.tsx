@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Touchable,
-  TouchableOpacity,
-} from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 
 export function Task(props: any): React.JSX.Element {

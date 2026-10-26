@@ -3,7 +3,6 @@ import {
   View,
   AlertDialog,
   Button,
-  ButtonIcon,
   AlertDialogBackdrop,
   Heading,
   AlertDialogHeader,
@@ -12,7 +11,6 @@ import {
   AlertDialogFooter,
   AlertDialogContent,
   HStack,
-  VStack,
 } from '@gluestack-ui/themed';
 import React from 'react';
 import { Text } from 'react-native';
@@ -23,7 +21,7 @@ import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils.tsx';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import styles from '../styles/styles.tsx';
+// import styles from '../styles/styles.tsx';
 import { FoodItem } from '../types.ts';
 
 export function CustomFoods(props: any): React.JSX.Element {
@@ -53,7 +51,7 @@ export function CustomFoods(props: any): React.JSX.Element {
       load();
       setLoaded(true);
     }
-  }, []);
+  }, [loaded]);
 
   async function store(foods: any) {
     try {
