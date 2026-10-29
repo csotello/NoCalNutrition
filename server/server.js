@@ -4,7 +4,7 @@ const express = require('express');
 
 const app = express();
 const host = '0.0.0.0';
-const port = Number(process.env.PORT) || 3000;
+const port = Number(process.env.PORT) || 8080;
 const maxQueryLength = 200;
 
 app.use(express.json({limit: '10kb'}));
