@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,15 +10,15 @@ import {
   Pressable,
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {Task} from '../components/Task';
+import { Task } from '../components/Task';
 import uuid from 'uuid-random';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 export function Tasks(): React.JSX.Element {
   const [tasks, setTask] = useState<
-    {id: string; title: string; completed: boolean}[]
-  >([{id: '0', title: 'Loading...', completed: false}]);
+    { id: string; title: string; completed: boolean }[]
+  >([{ id: '0', title: 'Loading...', completed: false }]);
   const [text, setText] = useState('');
   const [loaded, setLoaded] = useState(false);
 
@@ -54,7 +54,7 @@ export function Tasks(): React.JSX.Element {
     if (task == null) return;
     let current: any[] = [
       ...tasks,
-      {id: uuid(), title: task, completed: false},
+      { id: uuid(), title: task, completed: false },
     ];
     store(current);
     setTask(current);
@@ -71,7 +71,7 @@ export function Tasks(): React.JSX.Element {
 
   function complete(task: any) {
     tasks.forEach(x => {
-      if (x.id == task) {
+      if (x.id === task) {
         x.completed = !x.completed;
       }
     });
@@ -91,7 +91,8 @@ export function Tasks(): React.JSX.Element {
                   style={styles.task}
                   task={task}
                   delete={remove}
-                  complete={complete}></Task>
+                  complete={complete}
+                />
               </View>
             );
           })}
@@ -100,9 +101,10 @@ export function Tasks(): React.JSX.Element {
       <View>
         <TextInput
           onChangeText={txt => setText(txt)}
-          style={{height: 50}}
+          style={{ height: 50 }}
           placeholder="text"
-          value={text}></TextInput>
+          value={text}
+        ></TextInput>
         <Pressable onPress={() => add(text)} style={styles.button}>
           <Text>Add</Text>
         </Pressable>

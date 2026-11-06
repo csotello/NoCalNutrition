@@ -1,9 +1,15 @@
-FROM node
+FROM node:22-bookworm-slim
 
-WORKDIR /usr/app
+ENV NODE_ENV=production
+WORKDIR /app
 
-COPY ./ /usr/app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
 
-RUN npm i
+COPY --chown=node:node server.js ./server.js
 
-CMD ["node", "server.js"]
+USER node
+
+EXPOSE 8080
+
+ENTRYPOINT ["node", "server.js"]

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import React from 'react';
 import { View, Text, ScrollView, ToastAndroid, Keyboard } from 'react-native';
-import { Modal, Input, Button, InputField } from '@gluestack-ui/themed';
+import { Input, Button, InputField } from '@gluestack-ui/themed';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import styles from '../styles/styles';
+// import styles from '../styles/styles';
 import { WhiteText } from '../styledComponents/WhiteText';
 
 function FoodCategories(): React.JSX.Element {
@@ -46,7 +46,7 @@ function FoodCategories(): React.JSX.Element {
   }
 
   function remove(category: string) {
-    let current = categories.filter(cat => cat != category);
+    let current = categories.filter(cat => cat !== category);
     setCategories(current);
     store(current);
   }

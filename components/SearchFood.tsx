@@ -7,7 +7,7 @@ import {
   HStack,
 } from '@gluestack-ui/themed';
 import { API_KEY } from '@env';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { WhiteText } from '../styledComponents/WhiteText';

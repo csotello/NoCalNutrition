@@ -11,13 +11,12 @@ import {
   AlertDialogFooter,
   HStack,
   VStack,
-  ButtonIcon,
 } from '@gluestack-ui/themed';
 import React from 'react';
 import { Text } from 'react-native';
 import { WhiteText } from '../styledComponents/WhiteText';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-import styles from '../styles/styles';
+// import styles from '../styles/styles';
 import { getMainNutrients } from '../utils';
 import { useState, useRef } from 'react';
 export function Food(props: any): React.JSX.Element {

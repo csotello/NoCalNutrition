@@ -24,7 +24,7 @@ import { WhiteText } from '../styledComponents/WhiteText';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { convertCustomFood, store, retrieve } from '../utils';
 import { FoodItem } from '../types';
-import styles from '../styles/styles';
+// import styles from '../styles/styles';
 
 interface EditFoodProps {
   food: FoodItem;

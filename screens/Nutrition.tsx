@@ -1,10 +1,4 @@
-import {
-  Text,
-  // ScrollView,
-  Button,
-  HStack,
-  ButtonIcon,
-} from '@gluestack-ui/themed';
+import { Text, Button, HStack } from '@gluestack-ui/themed';
 import { ScrollView } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
@@ -13,9 +7,18 @@ import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { Food } from '../components/Food';
 import styles from '../styles/styles';
-import { retrieve } from '../utils';
+// import { retrieve } from '../utils';
 import { FoodItem } from '../types';
 import Nutrients from '../components/Nutrients';
+
+function emptyNutrition(): { [key: string]: any[] } {
+  return {
+    Breakfast: [],
+    Lunch: [],
+    Dinner: [],
+    Snacks: [],
+  };
+}
 
 export function Nutrition({ route, navigation }: any): React.JSX.Element {
   const [loaded, setLoaded] = useState(false);
@@ -24,12 +27,7 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
     carbs: 0,
     fat: 0,
   });
-  const [food, setFood] = useState<{ [key: string]: any[] }>({
-    Breakfast: [],
-    Lunch: [],
-    Dinner: [],
-    Snacks: [],
-  });
+  const [food, setFood] = useState<{ [key: string]: any[] }>(emptyNutrition);
   const [date, setDate] = useState<string>(
     route.params?.date || new Date().toDateString(),
   );
@@ -50,13 +48,14 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
     console.log('Loading: ' + key);
     try {
       let val = await EncryptedStorage.getItem('nutrition' + '-' + date);
-      let ret;
       if (val) {
-        ret = JSON.parse(val);
-        setFood(ret);
+        setFood(JSON.parse(val));
         console.log('Loaded: ', val);
+      } else {
+        setFood(emptyNutrition());
       }
     } catch (error) {
+      setFood(emptyNutrition());
       console.log(error);
       console.log('Failed to load');
     }

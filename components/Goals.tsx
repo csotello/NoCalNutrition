@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
-import {
-  Button,
-  HStack,
-  Input,
-  VStack,
-  InputField,
-  Box,
-  View,
-} from '@gluestack-ui/themed';
+import { Button, HStack, Input, InputField } from '@gluestack-ui/themed';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { Text, ScrollView } from 'react-native';
-import styles from '../styles/styles';
+// import styles from '../styles/styles';
 import { WhiteText } from '../styledComponents/WhiteText';
 
 interface Goals {
@@ -30,6 +22,7 @@ function Goals(props: any) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     load();
+    setLoaded(true);
   }, [loaded]);
 
   async function load() {
