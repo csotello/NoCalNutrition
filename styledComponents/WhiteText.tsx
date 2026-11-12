@@ -1,5 +1,6 @@
 import { Text } from 'react-native';
 import React from 'react';
+import styles from '../styles/styles';
 
 type Props = {
   children?: React.ReactNode;
@@ -12,7 +13,7 @@ export function WhiteText({
   style,
   ...rest
 }: Props): React.JSX.Element {
-  const customStyle = { ...style, color: 'white' };
+  const customStyle = { ...style, color: styles.colors.white };
   return (
     <Text style={customStyle} {...rest}>
       {children}

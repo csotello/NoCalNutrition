@@ -1,5 +1,4 @@
 import {
-  ScrollView,
   View,
   AlertDialog,
   Button,
@@ -10,10 +9,9 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   AlertDialogContent,
-  HStack,
 } from '@gluestack-ui/themed';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, ScrollView } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { WhiteText } from '../styledComponents/WhiteText.tsx';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -21,7 +19,7 @@ import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils.tsx';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
-// import styles from '../styles/styles.tsx';
+import styles from '../styles/styles';
 import { FoodItem } from '../types.ts';
 
 export function CustomFoods(props: any): React.JSX.Element {
@@ -80,10 +78,14 @@ export function CustomFoods(props: any): React.JSX.Element {
   function displayFoods(food: any): React.JSX.Element {
     let nutrients = getMainNutrients(food);
     return (
-      <HStack space="xl">
-        <View style={{ paddingRight: 10, minWidth: 100 }}>
-          <WhiteText>{food.description || 'Food Description'}</WhiteText>
-          <WhiteText>{food.brandName || ''}</WhiteText>
+      <View style={[styles.listItem, styles.customFoods.card]}>
+        <View style={styles.customFoods.details}>
+          <WhiteText style={styles.typography.sectionTitle}>
+            {food.description || 'Food Description'}
+          </WhiteText>
+          <WhiteText style={styles.typography.muted}>
+            {food.brandName || ''}
+          </WhiteText>
           {food.householdServingFullText && (
             <WhiteText>{food.householdServingFullText}</WhiteText>
           )}
@@ -93,59 +95,64 @@ export function CustomFoods(props: any): React.JSX.Element {
             </WhiteText>
           )}
         </View>
-        <View>
+        <View style={styles.customFoods.macro}>
           <WhiteText>P</WhiteText>
           <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
         </View>
-        <View>
+        <View style={styles.customFoods.macro}>
           <WhiteText>C</WhiteText>
           <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
         </View>
-        <View style={{ marginRight: 20 }}>
+        <View style={styles.customFoods.macro}>
           <WhiteText>F</WhiteText>
           <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
         </View>
-        <FontAwesome5
-          name="plus"
-          size={20}
-          iconStyle="solid"
-          testID="Add Icon"
-          color={'white'}
-          onPress={() => {
-            navigation.push('AddFood', {
-              page: 'edit',
-              food: { ...food },
-              isNew: true,
-              date: props.date,
-            });
-          }}
-        />
-        <FontAwesome5
-          name="trash-alt"
-          size={20}
-          testID="Delete Icon"
-          iconStyle="solid"
-          color={'white'}
-          onPress={() => setIsOpen(true)}
-        />
-        {alertDialog(food)}
-        <FontAwesome5
-          name="pencil-alt"
-          size={20}
-          iconStyle="solid"
-          testID="Edit Icon"
-          color={'white'}
-          onPress={() =>
-            navigation.push('AddFood', {
-              page: 'edit',
-              food: { ...food },
-              isNew: false,
-              date: props.date,
-              isCustom: true,
-            })
-          }
-        />
-      </HStack>
+        <View style={styles.customFoods.actions}>
+          <FontAwesome5
+            name="plus"
+            style={{ marginRight: 8 }}
+            size={20}
+            iconStyle="solid"
+            testID="Add Icon"
+            color={styles.colors.accent}
+            onPress={() => {
+              navigation.push('AddFood', {
+                page: 'edit',
+                food: { ...food },
+                isNew: true,
+                date: props.date,
+              });
+            }}
+          />
+          <FontAwesome5
+            name="trash-alt"
+            size={20}
+            style={{ marginRight: 8 }}
+            testID="Delete Icon"
+            iconStyle="solid"
+            color={styles.colors.textMuted}
+            onPress={() => setIsOpen(true)}
+          />
+          {alertDialog(food)}
+          <FontAwesome5
+            name="pencil-alt"
+            size={20}
+            style={{ marginRight: 8 }}
+            iconStyle="solid"
+            testID="Edit Icon"
+            color={styles.colors.textMuted}
+            onPress={() =>
+              navigation.push('AddFood', {
+                page: 'edit',
+                food: { ...food },
+                isNew: false,
+                date: props.date,
+                isCustom: true,
+              })
+            }
+          />
+        </View>
+      </View>
     );
   }
 
@@ -157,23 +164,26 @@ export function CustomFoods(props: any): React.JSX.Element {
         leastDestructiveRef={cancelRef}
       >
         <AlertDialogBackdrop />
-        <AlertDialogContent>
+        <AlertDialogContent style={styles.dialogs.content}>
           <AlertDialogHeader>
-            <Heading>Delete Custom Food</Heading>
+            <Heading style={styles.dialogs.heading}>Delete Custom Food</Heading>
             <AlertDialogCloseButton />
           </AlertDialogHeader>
           <AlertDialogBody>
-            This will permanently delete the custom food. Data cannot be
-            recovered.
+            <Text style={styles.dialogs.body}>
+              This will permanently delete the custom food. Data cannot be
+              recovered.
+            </Text>
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button
+              style={styles.dialogs.destructive}
               onPress={() => {
                 removeFood(food);
                 setIsOpen(false);
               }}
             >
-              <Text>Delete</Text>
+              <Text style={styles.dialogs.destructiveText}>Delete</Text>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -182,8 +192,13 @@ export function CustomFoods(props: any): React.JSX.Element {
   }
 
   return (
-    <ScrollView>
-      <WhiteText>Custom Foods</WhiteText>
+    <ScrollView contentContainerStyle={styles.customFoods.list}>
+      <WhiteText style={styles.screenHeading}>Custom Foods</WhiteText>
+      {foods.length === 0 && (
+        <WhiteText style={styles.typography.muted}>
+          No custom foods saved yet.
+        </WhiteText>
+      )}
       {foods?.map((item, i) => {
         return <View key={i}>{displayFoods(item)}</View>;
       })}

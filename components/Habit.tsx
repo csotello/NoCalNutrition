@@ -3,6 +3,7 @@ import React from 'react';
 import { Box, Button, ButtonIcon, HStack } from '@gluestack-ui/themed';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { useState } from 'react';
+import styles from '../styles/styles';
 export function Habit(props: any) {
   const [days, setDays] = useState<{ [key: string]: string }>(props.habit.days);
   const dayText: { [key: string]: string } = {
@@ -36,12 +37,12 @@ export function Habit(props: any) {
 
   return (
     <ScrollView>
-      <Box style={{ borderRadius: 10 }}>
-        <HStack w={'100%'}>
-          <Text style={{ paddingLeft: 20, fontSize: 20 }}>
+      <Box style={styles.habit.card}>
+        <HStack w={'100%'} style={styles.row}>
+          <Text style={styles.habit.title}>
             {props.habit.title}
           </Text>
-          <Text style={{ marginLeft: 40, fontSize: 20 }}>
+          <Text style={styles.habit.category}>
             {props.habit.catagory}
           </Text>
           <Button testID="Edit Habit" onPress={() => props.edit(props.habit)}>
@@ -72,23 +73,17 @@ export function Habit(props: any) {
             />
           </Button>
         </HStack>
-        <HStack w={'100%'}>
+        <HStack w={'100%'} style={{ flexWrap: 'wrap' }}>
           {Object.keys(days).map((day, i) => {
             return (
               <Button
                 testID={`Habit Day ${day}`}
-                borderRadius={100}
-                variant="outline"
-                borderColor={'amber.100'}
-                marginBottom={10}
-                marginRight={2}
-                w={'12%'}
-                h={10}
+                style={styles.habit.day}
                 key={i}
                 onPress={() => handleClick(day)}
-                bg={days[day] === 'Default' ? '#6fdc6f' : '#178237'}
+                bg={days[day] === 'Default' ? styles.colors.accent : styles.colors.successDark}
               >
-                <Text>{dayText[day]}</Text>
+                <Text style={styles.habit.dayText}>{dayText[day]}</Text>
               </Button>
             );
           })}

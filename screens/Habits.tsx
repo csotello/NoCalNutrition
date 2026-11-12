@@ -16,6 +16,7 @@ import {
 } from '@gluestack-ui/themed';
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import styles from '../styles/styles';
 
 export function Habits() {
   const [visible, setVisible] = useState(false);
@@ -123,11 +124,9 @@ export function Habits() {
   }
 
   return (
-    <View>
-      <Box>
-        <Text style={{ fontSize: 20, alignSelf: 'center', paddingBottom: 10 }}>
-          Habits
-        </Text>
+    <View style={styles.screen}>
+      <Box style={[styles.screenContent, { flex: 1 }]}>
+        <Text style={styles.screenHeading}>Habits</Text>
         <ScrollView>
           {habits.map((habit, i) => {
             return (
@@ -147,38 +146,34 @@ export function Habits() {
           size="lg"
         >
           <ModalBackdrop />
-          <ModalContent
-            h={'80%'}
-            style={{ backgroundColor: '#6fdc6f' }}
-            paddingTop={10}
-          >
+          <ModalContent h={'80%'} style={styles.dialogs.content} paddingTop={10}>
             <ModalHeader>
               <ModalCloseButton />
             </ModalHeader>
-            <Text style={{ fontSize: 20 }}>New Habit</Text>
-            <Input>
+            <Text style={styles.screenHeading}>New Habit</Text>
+            <Input style={styles.field}>
               <InputField
                 value={text}
                 onChangeText={txt => setText(txt)}
                 placeholder={'habit'}
               ></InputField>
             </Input>
-            <Text style={{ fontSize: 20 }}>Catagory</Text>
-            <Input>
+            <Text style={styles.fieldLabel}>Catagory</Text>
+            <Input style={styles.field}>
               <InputField
                 value={catagory}
                 onChangeText={txt => setCatagory(txt)}
                 placeholder={'catagory'}
               ></InputField>
             </Input>
-            <Button onPress={() => add(text)}>Add</Button>
+            <Button style={styles.dialogs.confirm} onPress={() => add(text)}>
+              <Text style={styles.buttonText}>Add Habit</Text>
+            </Button>
           </ModalContent>
         </Modal>
         <Button
-          position={'absolute'}
+          style={styles.habits.addButton}
           onPress={() => setVisible(prev => !prev)}
-          right={15}
-          top={450}
         >
           <ButtonIcon
             as={FontAwesome5}
@@ -188,21 +183,9 @@ export function Habits() {
           />
         </Button>
         {edit && (
-          <View
-            style={{
-              width: '80%',
-              height: '60%',
-              zIndex: 50,
-              borderRadius: 10,
-              shadowColor: '#171717',
-              elevation: 20,
-              top: -200,
-              backgroundColor: 'white',
-              alignSelf: 'center',
-            }}
-          >
-            <Text>Habit title</Text>
-            <Input>
+          <View style={[styles.card, { width: '90%', alignSelf: 'center' }]}>
+            <Text style={styles.fieldLabel}>Habit title</Text>
+            <Input style={styles.field}>
               <InputField
                 value={edit.title}
                 onChangeText={txt => setEdit({ ...edit, title: txt })}
@@ -210,8 +193,8 @@ export function Habits() {
                 placeholder="Title"
               />
             </Input>
-            <Text>Catagory</Text>
-            <Input>
+            <Text style={styles.fieldLabel}>Catagory</Text>
+            <Input style={styles.field}>
               <InputField
                 value={edit.catagory}
                 onChangeText={txt => setEdit({ ...edit, catagory: txt })}
@@ -220,6 +203,7 @@ export function Habits() {
               />
             </Input>
             <Button
+              style={styles.dialogs.confirm}
               onPress={() => {
                 habits.forEach(habit => {
                   if (habit.title === editTitle) {
@@ -232,7 +216,7 @@ export function Habits() {
                 store(habits);
               }}
             >
-              Change
+              <Text style={styles.buttonText}>Save Changes</Text>
             </Button>
           </View>
         )}
