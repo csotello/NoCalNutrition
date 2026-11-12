@@ -1,6 +1,5 @@
-import { Text, View } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import React from 'react';
-import { HStack } from '@gluestack-ui/themed';
 import { SearchFood } from '../components/SearchFood';
 import { CustomFoods } from '../components/CustomFoods';
 import { EditFood } from '../components/EditFood';
@@ -19,6 +18,11 @@ export function AddFood({ navigation, route }: any) {
     Snacks: [],
   });
   const key = 'nutrition' + '-' + date;
+  const tabs = [
+    { label: 'Search', page: 'search' },
+    { label: 'Custom Foods', page: 'custom' },
+    { label: 'Create', page: 'edit' },
+  ];
   useEffect(() => {
     if (!loaded) {
       load();
@@ -169,76 +173,25 @@ export function AddFood({ navigation, route }: any) {
   }
 
   return (
-    <View
-      style={{ backgroundColor: styles.primaryBackgroundColor, height: '100%' }}
-    >
-      <HStack>
-        <Text
-          style={{
-            width: '34%',
-            padding: 10,
-            justifyContent: 'center',
-            marginBottom: 10,
-            textAlign: 'center',
-            borderColor: 'grey',
-            elevation: 1,
-            color: 'white',
-          }}
-          onPress={() =>
-            navigation.navigate('AddFood', {
-              page: 'search',
+    <View style={styles.screen}>
+      <View style={styles.addFood.tabs}>
+        {tabs.map(tab => (
+          <Pressable
+            key={tab.page}
+            accessibilityRole="button"
+            accessibilityState={{ selected: page === tab.page }}
+            style={[styles.addFood.tab, page === tab.page && styles.addFood.selectedTab]}
+            onPress={() => navigation.navigate('AddFood', {
+              page: tab.page,
               isNew: true,
-              date: date,
-            })
-          }
-        >
-          Search
-        </Text>
-        <Text
-          style={{
-            width: '34%',
-            padding: 10,
-            justifyContent: 'center',
-            marginBottom: 10,
-            textAlign: 'center',
-            borderColor: 'grey',
-            elevation: 1,
-            color: 'white',
-          }}
-          onPress={() =>
-            navigation.navigate('AddFood', {
-              page: 'custom',
-              isNew: true,
-              date: date,
-            })
-          }
-        >
-          Custom Foods
-        </Text>
-        <Text
-          style={{
-            width: '34%',
-            padding: 10,
-            justifyContent: 'center',
-            marginBottom: 10,
-            textAlign: 'center',
-            borderColor: 'grey',
-            elevation: 1,
-            color: 'white',
-          }}
-          onPress={() =>
-            navigation.navigate('AddFood', {
-              page: 'edit',
-              isNew: true,
-              food: {},
-              date: date,
-              isCustom: true,
-            })
-          }
-        >
-          Create
-        </Text>
-      </HStack>
+              ...(tab.page === 'edit' ? { food: {}, isCustom: true } : {}),
+              date,
+            })}
+          >
+            <Text style={[styles.addFood.tabText, page === tab.page && styles.addFood.selectedTabText]}>{tab.label}</Text>
+          </Pressable>
+        ))}
+      </View>
       {displayPage(page)}
     </View>
   );

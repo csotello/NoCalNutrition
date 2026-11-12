@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import React from 'react';
 import {
   Modal,
-  Button,
   ModalBackdrop,
   ModalContent,
   ModalCloseButton,
@@ -21,50 +20,49 @@ export function Settings() {
   const [selected, setSelected] = useState('');
 
   return (
-    <View
-      style={{ backgroundColor: styles.primaryBackgroundColor, height: '100%' }}
-    >
-      <Button
-        size={'md'}
+    <ScrollView style={styles.settings.screen} contentContainerStyle={{ paddingBottom: 28 }}>
+      <Text style={styles.screenHeading}>Settings</Text>
+      <Pressable
+        style={styles.settings.action}
         onPress={() => {
           setVisible(prev => !prev);
           setSelected('catagories');
         }}
       >
-        <Text>Customize Catagories</Text>
-      </Button>
-      <Button
-        size={'md'}
+        <Text style={styles.settings.actionText}>Customize Catagories</Text>
+      </Pressable>
+      <Pressable
+        style={styles.settings.action}
         onPress={() => {
           setVisible(prev => !prev);
           setSelected('goals');
         }}
       >
-        <Text>Set Goals</Text>
-      </Button>
-      <Button
+        <Text style={styles.settings.actionText}>Set Goals</Text>
+      </Pressable>
+      <Pressable
+        style={styles.settings.action}
         onPress={async () => {
           await store('customFood', JSON.stringify([]));
         }}
       >
-        <Text>Reset Custom</Text>
-      </Button>
+        <Text style={styles.settings.actionText}>Reset Custom</Text>
+      </Pressable>
       <Modal
         isOpen={visible}
         onClose={() => setVisible(prev => !prev)}
         size="lg"
       >
         <ModalBackdrop />
-        <ModalContent h={'80%'} backgroundColor={styles.primaryBackgroundColor}>
+        <ModalContent h={'80%'} style={styles.dialogs.content}>
           <ModalHeader>
-            <Heading size="lg" color="white">
+            <Heading size="lg" style={styles.dialogs.heading}>
               {selected === 'catagories' ? 'Catagories' : 'Set Nutrient Goals'}
             </Heading>
             <ModalCloseButton
-              bgColor="white"
+              bgColor={styles.colors.surfaceRaised}
               style={{ alignContent: 'center' }}
             />
-            {selected === 'catagories' ? 'Catagories' : 'Goals'}
           </ModalHeader>
           <ModalBody>
             {selected === 'goals' ? (
@@ -75,6 +73,6 @@ export function Settings() {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }

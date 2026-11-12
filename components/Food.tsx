@@ -10,119 +10,98 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   HStack,
-  VStack,
 } from '@gluestack-ui/themed';
-import React from 'react';
-import { Text } from 'react-native';
-import { WhiteText } from '../styledComponents/WhiteText';
+import React, { useRef, useState } from 'react';
+import { Pressable, Text } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-// import styles from '../styles/styles';
 import { getMainNutrients } from '../utils';
-import { useState, useRef } from 'react';
+import styles from '../styles/styles';
+
 export function Food(props: any): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedFood, setSelectedFood] = useState<any>(null);
   const cancelRef = useRef(null);
-  const alertDialog = (food: any, section: string) => {
-    return (
+
+  return (
+    <View style={styles.nutrition.mealCard}>
+      <Text style={styles.nutrition.mealTitle}>{props.title}</Text>
+      {props.meal?.length === 0 && (
+        <Text style={styles.typography.muted}>No foods added yet</Text>
+      )}
+      {props.meal?.map((item: any) => {
+        const nutrients = getMainNutrients({ ...item });
+        return (
+          <View key={item.UUID || item.fdcId || item.description} style={styles.nutrition.foodCard}>
+            <HStack style={styles.nutrition.foodHeader}>
+              <View style={{ flex: 1 }}>
+                {!!item.brandName && (
+                  <Text style={styles.nutrition.foodDetail}>{item.brandName}</Text>
+                )}
+                <Text style={styles.nutrition.foodName}>{item.description}</Text>
+                <Text style={styles.nutrition.foodDetail}>
+                  Amount: {Number(item.servingSize)} {item.servingSizeUnit}
+                </Text>
+              </View>
+              <View style={styles.nutrition.foodActions}>
+                <Pressable
+                  testID="Delete Icon"
+                  accessibilityRole="button"
+                  accessibilityLabel={`Delete ${item.description}`}
+                  hitSlop={4}
+                  style={styles.nutrition.actionButton}
+                  onPress={() => setSelectedFood(item)}
+                >
+                  <FontAwesome5 name="trash-alt" iconStyle="solid" color={styles.colors.textMuted} size={17} />
+                </Pressable>
+                <Pressable
+                  testID="Edit Icon"
+                  accessibilityRole="button"
+                  accessibilityLabel={`Edit ${item.description}`}
+                  hitSlop={4}
+                  style={styles.nutrition.actionButton}
+                  onPress={() => props.edit(item, props.title)}
+                >
+                  <FontAwesome5 name="pencil-alt" iconStyle="solid" color={styles.colors.textMuted} size={17} />
+                </Pressable>
+              </View>
+            </HStack>
+            <View style={styles.nutrition.nutrients}>
+              <Text style={styles.nutrition.nutrientValue}>P: {nutrients.protein.value}{nutrients.protein.unitName}</Text>
+              <Text style={styles.nutrition.nutrientValue}>C: {nutrients.carbs.value}{nutrients.carbs.unitName}</Text>
+              <Text style={styles.nutrition.nutrientValue}>F: {nutrients.fat.value}{nutrients.fat.unitName}</Text>
+            </View>
+          </View>
+        );
+      })}
       <AlertDialog
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={!!selectedFood}
+        onClose={() => setSelectedFood(null)}
         testID="modal"
         leastDestructiveRef={cancelRef}
       >
         <AlertDialogBackdrop />
-        <AlertDialogContent>
+        <AlertDialogContent style={styles.dialogs.content}>
           <AlertDialogCloseButton />
-          <AlertDialogHeader>
-            <Heading>Delete Food</Heading>
-          </AlertDialogHeader>
+          <AlertDialogHeader><Heading style={styles.dialogs.heading}>Delete Food</Heading></AlertDialogHeader>
           <AlertDialogBody>
-            <Text>
+            <Text style={styles.dialogs.body}>
               This will permanently delete the food item. Data cannot be
               recovered.
             </Text>
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button
+              style={styles.dialogs.destructive}
               testID="Delete Button"
               onPress={() => {
-                props.remove(food, section);
-                setIsOpen(false);
+                if (selectedFood) props.remove(selectedFood, props.title);
+                setSelectedFood(null);
               }}
             >
-              <WhiteText>Delete</WhiteText>
+              <Text style={styles.dialogs.destructiveText}>Delete</Text>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    );
-  };
-
-  return (
-    <View style={{ padding: 10 }}>
-      <WhiteText style={{ paddingBottom: 10 }}>{props.title}</WhiteText>
-      {props.meal?.map((item: any, i: any) => {
-        let nutrients = getMainNutrients({ ...item });
-        return (
-          <View
-            key={i}
-            style={{ paddingLeft: 10, marginBottom: 10, paddingBottom: 10 }}
-          >
-            <HStack space={'4xl'}>
-              <VStack justifyContent="flex-start" paddingRight={'30%'}>
-                <View style={{ maxWidth: '80%' }}>
-                  <WhiteText>
-                    {item.brandName} {'\n'}
-                    {item.description} {'\n'}
-                    Amount: {Number(item.servingSize)} {item.servingSizeUnit}
-                  </WhiteText>
-                </View>
-                <HStack
-                  space={'md'}
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <WhiteText>
-                    P: {nutrients.protein.value}
-                    {nutrients.protein.unitName}
-                  </WhiteText>
-                  <WhiteText>
-                    C: {nutrients.carbs.value}
-                    {nutrients.carbs.unitName}
-                  </WhiteText>
-                  <WhiteText>
-                    F: {nutrients.fat.value}
-                    {nutrients.fat.unitName}
-                  </WhiteText>
-                </HStack>
-              </VStack>
-              {alertDialog(item, props.title)}
-              <HStack
-                style={{ alignItems: 'center', justifyContent: 'flex-end' }}
-              >
-                <FontAwesome5
-                  name="trash-alt"
-                  testID="Delete Icon"
-                  iconStyle="solid"
-                  color={'white'}
-                  onPress={() => setIsOpen(true)}
-                  style={{ marginLeft: 10 }}
-                />
-                <FontAwesome5
-                  name="pencil-alt"
-                  testID="Edit Icon"
-                  iconStyle="solid"
-                  color={'white'}
-                  onPress={() => props.edit(item, props.title)}
-                  style={{ marginLeft: 10 }}
-                />
-              </HStack>
-            </HStack>
-          </View>
-        );
-      })}
     </View>
   );
 }

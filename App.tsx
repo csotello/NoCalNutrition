@@ -19,9 +19,9 @@ const headerStyle = {
     backgroundColor: styles.navigator.backgroundColor,
   },
   headerTitleStyle: {
-    color: 'white',
+    color: styles.colors.white,
   },
-  headerTintColor: 'white',
+  headerTintColor: styles.colors.white,
 };
 
 function App(): React.JSX.Element {
@@ -42,7 +42,7 @@ function App(): React.JSX.Element {
             tabBarLabel: 'Nutrition',
             // headerShown: false,
             tabBarIcon: ({ focused }: { focused: boolean }) => (
-              <Icon as={AddIcon} color={focused ? 'black' : 'white'} m={1} />
+              <Icon as={AddIcon} color={focused ? styles.colors.accentSoft : styles.colors.textMuted} m={1} />
             ),
           }}
         />
@@ -52,7 +52,7 @@ function App(): React.JSX.Element {
           options={{
             tabBarLabel: 'Settings',
             tabBarIcon: ({ focused }: { focused: boolean }) => (
-              <Icon as={SettingsIcon} color={focused ? 'black' : 'white'} />
+              <Icon as={SettingsIcon} color={focused ? styles.colors.accentSoft : styles.colors.textMuted} />
             ),
           }}
         />

@@ -1,80 +1,81 @@
-import {
-  Text,
-  Center,
-  Box,
-  Progress,
-  VStack,
-  HStack,
-} from '@gluestack-ui/themed';
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import styles from '../styles/styles';
 import { retrieve } from '../utils';
 
-interface Nutrients {
-  [key: string]: string;
-  Protein: string;
-  Fat: string;
-  Carbs: string;
+interface NutrientProps {
+  Protein: number;
+  Fat: number;
+  Carbs: number;
 }
 
-export function Nutrients(props: Nutrients) {
-  const [goals, setGoals] = useState<Nutrients>({
+const nutrientColors: Record<keyof NutrientProps, string> = {
+  Protein: styles.colors.protein,
+  Fat: styles.colors.fat,
+  Carbs: styles.colors.carbs,
+};
+
+export function Nutrients(props: NutrientProps) {
+  const [goals, setGoals] = useState<Record<keyof NutrientProps, string>>({
     Protein: '0',
     Fat: '0',
     Carbs: '0',
   });
-  useEffect(() => {
-    load();
-  }, [props]);
-  async function load() {
-    let val = await retrieve('goals');
-    let ret = val ? JSON.parse(val) : { Protein: '0', Fat: '0', Carbs: '0' };
-    setGoals(ret);
-  }
 
-  function nutrient(name: string) {
-    let color;
-    switch (name) {
-      case 'Protein':
-        color = '#d10415';
-        break;
-      case 'Fat':
-        color = '#c7d104';
-        break;
-      case 'Carbs':
-        color = '#0426d1';
-        break;
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      try {
+        const val = await retrieve('goals');
+        const saved = val ? JSON.parse(val) : {};
+        if (active) {
+          setGoals({
+            Protein: saved.Protein ?? '0',
+            Fat: saved.Fat ?? '0',
+            Carbs: saved.Carbs ?? '0',
+          });
+        }
+      } catch {
+        if (active) setGoals({ Protein: '0', Fat: '0', Carbs: '0' });
+      }
     }
+    load();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  function nutrient(name: keyof NutrientProps) {
+    const goal = Number(goals[name]);
+    const current = Number(props[name]) || 0;
+    const progress = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
+    const color = nutrientColors[name];
     return (
-      <HStack>
-        <Text
-          style={{
-            ...styles.nutrient,
-            color: color,
-          }}
-        >
-          {name}
-          {'  '}
-          {props[name] || 0} / {goals[name]}
+      <View style={styles.nutrientRow} key={name}>
+        <Text style={styles.nutrientLabel}>
+          {name}  {current} / {goals[name]}
         </Text>
-        <Center w="80%">
-          <Box w="70%" marginRight={30}>
-            <Progress value={(Number(props[name]) / Number(goals[name])) * 100}>
-              <Progress.FilledTrack bg={color} />
-            </Progress>
-          </Box>
-        </Center>
-      </HStack>
+        <View
+          style={styles.nutrientTrack}
+          accessible
+          accessibilityLabel={`${name}: ${current} grams of ${goals[name]} gram goal`}
+          accessibilityRole="progressbar"
+          accessibilityValue={{ min: 0, max: 100, now: progress }}
+        >
+          <View
+            style={{ width: `${progress}%`, height: '100%', backgroundColor: color }}
+          />
+        </View>
+      </View>
     );
   }
 
   return (
-    <VStack>
+    <View>
       {nutrient('Protein')}
       {nutrient('Fat')}
       {nutrient('Carbs')}
-    </VStack>
+    </View>
   );
 }
 

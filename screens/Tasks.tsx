@@ -1,136 +1,62 @@
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Keyboard,
-  TextInput,
-  Dimensions,
-  Pressable,
-} from 'react-native';
+import { ScrollView, Text, View, Keyboard, TextInput, Pressable } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { Task } from '../components/Task';
 import uuid from 'uuid-random';
+import styles from '../styles/styles';
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 export function Tasks(): React.JSX.Element {
-  const [tasks, setTask] = useState<
-    { id: string; title: string; completed: boolean }[]
-  >([{ id: '0', title: 'Loading...', completed: false }]);
+  const [tasks, setTask] = useState<{ id: string; title: string; completed: boolean }[]>([]);
   const [text, setText] = useState('');
   const [loaded, setLoaded] = useState(false);
 
-  const load = async () => {
-    try {
-      const val = await EncryptedStorage.getItem('tasks');
-      if (val) {
-        setTask(JSON.parse(val));
-        console.log('Loaded Tasks');
-      }
-    } catch (error) {
-      console.log(error);
-      console.log('Failed to load');
-    }
-  };
   if (!loaded) {
-    load();
-    setLoaded(true);
+    EncryptedStorage.getItem('tasks').then(val => {
+      if (val) setTask(JSON.parse(val));
+      setLoaded(true);
+    }).catch(() => setLoaded(true));
   }
 
-  async function store(tasks: any) {
-    try {
-      await EncryptedStorage.setItem('tasks', JSON.stringify(tasks));
-      // await storage.setItem('tasks', JSON.stringify(tasks));
-      console.log('Stored:' + JSON.stringify(tasks));
-    } catch (error) {
-      console.log('Failed to store');
-      console.log(error);
-    }
+  async function store(nextTasks: any) {
+    try { await EncryptedStorage.setItem('tasks', JSON.stringify(nextTasks)); }
+    catch (error) { console.log('Failed to store', error); }
   }
-
-  function add(task: any) {
-    if (task == null) return;
-    let current: any[] = [
-      ...tasks,
-      { id: uuid(), title: task, completed: false },
-    ];
-    store(current);
-    setTask(current);
-    setText('');
-    Keyboard.dismiss();
+  function add(task: string) {
+    if (!task.trim()) return;
+    const current = [...tasks, { id: uuid(), title: task.trim(), completed: false }];
+    store(current); setTask(current); setText(''); Keyboard.dismiss();
   }
-
-  function remove(task: any) {
-    setText('');
-    var current = tasks.filter(val => val.id !== task);
-    store(current);
-    setTask(current);
+  function remove(id: string) {
+    const current = tasks.filter(task => task.id !== id);
+    store(current); setTask(current);
   }
-
-  function complete(task: any) {
-    tasks.forEach(x => {
-      if (x.id === task) {
-        x.completed = !x.completed;
-      }
-    });
-    store(tasks);
-    setTask([...tasks]);
+  function complete(id: string) {
+    const current = tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task);
+    store(current); setTask(current);
   }
 
   return (
-    <View style={styles.background}>
-      <View>
-        <Text>Tasks</Text>
-        <ScrollView>
-          {tasks.map((task, i) => {
-            return (
-              <View key={i}>
-                <Task
-                  style={styles.task}
-                  task={task}
-                  delete={remove}
-                  complete={complete}
-                />
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-      <View>
+    <View style={styles.task.screen}>
+      <Text style={styles.screenHeading}>Tasks</Text>
+      <ScrollView style={{ flex: 1 }}>
+        {tasks.map(task => <Task key={task.id} task={task} delete={remove} complete={complete} />)}
+        {loaded && tasks.length === 0 && <Text style={styles.typography.muted}>No tasks yet. Add one to get started.</Text>}
+      </ScrollView>
+      <View style={styles.row}>
         <TextInput
-          onChangeText={txt => setText(txt)}
-          style={{ height: 50 }}
+          onChangeText={setText}
+          style={[styles.task.input, { flex: 1, marginRight: 8 }]}
           placeholder="text"
+          placeholderTextColor={styles.colors.textMuted}
           value={text}
-        ></TextInput>
-        <Pressable onPress={() => add(text)} style={styles.button}>
-          <Text>Add</Text>
+          accessibilityLabel="New task"
+        />
+        <Pressable onPress={() => add(text)} style={styles.button} accessibilityRole="button">
+          <Text style={styles.buttonText}>Add</Text>
         </Pressable>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-    backgroundColor: '#6fdc6f',
-    width: width,
-    height: height,
-  },
-  button: {
-    width: width / 4,
-    height: 50,
-    color: '#2db92d',
-  },
-  task: {
-    backgroundColor: '#6fdc6f',
-    width: width,
-    height: 50,
-    paddingTop: 10,
-    display: 'flex',
-  },
-});
 
 export default Tasks;

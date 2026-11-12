@@ -1,19 +1,12 @@
-import {
-  Button,
-  ScrollView,
-  Input,
-  InputField,
-  View,
-  HStack,
-} from '@gluestack-ui/themed';
+import { Button, Input, InputField } from '@gluestack-ui/themed';
 import { API_KEY } from '@env';
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { WhiteText } from '../styledComponents/WhiteText';
-import { getMainNutrients } from '../utils';
-import { Keyboard, Pressable, Text } from 'react-native';
+import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { getMainNutrients } from '../utils';
+import { WhiteText } from '../styledComponents/WhiteText';
+import styles from '../styles/styles';
 
 interface SearchFoodProps {
   date: string;
@@ -22,117 +15,100 @@ interface SearchFoodProps {
 export function SearchFood(props: SearchFoodProps): React.JSX.Element {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [text, setText] = useState('');
-
-  function search(food: string) {
-    let api_key = API_KEY;
-    let url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food}&api_key=${api_key}&pageSize=8&dataType=Branded`;
-    console.log(url);
-    fetch(url)
-      .then(resp => {
-        console.log('response');
-        return resp.json();
-      })
-      .then(data => {
-        console.log(JSON.stringify(data));
-        setSearchResults([...data.foods]);
-        Keyboard.dismiss();
-      })
-      .catch(error => console.error(error));
-  }
+  const [loading, setLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [searchFailed, setSearchFailed] = useState(false);
   const navigation = useNavigation<StackNavigationProp<any>>();
-  /**
-   * Renders the search results in a list.
-   *
-   * @return {ReactElement} The rendered search results list.
-   */
-  function displaySearch() {
-    return (
-      <ScrollView>
-        {searchResults &&
-          searchResults.map((item, i) => {
-            console.log(JSON.stringify(item));
-            let nutrients = getMainNutrients(item);
+
+  async function search(food: string) {
+    const query = food.trim();
+    if (!query) return;
+    setLoading(true);
+    setHasSearched(true);
+    setSearchFailed(false);
+    const url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&api_key=${API_KEY}&pageSize=8&dataType=Branded`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setSearchResults(Array.isArray(data.foods) ? data.foods : []);
+    } catch (error) {
+      console.error(error);
+      setSearchResults([]);
+      setSearchFailed(true);
+    } finally {
+      setLoading(false);
+      Keyboard.dismiss();
+    }
+  }
+
+  return (
+    <View style={styles.search.content}>
+      <WhiteText style={styles.screenHeading}>Find a food</WhiteText>
+      <View style={styles.search.queryRow}>
+        <Input style={[styles.field, styles.search.queryField]}>
+          <InputField
+            value={text}
+            onChangeText={setText}
+            color={styles.colors.text}
+            placeholder="Cheese"
+            placeholderTextColor={styles.colors.textMuted}
+            returnKeyType="search"
+            onSubmitEditing={() => search(text)}
+          />
+        </Input>
+        <Button
+          style={styles.search.searchButton}
+          isDisabled={loading}
+          onPress={() => search(text)}
+        >
+          <Text style={styles.buttonText}>{loading ? 'Searching…' : 'Search'}</Text>
+        </Button>
+      </View>
+      {loading && <Text style={styles.search.message}>Searching foods…</Text>}
+      {!loading && hasSearched && searchFailed && (
+        <Text style={styles.search.message}>Search failed. Check your connection and try again.</Text>
+      )}
+      {!loading && hasSearched && !searchFailed && searchResults.length === 0 && (
+        <Text style={styles.search.message}>No foods found. Try another search.</Text>
+      )}
+      {searchResults.length > 0 && (
+        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
+          {searchResults.map((item, index) => {
+            const nutrients = getMainNutrients(item);
             return (
               <Pressable
-                onPress={() =>
-                  navigation.push('AddFood', {
-                    page: 'edit',
-                    food: item,
-                    isNew: true,
-                    date: props.date,
-                  })
-                }
+                key={item.fdcId || `${item.description}-${index}`}
+                accessibilityRole="button"
+                accessibilityLabel={`Add ${item.description}`}
+                onPress={() => navigation.push('AddFood', {
+                  page: 'edit', food: item, isNew: true, date: props.date,
+                })}
+                style={styles.search.resultCard}
               >
-                <View
-                  style={{
-                    padding: 10,
-                    paddingBottom: 10,
-                    borderColor: 'black',
-                    borderWidth: 1,
-                  }}
-                  key={i}
-                >
-                  {/* {item.brandOwner && <WhiteText>{item.brandOwner}</WhiteText>} */}
-                  <WhiteText>{item.description}</WhiteText>
-                  {item.brandName && (
-                    <WhiteText style={{ fontSize: 12 }}>
-                      {item.brandName}
-                    </WhiteText>
-                  )}
-                  <HStack>
-                    {item.servingSize && item.servingSizeUnit && (
-                      <WhiteText>
-                        {item.servingSize.toFixed(2)} {item.servingSizeUnit}
-                      </WhiteText>
+                <Text style={styles.search.resultTitle}>{item.description}</Text>
+                {!!item.brandName && <Text style={styles.search.resultDetail}>{item.brandName}</Text>}
+                <View style={styles.search.resultFooter}>
+                  <View>
+                    {!!item.servingSize && !!item.servingSizeUnit && (
+                      <Text style={styles.search.resultDetail}>
+                        {Number(item.servingSize).toFixed(2)} {item.servingSizeUnit}
+                      </Text>
                     )}
-                    {item.householdServingFullText && (
-                      <WhiteText>({item.householdServingFullText})</WhiteText>
+                    {!!item.householdServingFullText && (
+                      <Text style={styles.search.resultDetail}>{item.householdServingFullText}</Text>
                     )}
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        top: -20,
-                        position: 'absolute',
-                        right: 0,
-                      }}
-                    >
-                      <View style={{ marginLeft: 20, minWidth: 28 }}>
-                        <WhiteText>P</WhiteText>
-                        <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
-                      </View>
-                      <View style={{ marginLeft: 20, minWidth: 28 }}>
-                        <WhiteText>C</WhiteText>
-                        <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
-                      </View>
-                      <View style={{ marginLeft: 20, minWidth: 28 }}>
-                        <WhiteText>F</WhiteText>
-                        <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
-                      </View>
-                    </View>
-                  </HStack>
+                  </View>
+                  <View style={styles.search.macros}>
+                    <View style={styles.search.macroItem}><Text style={styles.search.macroLabel}>P</Text><Text style={styles.search.macro}>{nutrients.protein?.value || 0}</Text></View>
+                    <View style={styles.search.macroItem}><Text style={styles.search.macroLabel}>C</Text><Text style={styles.search.macro}>{nutrients.carbs?.value || 0}</Text></View>
+                    <View style={styles.search.macroItem}><Text style={styles.search.macroLabel}>F</Text><Text style={styles.search.macro}>{nutrients.fat?.value || 0}</Text></View>
+                  </View>
                 </View>
               </Pressable>
             );
           })}
-      </ScrollView>
-    );
-  }
-
-  return (
-    <View style={{ flex: 1 }}>
-      <WhiteText style={{ fontSize: 20 }}>New Food</WhiteText>
-      <Input>
-        <InputField
-          value={text}
-          onChangeText={txt => setText(txt)}
-          color="white"
-          placeholder={'Cheese'}
-        />
-      </Input>
-      <Button onPress={() => search(text)}>
-        <Text>Search</Text>
-      </Button>
-      {searchResults && displaySearch()}
+        </ScrollView>
+      )}
     </View>
   );
 }

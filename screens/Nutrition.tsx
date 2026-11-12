@@ -1,8 +1,7 @@
-import { Text, Button, HStack } from '@gluestack-ui/themed';
 import { ScrollView } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { ToastAndroid, View, Dimensions } from 'react-native';
+import { ToastAndroid, View, Text, Pressable } from 'react-native';
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { Food } from '../components/Food';
@@ -165,93 +164,55 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
     });
     setTotals({ ...newTotals });
   }
-  let width = Dimensions.get('window').width;
-  let height = Dimensions.get('window').height;
   return (
-    <ScrollView
-      style={{ backgroundColor: styles.primaryBackgroundColor }}
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
-      <Text style={{ color: 'white', textAlign: 'center' }}>Nutrition</Text>
-      <HStack style={{ padding: 10, justifyContent: 'center' }}>
-        <FontAwesome5
-          name="chevron-left"
-          testID="Previous Day"
-          size={20}
-          iconStyle="solid"
-          color={styles.primaryBackgroundColor}
-          style={{ color: 'white' }}
-          onPress={() => changeDate(-1)}
-        />
-        <Text
-          style={{
-            color: 'white',
-            textAlignVertical: 'center',
-            paddingLeft: 20,
-            paddingRight: 20,
-          }}
-        >
-          {date}
-        </Text>
-        <FontAwesome5
-          name="chevron-right"
-          testID="Next Day"
-          size={20}
-          iconStyle="solid"
-          color={'white'}
-          onPress={() => changeDate(1)}
-        />
-      </HStack>
-      <Nutrients
-        Protein={totals.protein}
-        Fat={totals.fat}
-        Carbs={totals.carbs}
-      />
-      <Button
-        style={{ margin: 10 }}
-        variant="link"
-        onPress={() =>
-          ToastAndroid.show('Calories: ' + getCalCount(), ToastAndroid.SHORT)
-        }
-      >
-        <Text style={{ color: 'white', textAlign: 'center' }}>
-          Show Calories
-        </Text>
-      </Button>
-      {food &&
-        Object.keys(food || {})?.map((meal, i) => {
-          let info: FoodItem[] = food[meal];
-          return (
-            <Food
-              meal={[...info]}
-              title={meal}
-              key={i}
-              remove={removeFood}
-              edit={openEdit}
-            />
-          );
+    <View style={styles.nutrition.screen}>
+      <ScrollView contentContainerStyle={styles.nutrition.content}>
+        <Text style={styles.nutrition.title}>Nutrition</Text>
+        <View style={styles.nutrition.dateNavigation}>
+          <Pressable
+            testID="Previous Day"
+            accessibilityRole="button"
+            accessibilityLabel="Previous day"
+            style={styles.nutrition.dateButton}
+            onPress={() => changeDate(-1)}
+          >
+            <FontAwesome5 name="chevron-left" size={17} iconStyle="solid" color={styles.colors.text} />
+          </Pressable>
+          <Text style={styles.nutrition.dateText}>{date}</Text>
+          <Pressable
+            testID="Next Day"
+            accessibilityRole="button"
+            accessibilityLabel="Next day"
+            style={styles.nutrition.dateButton}
+            onPress={() => changeDate(1)}
+          >
+            <FontAwesome5 name="chevron-right" size={17} iconStyle="solid" color={styles.colors.text} />
+          </Pressable>
+        </View>
+        <View style={styles.nutrition.summary}>
+          <Nutrients Protein={totals.protein} Fat={totals.fat} Carbs={totals.carbs} />
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => ToastAndroid.show('Calories: ' + getCalCount(), ToastAndroid.SHORT)}
+            style={styles.nutrition.caloriesButton}
+          >
+            <Text style={styles.nutrition.caloriesText}>Show Calories</Text>
+          </Pressable>
+        </View>
+        {food && Object.keys(food).map((meal, i) => {
+          const info: FoodItem[] = food[meal];
+          return <Food meal={[...info]} title={meal} key={i} remove={removeFood} edit={openEdit} />;
         })}
-      <View
-        style={{ position: 'absolute', top: height - 400, left: width - 50 }}
+      </ScrollView>
+      <Pressable
+        testID="Add Food"
+        accessibilityRole="button"
+        accessibilityLabel="Add food"
+        style={styles.nutrition.fab}
+        onPress={() => navigation.navigate('AddFood', { page: 'search', isNew: true, date })}
       >
-        <FontAwesome5
-          name="plus"
-          testID="Add Food"
-          iconStyle="solid"
-          color="white"
-          size={30}
-          style={{
-            zIndex: 10,
-          }}
-          onPress={() => {
-            navigation.navigate('AddFood', {
-              page: 'search',
-              isNew: true,
-              date: date,
-            });
-          }}
-        />
-      </View>
-    </ScrollView>
+        <FontAwesome5 name="plus" iconStyle="solid" color={styles.colors.background} size={22} />
+      </Pressable>
+    </View>
   );
 }
