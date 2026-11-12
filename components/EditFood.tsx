@@ -266,7 +266,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               w={'30%'}
               keyboardType="number-pad"
               color={styles.colors.white}
-              value={nutrients.fiber.toString()}
+              value={nutrients[nutrient.toLowerCase()].toString()}
               onChangeText={txt =>
                 setNutrients({ ...nutrients, nutrient: Number(txt) })
               }
