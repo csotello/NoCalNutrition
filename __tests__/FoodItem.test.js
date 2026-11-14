@@ -1,8 +1,8 @@
-import {render, fireEvent} from '@testing-library/react-native';
-import {GluestackUIProvider} from '@gluestack-ui/themed';
-import {config} from '@gluestack-ui/config';
-import {Food} from '../components/Food';
-import {defaultFood} from '../utils';
+import { render, fireEvent } from '@testing-library/react-native';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '@gluestack-ui/config';
+import { Food } from '../components/Food';
+import { defaultFood } from '../utils';
 
 async function renderFood(overrides = {}) {
   const food = {
@@ -26,11 +26,11 @@ async function renderFood(overrides = {}) {
     </GluestackUIProvider>,
   );
 
-  return {...rendered, props, food};
+  return { ...rendered, props, food };
 }
 
 it('renders an empty meal without food details', async () => {
-  const {getByText, queryByTestId} = await renderFood({meal: []});
+  const { getByText, queryByTestId } = await renderFood({ meal: [] });
 
   expect(getByText('Breakfast')).toBeTruthy();
   expect(queryByTestId('Edit Icon')).toBeNull();
@@ -38,17 +38,17 @@ it('renders an empty meal without food details', async () => {
 });
 
 it('renders food details and nutrient amounts', async () => {
-  const {getByText} = await renderFood();
+  const { getByText } = await renderFood();
 
   expect(getByText(/Kroger Mexican Cheese/)).toBeTruthy();
-  expect(getByText(/Amount: 28 G/)).toBeTruthy();
+  expect(getByText(/Serving Size: 28 G/)).toBeTruthy();
   expect(getByText(/P:\s*12\s*G/)).toBeTruthy();
   expect(getByText(/C:\s*10\s*G/)).toBeTruthy();
   expect(getByText(/F:\s*8\s*G/)).toBeTruthy();
 });
 
 it('calls edit with the selected food and meal name', async () => {
-  const {getByTestId, props, food} = await renderFood();
+  const { getByTestId, props, food } = await renderFood();
 
   await fireEvent.press(getByTestId('Edit Icon'));
 
@@ -56,7 +56,7 @@ it('calls edit with the selected food and meal name', async () => {
 });
 
 it('opens a delete confirmation without removing the food', async () => {
-  const {getByTestId, getByText, props} = await renderFood();
+  const { getByTestId, getByText, props } = await renderFood();
 
   expect(() => getByText('Delete Food')).toThrow();
   await fireEvent.press(getByTestId('Delete Icon'));
@@ -67,7 +67,7 @@ it('opens a delete confirmation without removing the food', async () => {
 });
 
 it('removes the selected food after confirming deletion', async () => {
-  const {getByTestId, queryByText, props, food} = await renderFood();
+  const { getByTestId, queryByText, props, food } = await renderFood();
 
   await fireEvent.press(getByTestId('Delete Icon'));
   await fireEvent.press(getByTestId('Delete Button'));
