@@ -80,6 +80,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
           cur.fat = Number(nutrient.value);
           break;
         case 'Sugars, total including NLEA':
+        case 'Total Sugars':
           cur.sugar = Number(nutrient.value);
           break;
         case 'Fiber, total dietary':
@@ -266,7 +267,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               w={'30%'}
               keyboardType="number-pad"
               color={styles.colors.white}
-              value={nutrients[nutrient.toLowerCase()].toString()}
+              value={nutrients[nutrient]?.toString()}
               onChangeText={txt =>
                 setNutrients({ ...nutrients, nutrient: Number(txt) })
               }

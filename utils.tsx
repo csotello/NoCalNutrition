@@ -152,6 +152,7 @@ export function getMainNutrients(food: FoodItem): NutrientValues {
         ret.fat = { ...nutrient };
         break;
       case 'Sugars, total including NLEA':
+      case 'Total Sugars':
         ret.sugar = { ...nutrient };
         break;
       case 'Fiber, total dietary':
