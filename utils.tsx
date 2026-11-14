@@ -77,6 +77,7 @@ export const defaultFood = {
   householdServingFullText: '1/4 cup',
   servingSize: 28,
   servingSizeUnit: 'G',
+  servings: 1,
   foodNutrients: [
     {
       nutrientName: 'Protein',
