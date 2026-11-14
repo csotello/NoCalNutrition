@@ -37,8 +37,8 @@ interface EditFoodProps {
 
 export function EditFood(props: EditFoodProps): React.JSX.Element {
   const [servings, setServings] = useState({
-    servingSize: 0,
-    servings: 1,
+    servingSize: props.food.servingSize || 0,
+    servings: props.food.servings || '1',
     servingSizeUnit: props.food.servingSizeUnit || 'g',
   });
   const [descriptors, setDescriptors] = useState({
@@ -65,8 +65,6 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
   }, [dropdown]);
 
   useEffect(() => {
-    var serving = props.food.servingSize || 0;
-    setServings({ ...servings, servingSize: serving });
     var cur = { ...nutrients };
     props.food.foodNutrients?.map((nutrient: any, i: any) => {
       switch (nutrient.nutrientName) {
@@ -152,7 +150,6 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     console.log(props.isNew ? 'New' : 'Edit');
     console.log(props.isCustom ? 'Custom' : 'Normal');
     if (props.isNew) {
-      // await props.add({...newFood}, meal);
       if (props.isCustom) {
         let custom = convertCustomFood({
           ...nutrients,

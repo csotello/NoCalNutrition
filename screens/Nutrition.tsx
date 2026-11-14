@@ -146,13 +146,14 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
         food.foodNutrients.map((nutrient: any, i: number) => {
           switch (nutrient.nutrientName) {
             case 'Protein':
-              newTotals.protein += Number(nutrient.value);
+              newTotals.protein +=
+                Number(nutrient.value) * Number(food.servings);
               break;
             case 'Carbohydrate, by difference':
-              newTotals.carbs += Number(nutrient.value);
+              newTotals.carbs += Number(nutrient.value) * Number(food.servings);
               break;
             case 'Total lipid (fat)':
-              newTotals.fat += Number(nutrient.value);
+              newTotals.fat += Number(nutrient.value) * Number(food.servings);
               break;
             default:
           }
@@ -176,7 +177,12 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
             style={styles.nutrition.dateButton}
             onPress={() => changeDate(-1)}
           >
-            <FontAwesome5 name="chevron-left" size={17} iconStyle="solid" color={styles.colors.text} />
+            <FontAwesome5
+              name="chevron-left"
+              size={17}
+              iconStyle="solid"
+              color={styles.colors.text}
+            />
           </Pressable>
           <Text style={styles.nutrition.dateText}>{date}</Text>
           <Pressable
@@ -186,32 +192,62 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
             style={styles.nutrition.dateButton}
             onPress={() => changeDate(1)}
           >
-            <FontAwesome5 name="chevron-right" size={17} iconStyle="solid" color={styles.colors.text} />
+            <FontAwesome5
+              name="chevron-right"
+              size={17}
+              iconStyle="solid"
+              color={styles.colors.text}
+            />
           </Pressable>
         </View>
         <View style={styles.nutrition.summary}>
-          <Nutrients Protein={totals.protein} Fat={totals.fat} Carbs={totals.carbs} />
+          <Nutrients
+            Protein={totals.protein}
+            Fat={totals.fat}
+            Carbs={totals.carbs}
+          />
           <Pressable
             accessibilityRole="button"
-            onPress={() => ToastAndroid.show('Calories: ' + getCalCount(), ToastAndroid.SHORT)}
+            onPress={() =>
+              ToastAndroid.show(
+                'Calories: ' + getCalCount(),
+                ToastAndroid.SHORT,
+              )
+            }
             style={styles.nutrition.caloriesButton}
           >
             <Text style={styles.nutrition.caloriesText}>Show Calories</Text>
           </Pressable>
         </View>
-        {food && Object.keys(food).map((meal, i) => {
-          const info: FoodItem[] = food[meal];
-          return <Food meal={[...info]} title={meal} key={i} remove={removeFood} edit={openEdit} />;
-        })}
+        {food &&
+          Object.keys(food).map((meal, i) => {
+            const info: FoodItem[] = food[meal];
+            return (
+              <Food
+                meal={[...info]}
+                title={meal}
+                key={i}
+                remove={removeFood}
+                edit={openEdit}
+              />
+            );
+          })}
       </ScrollView>
       <Pressable
         testID="Add Food"
         accessibilityRole="button"
         accessibilityLabel="Add food"
         style={styles.nutrition.fab}
-        onPress={() => navigation.navigate('AddFood', { page: 'search', isNew: true, date })}
+        onPress={() =>
+          navigation.navigate('AddFood', { page: 'search', isNew: true, date })
+        }
       >
-        <FontAwesome5 name="plus" iconStyle="solid" color={styles.colors.background} size={22} />
+        <FontAwesome5
+          name="plus"
+          iconStyle="solid"
+          color={styles.colors.background}
+          size={22}
+        />
       </Pressable>
     </View>
   );

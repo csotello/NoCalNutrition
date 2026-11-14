@@ -30,15 +30,26 @@ export function Food(props: any): React.JSX.Element {
       {props.meal?.map((item: any) => {
         const nutrients = getMainNutrients({ ...item });
         return (
-          <View key={item.UUID || item.fdcId || item.description} style={styles.nutrition.foodCard}>
+          <View
+            key={item.UUID || item.fdcId || item.description}
+            style={styles.nutrition.foodCard}
+          >
             <HStack style={styles.nutrition.foodHeader}>
               <View style={{ flex: 1 }}>
                 {!!item.brandName && (
-                  <Text style={styles.nutrition.foodDetail}>{item.brandName}</Text>
+                  <Text style={styles.nutrition.foodDetail}>
+                    {item.brandName}
+                  </Text>
                 )}
-                <Text style={styles.nutrition.foodName}>{item.description}</Text>
+                <Text style={styles.nutrition.foodName}>
+                  {item.description}
+                </Text>
                 <Text style={styles.nutrition.foodDetail}>
-                  Amount: {Number(item.servingSize)} {item.servingSizeUnit}
+                  Serving Size: {Number(item.servingSize)}{' '}
+                  {item.servingSizeUnit}
+                </Text>
+                <Text style={styles.nutrition.foodDetail}>
+                  Servings: {Number(item.servings)}
                 </Text>
               </View>
               <View style={styles.nutrition.foodActions}>
@@ -50,7 +61,12 @@ export function Food(props: any): React.JSX.Element {
                   style={styles.nutrition.actionButton}
                   onPress={() => setSelectedFood(item)}
                 >
-                  <FontAwesome5 name="trash-alt" iconStyle="solid" color={styles.colors.textMuted} size={17} />
+                  <FontAwesome5
+                    name="trash-alt"
+                    iconStyle="solid"
+                    color={styles.colors.textMuted}
+                    size={17}
+                  />
                 </Pressable>
                 <Pressable
                   testID="Edit Icon"
@@ -60,14 +76,28 @@ export function Food(props: any): React.JSX.Element {
                   style={styles.nutrition.actionButton}
                   onPress={() => props.edit(item, props.title)}
                 >
-                  <FontAwesome5 name="pencil-alt" iconStyle="solid" color={styles.colors.textMuted} size={17} />
+                  <FontAwesome5
+                    name="pencil-alt"
+                    iconStyle="solid"
+                    color={styles.colors.textMuted}
+                    size={17}
+                  />
                 </Pressable>
               </View>
             </HStack>
             <View style={styles.nutrition.nutrients}>
-              <Text style={styles.nutrition.nutrientValue}>P: {nutrients.protein.value}{nutrients.protein.unitName}</Text>
-              <Text style={styles.nutrition.nutrientValue}>C: {nutrients.carbs.value}{nutrients.carbs.unitName}</Text>
-              <Text style={styles.nutrition.nutrientValue}>F: {nutrients.fat.value}{nutrients.fat.unitName}</Text>
+              <Text style={styles.nutrition.nutrientValue}>
+                P: {nutrients.protein.value}
+                {nutrients.protein.unitName}
+              </Text>
+              <Text style={styles.nutrition.nutrientValue}>
+                C: {nutrients.carbs.value}
+                {nutrients.carbs.unitName}
+              </Text>
+              <Text style={styles.nutrition.nutrientValue}>
+                F: {nutrients.fat.value}
+                {nutrients.fat.unitName}
+              </Text>
             </View>
           </View>
         );
@@ -81,7 +111,9 @@ export function Food(props: any): React.JSX.Element {
         <AlertDialogBackdrop />
         <AlertDialogContent style={styles.dialogs.content}>
           <AlertDialogCloseButton />
-          <AlertDialogHeader><Heading style={styles.dialogs.heading}>Delete Food</Heading></AlertDialogHeader>
+          <AlertDialogHeader>
+            <Heading style={styles.dialogs.heading}>Delete Food</Heading>
+          </AlertDialogHeader>
           <AlertDialogBody>
             <Text style={styles.dialogs.body}>
               This will permanently delete the food item. Data cannot be
