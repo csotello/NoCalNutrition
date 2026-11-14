@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { useRef, useState } from 'react';
+import { Text, Pressable, ScrollView } from 'react-native';
 import React from 'react';
 import {
-  Modal,
-  ModalBackdrop,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
-  ModalBody,
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
   Heading,
 } from '@gluestack-ui/themed';
 import { store } from '../utils';
 import styles from '../styles/styles';
 import Goals from '../components/Goals';
 import FoodCategories from '../components/FoodCategories';
-
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 export function Settings() {
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState('');
+  const cancelRef = useRef(null);
 
   return (
     <ScrollView style={styles.settings.screen} contentContainerStyle={{ paddingBottom: 28 }}>
@@ -25,7 +26,7 @@ export function Settings() {
       <Pressable
         style={styles.settings.action}
         onPress={() => {
-          setVisible(prev => !prev);
+          setVisible(true);
           setSelected('catagories');
         }}
       >
@@ -34,7 +35,7 @@ export function Settings() {
       <Pressable
         style={styles.settings.action}
         onPress={() => {
-          setVisible(prev => !prev);
+          setVisible(true);
           setSelected('goals');
         }}
       >
@@ -48,31 +49,39 @@ export function Settings() {
       >
         <Text style={styles.settings.actionText}>Reset Custom</Text>
       </Pressable>
-      <Modal
+      <AlertDialog
         isOpen={visible}
-        onClose={() => setVisible(prev => !prev)}
-        size="lg"
+        onClose={() => setVisible(false)}
+        leastDestructiveRef={cancelRef}
       >
-        <ModalBackdrop />
-        <ModalContent h={'80%'} style={styles.dialogs.content}>
-          <ModalHeader>
+        <AlertDialogBackdrop />
+        <AlertDialogContent h={'80%'} style={styles.dialogs.content}>
+          <AlertDialogHeader>
             <Heading size="lg" style={styles.dialogs.heading}>
               {selected === 'catagories' ? 'Catagories' : 'Set Nutrient Goals'}
             </Heading>
-            <ModalCloseButton
+            <AlertDialogCloseButton
+              ref={cancelRef}
               bgColor={styles.colors.surfaceRaised}
               style={{ alignContent: 'center' }}
-            />
-          </ModalHeader>
-          <ModalBody>
+            >
+              <FontAwesome5
+                name="times"
+                iconStyle="solid"
+                size={16}
+                color={styles.colors.textMuted}
+              />
+            </AlertDialogCloseButton>
+          </AlertDialogHeader>
+          <AlertDialogBody>
             {selected === 'goals' ? (
               <Goals setVisible={setVisible} />
             ) : (
               <FoodCategories />
             )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </AlertDialogBody>
+        </AlertDialogContent>
+      </AlertDialog>
     </ScrollView>
   );
 }
