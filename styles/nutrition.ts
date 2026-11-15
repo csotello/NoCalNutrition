@@ -1,0 +1,103 @@
+import { StyleSheet } from 'react-native';
+import { colors } from './colors';
+
+const nutrition = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.background },
+  content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 100 },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 12,
+  },
+  dateNavigation: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+  dateText: {
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+    flex: 1,
+  },
+  dateButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  foodHeader: { flexDirection: 'row', alignItems: 'flex-start' },
+  summary: {
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  caloriesButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+  },
+  caloriesText: { color: colors.accentSoft, fontWeight: '600' },
+  mealCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  mealTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.text,
+    paddingBottom: 10,
+  },
+  foodCard: {
+    backgroundColor: colors.surfaceRaised,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 8,
+  },
+  foodName: { color: colors.text, fontSize: 14, lineHeight: 20, flex: 1 },
+  foodDetail: { color: colors.textMuted, fontSize: 12, lineHeight: 18 },
+  foodActions: { flexDirection: 'row', alignItems: 'center', marginLeft: 8 },
+  actionButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nutrients: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  nutrientValue: { color: colors.text, fontSize: 12, fontWeight: '600' },
+  fab: {
+    position: 'absolute',
+    right: 18,
+    bottom: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+});
+
+export default nutrition;
