@@ -60,6 +60,7 @@ it('opens the selected food for editing', async () => {
     food: { ...defaultFood, meal: 'Breakfast' },
     isNew: false,
     date,
+    isCustom: false,
   });
 });
 
@@ -86,6 +87,8 @@ it('opens AddFood in search mode', async () => {
     page: 'search',
     isNew: true,
     date,
+    isCustom: false,
+    food: {},
   });
 });
 

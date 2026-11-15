@@ -3,6 +3,7 @@ import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { Food } from '../components/Food';
 import { defaultFood } from '../utils';
+import { Meal } from '../types';
 
 async function renderFood(overrides = {}) {
   const food = {
@@ -14,8 +15,8 @@ async function renderFood(overrides = {}) {
     })),
   };
   const props = {
-    meal: [food],
-    title: 'Breakfast',
+    foods: [food],
+    meal: 'Breakfast',
     remove: jest.fn(),
     edit: jest.fn(),
     ...overrides,
@@ -30,7 +31,7 @@ async function renderFood(overrides = {}) {
 }
 
 it('renders an empty meal without food details', async () => {
-  const { getByText, queryByTestId } = await renderFood({ meal: [] });
+  const { getByText, queryByTestId } = await renderFood({ foods: [] });
 
   expect(getByText('Breakfast')).toBeTruthy();
   expect(queryByTestId('Edit Icon')).toBeNull();
