@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 export type NutrientValues = {
   [key: string]: Nutrient;
   protein: Nutrient;
@@ -26,4 +28,27 @@ export type Nutrient = {
   nutrientName?: string;
   value?: number;
   unitName?: string;
+};
+
+export type Meal = 'Breakfast' | 'Lunch' | 'Dinner' | 'Snacks';
+
+export type NutritionDay = Record<Meal, FoodItem[]>;
+
+export type AddFoodPage = 'search' | 'custom' | 'edit';
+
+export type MainTabParamList = {
+  Nutrition: { date?: string } | undefined;
+  Setting: undefined;
+};
+
+export type RootStackParamList = {
+  Home: NavigatorScreenParams<MainTabParamList>;
+  Habits: undefined;
+  AddFood: {
+    page: AddFoodPage;
+    date: string;
+    isNew: boolean;
+    isCustom: boolean;
+    food: FoodItem;
+  };
 };

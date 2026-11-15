@@ -1,5 +1,62 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
-import { FoodItem, NutrientValues } from './types.ts';
+import { FoodItem, Meal, NutrientValues, NutritionDay } from './types.ts';
+
+const nutritionMeals: Meal[] = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+
+export function emptyNutritionDay(): NutritionDay {
+  return { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] };
+}
+
+function normalizeNutritionDay(value: unknown): NutritionDay {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('Stored nutrition data must be an object.');
+  }
+
+  const source = value as Record<string, unknown>;
+  const normalized = emptyNutritionDay();
+  nutritionMeals.forEach(meal => {
+    const items = source[meal];
+    if (items === undefined) return;
+    if (!Array.isArray(items)) {
+      throw new Error(`Stored nutrition meal "${meal}" must be an array.`);
+    }
+    if (items.some(item => item === null || typeof item !== 'object' || Array.isArray(item))) {
+      throw new Error(`Stored nutrition meal "${meal}" contains an invalid food item.`);
+    }
+    normalized[meal] = items as FoodItem[];
+  });
+  return normalized;
+}
+
+function nutritionStorageKey(date: string): string {
+  return `nutrition-${date}`;
+}
+
+/** Reads and validates a day's nutrition from encrypted storage. */
+export async function loadNutrition(date: string): Promise<NutritionDay> {
+  const stored = await EncryptedStorage.getItem(nutritionStorageKey(date));
+  if (stored === null) return emptyNutritionDay();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(stored);
+  } catch (error) {
+    throw new Error(`Stored nutrition for ${date} is not valid JSON: ${String(error)}`);
+  }
+  return normalizeNutritionDay(parsed);
+}
+
+/** Validates and writes a day's nutrition to encrypted storage. */
+export async function saveNutrition(
+  date: string,
+  nutrition: NutritionDay,
+): Promise<void> {
+  const normalized = normalizeNutritionDay(nutrition);
+  await EncryptedStorage.setItem(
+    nutritionStorageKey(date),
+    JSON.stringify(normalized),
+  );
+}
 
 /**
  * Convert user input into format used by API
@@ -77,6 +134,7 @@ export const defaultFood = {
   householdServingFullText: '1/4 cup',
   servingSize: 28,
   servingSizeUnit: 'G',
+  servings: 1,
   foodNutrients: [
     {
       nutrientName: 'Protein',
@@ -152,6 +210,7 @@ export function getMainNutrients(food: FoodItem): NutrientValues {
         ret.fat = { ...nutrient };
         break;
       case 'Sugars, total including NLEA':
+      case 'Total Sugars':
         ret.sugar = { ...nutrient };
         break;
       case 'Fiber, total dietary':

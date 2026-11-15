@@ -16,58 +16,97 @@ import { Pressable, Text } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils';
 import styles from '../styles/styles';
+import nutritionStyles from '../styles/nutrition';
+import { FoodItem, Meal } from '../types';
 
-export function Food(props: any): React.JSX.Element {
-  const [selectedFood, setSelectedFood] = useState<any>(null);
+interface FoodProps {
+  meal: Meal;
+  foods: FoodItem[];
+  edit: (item: FoodItem, meal: Meal) => void;
+  remove: (item: FoodItem, meal: Meal) => void;
+}
+
+export function Food(props: FoodProps): React.JSX.Element {
+  const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
   const cancelRef = useRef(null);
 
   return (
-    <View style={styles.nutrition.mealCard}>
-      <Text style={styles.nutrition.mealTitle}>{props.title}</Text>
-      {props.meal?.length === 0 && (
+    <View style={nutritionStyles.mealCard}>
+      <Text style={nutritionStyles.mealTitle}>{props.meal}</Text>
+      {props.foods?.length === 0 && (
         <Text style={styles.typography.muted}>No foods added yet</Text>
       )}
-      {props.meal?.map((item: any) => {
+      {props.foods?.map((item: any) => {
         const nutrients = getMainNutrients({ ...item });
         return (
-          <View key={item.UUID || item.fdcId || item.description} style={styles.nutrition.foodCard}>
-            <HStack style={styles.nutrition.foodHeader}>
+          <View
+            key={item.UUID || item.fdcId || item.description}
+            style={nutritionStyles.foodCard}
+          >
+            <HStack style={nutritionStyles.foodHeader}>
               <View style={{ flex: 1 }}>
                 {!!item.brandName && (
-                  <Text style={styles.nutrition.foodDetail}>{item.brandName}</Text>
+                  <Text style={nutritionStyles.foodDetail}>
+                    {item.brandName}
+                  </Text>
                 )}
-                <Text style={styles.nutrition.foodName}>{item.description}</Text>
-                <Text style={styles.nutrition.foodDetail}>
-                  Amount: {Number(item.servingSize)} {item.servingSizeUnit}
+                <Text style={nutritionStyles.foodName}>
+                  {item.description}
+                </Text>
+                <Text style={nutritionStyles.foodDetail}>
+                  Serving Size: {Number(item.servingSize)}{' '}
+                  {item.servingSizeUnit}
+                </Text>
+                <Text style={nutritionStyles.foodDetail}>
+                  Servings: {Number(item.servings)}
                 </Text>
               </View>
-              <View style={styles.nutrition.foodActions}>
+              <View style={nutritionStyles.foodActions}>
                 <Pressable
                   testID="Delete Icon"
                   accessibilityRole="button"
                   accessibilityLabel={`Delete ${item.description}`}
                   hitSlop={4}
-                  style={styles.nutrition.actionButton}
+                  style={nutritionStyles.actionButton}
                   onPress={() => setSelectedFood(item)}
                 >
-                  <FontAwesome5 name="trash-alt" iconStyle="solid" color={styles.colors.textMuted} size={17} />
+                  <FontAwesome5
+                    name="trash-alt"
+                    iconStyle="solid"
+                    color={styles.colors.textMuted}
+                    size={17}
+                  />
                 </Pressable>
                 <Pressable
                   testID="Edit Icon"
                   accessibilityRole="button"
                   accessibilityLabel={`Edit ${item.description}`}
                   hitSlop={4}
-                  style={styles.nutrition.actionButton}
-                  onPress={() => props.edit(item, props.title)}
+                  style={nutritionStyles.actionButton}
+                  onPress={() => props.edit(item, props.meal)}
                 >
-                  <FontAwesome5 name="pencil-alt" iconStyle="solid" color={styles.colors.textMuted} size={17} />
+                  <FontAwesome5
+                    name="pencil-alt"
+                    iconStyle="solid"
+                    color={styles.colors.textMuted}
+                    size={17}
+                  />
                 </Pressable>
               </View>
             </HStack>
-            <View style={styles.nutrition.nutrients}>
-              <Text style={styles.nutrition.nutrientValue}>P: {nutrients.protein.value}{nutrients.protein.unitName}</Text>
-              <Text style={styles.nutrition.nutrientValue}>C: {nutrients.carbs.value}{nutrients.carbs.unitName}</Text>
-              <Text style={styles.nutrition.nutrientValue}>F: {nutrients.fat.value}{nutrients.fat.unitName}</Text>
+            <View style={nutritionStyles.nutrients}>
+              <Text style={nutritionStyles.nutrientValue}>
+                P: {nutrients.protein.value}
+                {nutrients.protein.unitName}
+              </Text>
+              <Text style={nutritionStyles.nutrientValue}>
+                C: {nutrients.carbs.value}
+                {nutrients.carbs.unitName}
+              </Text>
+              <Text style={nutritionStyles.nutrientValue}>
+                F: {nutrients.fat.value}
+                {nutrients.fat.unitName}
+              </Text>
             </View>
           </View>
         );
@@ -81,7 +120,9 @@ export function Food(props: any): React.JSX.Element {
         <AlertDialogBackdrop />
         <AlertDialogContent style={styles.dialogs.content}>
           <AlertDialogCloseButton />
-          <AlertDialogHeader><Heading style={styles.dialogs.heading}>Delete Food</Heading></AlertDialogHeader>
+          <AlertDialogHeader>
+            <Heading style={styles.dialogs.heading}>Delete Food</Heading>
+          </AlertDialogHeader>
           <AlertDialogBody>
             <Text style={styles.dialogs.body}>
               This will permanently delete the food item. Data cannot be
@@ -93,7 +134,7 @@ export function Food(props: any): React.JSX.Element {
               style={styles.dialogs.destructive}
               testID="Delete Button"
               onPress={() => {
-                if (selectedFood) props.remove(selectedFood, props.title);
+                if (selectedFood) props.remove(selectedFood, props.meal);
                 setSelectedFood(null);
               }}
             >

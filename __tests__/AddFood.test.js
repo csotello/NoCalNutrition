@@ -1,7 +1,7 @@
-import {render, fireEvent} from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {AddFood} from '../screens/AddFood';
-import {defaultFood} from '../utils';
+import { AddFood } from '../screens/AddFood';
+import { defaultFood } from '../utils';
 
 const date = '2022-01-01';
 
@@ -35,35 +35,37 @@ async function renderAddFood(page, params) {
   const rendered = await render(
     <AddFood navigation={navigation} route={createRoute(page, params)} />,
   );
-  return {...rendered, navigation};
+  return { ...rendered, navigation };
 }
 
 it('renders the edit page for the selected food', async () => {
-  const {getByDisplayValue} = await renderAddFood('edit');
+  const { getByDisplayValue } = await renderAddFood('edit');
 
   expect(getByDisplayValue('Kroger Mexican Cheese')).toBeTruthy();
 });
 
 it('shows the search page when requested', async () => {
-  const {getByPlaceholderText} = await renderAddFood('search');
+  const { getByPlaceholderText } = await renderAddFood('search');
 
   expect(getByPlaceholderText('Cheese')).toBeTruthy();
 });
 
 it('shows the custom foods page when requested', async () => {
-  const {getAllByText} = await renderAddFood('custom');
+  const { getAllByText } = await renderAddFood('custom');
 
   expect(getAllByText('Custom Foods')).toHaveLength(2);
 });
 
 it('navigates to search, custom foods, and create pages from the tabs', async () => {
-  const {getByText, navigation} = await renderAddFood('edit');
+  const { getByText, navigation } = await renderAddFood('edit');
 
   await fireEvent.press(getByText('Search'));
   expect(navigation.navigate).toHaveBeenNthCalledWith(1, 'AddFood', {
     page: 'search',
     isNew: true,
     date,
+    isCustom: false,
+    food: {},
   });
 
   await fireEvent.press(getByText('Custom Foods'));
@@ -71,6 +73,8 @@ it('navigates to search, custom foods, and create pages from the tabs', async ()
     page: 'custom',
     isNew: true,
     date,
+    isCustom: true,
+    food: {},
   });
 
   await fireEvent.press(getByText('Create'));
@@ -79,7 +83,7 @@ it('navigates to search, custom foods, and create pages from the tabs', async ()
     isNew: true,
     food: {},
     date,
-    isCustom: true,
+    isCustom: false,
   });
 });
 
@@ -92,7 +96,7 @@ it('stores a new food and resets navigation to nutrition', async () => {
       Snacks: [],
     }),
   );
-  const {getByText, navigation} = await renderAddFood('edit');
+  const { getByText, navigation } = await renderAddFood('edit');
 
   await fireEvent.press(getByText('Add'));
 
@@ -117,7 +121,7 @@ it('stores a new food and resets navigation to nutrition', async () => {
     routes: [
       {
         name: 'Home',
-        state: {routes: [{name: 'Nutrition', params: {date}}]},
+        state: { routes: [{ name: 'Nutrition', params: { date } }] },
       },
     ],
   });

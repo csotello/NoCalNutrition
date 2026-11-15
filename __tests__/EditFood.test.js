@@ -113,6 +113,33 @@ it('edits an existing standard food', async () => {
   expect(testProps.editCustom).not.toHaveBeenCalled();
 });
 
+it('preserves edited additional nutrient values when saving', async () => {
+  const food = {
+    ...defaultFood,
+    foodNutrients: [
+      ...defaultFood.foodNutrients,
+      { nutrientName: 'Sodium, Na', value: 450 },
+      { nutrientName: 'Fiber, total dietary', value: 3 },
+    ],
+  };
+  const {props: testProps, getByText, getByDisplayValue, getByTestId} =
+    await renderEditFood({food, isNew: false, isCustom: false});
+
+  await fireEvent.press(getByText('Additional Nutrients'));
+  await fireEvent.changeText(getByDisplayValue('450'), '625');
+  await fireEvent.press(getByTestId('SaveButton'));
+
+  expect(testProps.edit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      foodNutrients: expect.arrayContaining([
+        expect.objectContaining({nutrientName: 'Sodium, Na', value: 625}),
+        expect.objectContaining({nutrientName: 'Fiber, total dietary', value: 3}),
+      ]),
+    }),
+    'Breakfast',
+  );
+});
+
 it('edits an existing custom food', async () => {
   const {props: testProps, getByTestId} = await renderEditFood({
     isNew: false,

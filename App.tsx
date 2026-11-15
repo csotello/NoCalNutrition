@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { useColorScheme } from 'react-native';
 import { Habits } from './screens/Habits';
 import { Nutrition } from './screens/Nutrition';
 import { Settings } from './screens/Settings';
@@ -10,9 +9,11 @@ import styles from './styles/styles';
 import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { NavigationContainer } from '@react-navigation/native';
-// import { Task } from './components/Task';
-import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const headerStyle = {
   headerStyle: {
@@ -25,14 +26,19 @@ const headerStyle = {
 };
 
 function App(): React.JSX.Element {
-  // const isDarkMode = useColorScheme() === 'dark';
-  const Tab = createMaterialBottomTabNavigator();
-  const Stack = createNativeStackNavigator();
   const MainTabs = () => {
     return (
       <Tab.Navigator
-        activeColor={styles.navigator.activeColor}
-        barStyle={{ backgroundColor: styles.navigator.backgroundColor }}
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: styles.navigator.activeColor,
+          tabBarInactiveTintColor: styles.colors.textMuted,
+          tabBarStyle: {
+            backgroundColor: styles.navigator.backgroundColor,
+            borderTopColor: styles.colors.border,
+          },
+          tabBarLabelStyle: { fontWeight: '600' },
+        }}
       >
         <Tab.Screen
           name="Nutrition"
@@ -41,8 +47,12 @@ function App(): React.JSX.Element {
           options={{
             tabBarLabel: 'Nutrition',
             // headerShown: false,
-            tabBarIcon: ({ focused }: { focused: boolean }) => (
-              <Icon as={AddIcon} color={focused ? styles.colors.accentSoft : styles.colors.textMuted} m={1} />
+            tabBarIcon: ({ color }: { color: string }) => (
+              <Icon
+                as={AddIcon}
+                color={color}
+                m={1}
+              />
             ),
           }}
         />
@@ -51,8 +61,11 @@ function App(): React.JSX.Element {
           component={Settings}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: ({ focused }: { focused: boolean }) => (
-              <Icon as={SettingsIcon} color={focused ? styles.colors.accentSoft : styles.colors.textMuted} />
+            tabBarIcon: ({ color }: { color: string }) => (
+              <Icon
+                as={SettingsIcon}
+                color={color}
+              />
             ),
           }}
         />

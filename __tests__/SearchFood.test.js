@@ -1,5 +1,5 @@
-import {render, fireEvent} from '@testing-library/react-native';
-import {SearchFood} from '../components/SearchFood';
+import { render, fireEvent } from '@testing-library/react-native';
+import { SearchFood } from '../components/SearchFood';
 
 const props = {
   date: '2023-01-01',
@@ -13,9 +13,9 @@ const searchResult = {
   servingSizeUnit: 'g',
   householdServingFullText: '1 slice',
   foodNutrients: [
-    {nutrientName: 'Protein', value: 7},
-    {nutrientName: 'Carbohydrate, by difference', value: 1},
-    {nutrientName: 'Total lipid (fat)', value: 9},
+    { nutrientName: 'Protein', value: 7 },
+    { nutrientName: 'Carbohydrate, by difference', value: 1 },
+    { nutrientName: 'Total lipid (fat)', value: 9 },
   ],
 };
 
@@ -28,7 +28,7 @@ beforeEach(() => {
 });
 
 it('renders the search field and button', async () => {
-  const {getByPlaceholderText, getByText} = await renderSearchFood();
+  const { getByPlaceholderText, getByText } = await renderSearchFood();
 
   expect(getByPlaceholderText('Cheese')).toBeTruthy();
   expect(getByText('Search')).toBeTruthy();
@@ -36,9 +36,9 @@ it('renders the search field and button', async () => {
 
 it('searches the API and displays returned food details', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockResolvedValue({
-    json: async () => ({foods: [searchResult]}),
+    json: async () => ({ foods: [searchResult] }),
   });
-  const {getByPlaceholderText, getByText} = await renderSearchFood();
+  const { getByPlaceholderText, getByText } = await renderSearchFood();
 
   await fireEvent.changeText(getByPlaceholderText('Cheese'), 'cheddar');
   await fireEvent.press(getByText('Search'));
@@ -59,9 +59,9 @@ it('searches the API and displays returned food details', async () => {
 
 it('opens the selected food in AddFood', async () => {
   jest.spyOn(global, 'fetch').mockResolvedValue({
-    json: async () => ({foods: [searchResult]}),
+    json: async () => ({ foods: [searchResult] }),
   });
-  const {getByPlaceholderText, getByText} = await renderSearchFood();
+  const { getByPlaceholderText, getByText } = await renderSearchFood();
 
   await fireEvent.changeText(getByPlaceholderText('Cheese'), 'cheddar');
   await fireEvent.press(getByText('Search'));
@@ -72,14 +72,15 @@ it('opens the selected food in AddFood', async () => {
     food: searchResult,
     isNew: true,
     date: props.date,
+    isCustom: false,
   });
 });
 
 it('renders no results when the search response has no foods', async () => {
   jest.spyOn(global, 'fetch').mockResolvedValue({
-    json: async () => ({foods: []}),
+    json: async () => ({ foods: [] }),
   });
-  const {getByPlaceholderText, getByText, queryByText} =
+  const { getByPlaceholderText, getByText, queryByText } =
     await renderSearchFood();
 
   await fireEvent.changeText(getByPlaceholderText('Cheese'), 'unknown food');

@@ -6,18 +6,24 @@ import { EditFood } from '../components/EditFood';
 import styles from '../styles/styles';
 import { useEffect, useState } from 'react';
 import uuid from 'uuid-random';
-import { store, retrieve, convertCustomFood } from '../utils';
+import {
+  store,
+  retrieve,
+  convertCustomFood,
+  emptyNutritionDay,
+  loadNutrition,
+  saveNutrition,
+} from '../utils';
+import { AddFoodPage, Meal, NutritionDay, RootStackParamList } from '../types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export function AddFood({ navigation, route }: any) {
+type AddFoodProps = NativeStackScreenProps<RootStackParamList, 'AddFood'>;
+
+export function AddFood({ navigation, route }: AddFoodProps) {
   const { page, isNew, food, date, isCustom } = route?.params;
   const [loaded, setLoaded] = useState(false);
-  const [nutrition, setNutrition] = useState({
-    Breakfast: [],
-    Lunch: [],
-    Dinner: [],
-    Snacks: [],
-  });
-  const key = 'nutrition' + '-' + date;
+  const [nutritionReady, setNutritionReady] = useState(false);
+  const [nutrition, setNutrition] = useState<NutritionDay>(emptyNutritionDay);
   const tabs = [
     { label: 'Search', page: 'search' },
     { label: 'Custom Foods', page: 'custom' },
@@ -33,15 +39,12 @@ export function AddFood({ navigation, route }: any) {
    * Load the nutrition data based on current date
    */
   async function load() {
-    console.log(key);
-    let val = await retrieve('nutrition' + '-' + date);
-    let ret;
-    if (val) {
-      ret = JSON.parse(val);
-    }
-    if (ret) {
-      setNutrition({ ...ret });
-      console.log('Loaded: ' + val);
+    try {
+      setNutrition(await loadNutrition(date));
+      setNutritionReady(true);
+    } catch (error) {
+      setNutritionReady(false);
+      console.error(`Failed to load nutrition for ${date}`, error);
     }
     if (!loaded) setLoaded(true);
   }
@@ -52,13 +55,10 @@ export function AddFood({ navigation, route }: any) {
    * @param {object} item - The item to be added.
    * @param {string} meal - The meal to add the item to.
    */
-  async function add(item: any, meal: string) {
-    // console.log('item: ' + item);
-    // console.log('meal: ' + meal);
-    // let key = 'nutrition' + '-' + date;
-    // let cur = await retrieve(key);
-    // cur = JSON.parse(cur);
-    let cur: { [key: string]: any } = {
+  async function add(item: any, meal: Meal) {
+    if (!nutritionReady)
+      throw new Error('Nutrition data is not ready to save.');
+    let cur: NutritionDay = {
       Breakfast: [...nutrition.Breakfast],
       Lunch: [...nutrition.Lunch],
       Dinner: [...nutrition.Dinner],
@@ -66,14 +66,8 @@ export function AddFood({ navigation, route }: any) {
     };
     console.log('cur:' + JSON.stringify(cur));
     item['UUID'] = uuid();
-    Object.entries(cur).forEach(([key, value]) => {
-      if (key === meal) {
-        value = value === undefined ? [item] : [...value, item];
-        console.log('key: ' + key + ' value: ' + JSON.stringify(value));
-        cur[key] = [...value];
-      }
-    });
-    await store(key, JSON.stringify(cur));
+    cur[meal] = [...cur[meal], item];
+    await saveNutrition(date, cur);
     console.log(JSON.stringify(cur));
     navigation.reset({
       index: 0,
@@ -92,19 +86,21 @@ export function AddFood({ navigation, route }: any) {
    * @param {object} item - The meal item to be edited.
    * @param {string} meal - The meal category to which the item belongs (e.g., Breakfast, Lunch, Dinner, Snacks).
    */
-  async function edit(item: any, meal: string) {
-    let cur: { [key: string]: any } = {
+  async function edit(item: any, meal: Meal) {
+    if (!nutritionReady)
+      throw new Error('Nutrition data is not ready to save.');
+    let cur: NutritionDay = {
       Breakfast: [...nutrition.Breakfast],
       Lunch: [...nutrition.Lunch],
       Dinner: [...nutrition.Dinner],
       Snacks: [...nutrition.Snacks],
     };
-    Object.entries(cur).forEach(([key, value]) => {
-      value = value?.filter((cur: any) => item.UUID !== cur.UUID);
-      if (key === meal) value.push({ ...item });
-      cur[key] = [...value];
-    });
-    await store(key, JSON.stringify(cur));
+    cur.Breakfast = cur.Breakfast.filter(current => item.UUID !== current.UUID);
+    cur.Lunch = cur.Lunch.filter(current => item.UUID !== current.UUID);
+    cur.Dinner = cur.Dinner.filter(current => item.UUID !== current.UUID);
+    cur.Snacks = cur.Snacks.filter(current => item.UUID !== current.UUID);
+    cur[meal] = [...cur[meal], { ...item }];
+    await saveNutrition(date, cur);
     console.log('Edited: ' + JSON.stringify(cur));
     navigation.reset({
       index: 0,
@@ -116,6 +112,7 @@ export function AddFood({ navigation, route }: any) {
       ],
     });
   }
+
   /**
    * Edits data for a custom food
    *
@@ -180,15 +177,28 @@ export function AddFood({ navigation, route }: any) {
             key={tab.page}
             accessibilityRole="button"
             accessibilityState={{ selected: page === tab.page }}
-            style={[styles.addFood.tab, page === tab.page && styles.addFood.selectedTab]}
-            onPress={() => navigation.navigate('AddFood', {
-              page: tab.page,
-              isNew: true,
-              ...(tab.page === 'edit' ? { food: {}, isCustom: true } : {}),
-              date,
-            })}
+            style={[
+              styles.addFood.tab,
+              page === tab.page && styles.addFood.selectedTab,
+            ]}
+            onPress={() =>
+              navigation.navigate('AddFood', {
+                page: tab.page as AddFoodPage,
+                isNew: true,
+                food: {},
+                isCustom: tab.page === 'custom',
+                date,
+              })
+            }
           >
-            <Text style={[styles.addFood.tabText, page === tab.page && styles.addFood.selectedTabText]}>{tab.label}</Text>
+            <Text
+              style={[
+                styles.addFood.tabText,
+                page === tab.page && styles.addFood.selectedTabText,
+              ]}
+            >
+              {tab.label}
+            </Text>
           </Pressable>
         ))}
       </View>
