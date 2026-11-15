@@ -13,7 +13,6 @@ import {
 import React from 'react';
 import { Text, ScrollView } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { WhiteText } from '../styledComponents/WhiteText.tsx';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils.tsx';
@@ -86,32 +85,32 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
     return (
       <View style={[styles.listItem, styles.customFoods.card]}>
         <View style={styles.customFoods.details}>
-          <WhiteText style={styles.typography.sectionTitle}>
+          <Text style={[styles.typography.sectionTitle, styles.typography.whiteText]}>
             {food.description || 'Food Description'}
-          </WhiteText>
-          <WhiteText style={styles.typography.muted}>
+          </Text>
+          <Text style={[styles.typography.muted, styles.typography.whiteText]}>
             {food.brandName || ''}
-          </WhiteText>
+          </Text>
           {food.householdServingFullText && (
-            <WhiteText>{food.householdServingFullText}</WhiteText>
+            <Text style={styles.typography.whiteText}>{food.householdServingFullText}</Text>
           )}
           {food.servingSize && (
-            <WhiteText>
+            <Text style={styles.typography.whiteText}>
               {food.servingSize} {food.servingSizeUnit.toLocaleLowerCase()}
-            </WhiteText>
+            </Text>
           )}
         </View>
         <View style={styles.customFoods.macro}>
-          <WhiteText>P</WhiteText>
-          <WhiteText>{nutrients.protein?.value || 0}</WhiteText>
+          <Text style={styles.typography.whiteText}>P</Text>
+          <Text style={styles.typography.whiteText}>{nutrients.protein?.value || 0}</Text>
         </View>
         <View style={styles.customFoods.macro}>
-          <WhiteText>C</WhiteText>
-          <WhiteText>{nutrients.carbs?.value || 0}</WhiteText>
+          <Text style={styles.typography.whiteText}>C</Text>
+          <Text style={styles.typography.whiteText}>{nutrients.carbs?.value || 0}</Text>
         </View>
         <View style={styles.customFoods.macro}>
-          <WhiteText>F</WhiteText>
-          <WhiteText>{nutrients.fat?.value || 0}</WhiteText>
+          <Text style={styles.typography.whiteText}>F</Text>
+          <Text style={styles.typography.whiteText}>{nutrients.fat?.value || 0}</Text>
         </View>
         <View style={styles.customFoods.actions}>
           <FontAwesome5
@@ -200,11 +199,11 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
 
   return (
     <ScrollView contentContainerStyle={styles.customFoods.list}>
-      <WhiteText style={styles.screenHeading}>Custom Foods</WhiteText>
+      <Text style={[styles.screenHeading, styles.typography.whiteText]}>Custom Foods</Text>
       {foods.length === 0 && (
-        <WhiteText style={styles.typography.muted}>
+        <Text style={[styles.typography.muted, styles.typography.whiteText]}>
           No custom foods saved yet.
-        </WhiteText>
+        </Text>
       )}
       {foods?.map((item, i) => {
         return <View key={i}>{displayFoods(item)}</View>;

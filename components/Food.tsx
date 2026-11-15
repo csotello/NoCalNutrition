@@ -16,6 +16,7 @@ import { Pressable, Text } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils';
 import styles from '../styles/styles';
+import nutritionStyles from '../styles/nutrition';
 import { FoodItem, Meal } from '../types';
 
 interface FoodProps {
@@ -30,8 +31,8 @@ export function Food(props: FoodProps): React.JSX.Element {
   const cancelRef = useRef(null);
 
   return (
-    <View style={styles.nutrition.mealCard}>
-      <Text style={styles.nutrition.mealTitle}>{props.meal}</Text>
+    <View style={nutritionStyles.mealCard}>
+      <Text style={nutritionStyles.mealTitle}>{props.meal}</Text>
       {props.foods?.length === 0 && (
         <Text style={styles.typography.muted}>No foods added yet</Text>
       )}
@@ -40,33 +41,33 @@ export function Food(props: FoodProps): React.JSX.Element {
         return (
           <View
             key={item.UUID || item.fdcId || item.description}
-            style={styles.nutrition.foodCard}
+            style={nutritionStyles.foodCard}
           >
-            <HStack style={styles.nutrition.foodHeader}>
+            <HStack style={nutritionStyles.foodHeader}>
               <View style={{ flex: 1 }}>
                 {!!item.brandName && (
-                  <Text style={styles.nutrition.foodDetail}>
+                  <Text style={nutritionStyles.foodDetail}>
                     {item.brandName}
                   </Text>
                 )}
-                <Text style={styles.nutrition.foodName}>
+                <Text style={nutritionStyles.foodName}>
                   {item.description}
                 </Text>
-                <Text style={styles.nutrition.foodDetail}>
+                <Text style={nutritionStyles.foodDetail}>
                   Serving Size: {Number(item.servingSize)}{' '}
                   {item.servingSizeUnit}
                 </Text>
-                <Text style={styles.nutrition.foodDetail}>
+                <Text style={nutritionStyles.foodDetail}>
                   Servings: {Number(item.servings)}
                 </Text>
               </View>
-              <View style={styles.nutrition.foodActions}>
+              <View style={nutritionStyles.foodActions}>
                 <Pressable
                   testID="Delete Icon"
                   accessibilityRole="button"
                   accessibilityLabel={`Delete ${item.description}`}
                   hitSlop={4}
-                  style={styles.nutrition.actionButton}
+                  style={nutritionStyles.actionButton}
                   onPress={() => setSelectedFood(item)}
                 >
                   <FontAwesome5
@@ -81,7 +82,7 @@ export function Food(props: FoodProps): React.JSX.Element {
                   accessibilityRole="button"
                   accessibilityLabel={`Edit ${item.description}`}
                   hitSlop={4}
-                  style={styles.nutrition.actionButton}
+                  style={nutritionStyles.actionButton}
                   onPress={() => props.edit(item, props.meal)}
                 >
                   <FontAwesome5
@@ -93,16 +94,16 @@ export function Food(props: FoodProps): React.JSX.Element {
                 </Pressable>
               </View>
             </HStack>
-            <View style={styles.nutrition.nutrients}>
-              <Text style={styles.nutrition.nutrientValue}>
+            <View style={nutritionStyles.nutrients}>
+              <Text style={nutritionStyles.nutrientValue}>
                 P: {nutrients.protein.value}
                 {nutrients.protein.unitName}
               </Text>
-              <Text style={styles.nutrition.nutrientValue}>
+              <Text style={nutritionStyles.nutrientValue}>
                 C: {nutrients.carbs.value}
                 {nutrients.carbs.unitName}
               </Text>
-              <Text style={styles.nutrition.nutrientValue}>
+              <Text style={nutritionStyles.nutrientValue}>
                 F: {nutrients.fat.value}
                 {nutrients.fat.unitName}
               </Text>

@@ -5,7 +5,6 @@ import { Input, Button, InputField } from '@gluestack-ui/themed';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import styles from '../styles/styles';
-import { WhiteText } from '../styledComponents/WhiteText';
 
 function FoodCategories(): React.JSX.Element {
   const [categories, setCategories] = useState<string[]>([]);
@@ -56,7 +55,7 @@ function FoodCategories(): React.JSX.Element {
         {categories.map((cat, i) => {
           return (
             <View key={i} style={[styles.listItem, styles.row]}>
-              <WhiteText style={{ flex: 1 }}>{cat}</WhiteText>
+              <Text style={[{ flex: 1 }, styles.typography.whiteText]}>{cat}</Text>
               <FontAwesome5
                 size={20}
                 name="trash"

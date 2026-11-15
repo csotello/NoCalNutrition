@@ -186,7 +186,7 @@ export function AddFood({ navigation, route }: AddFoodProps) {
                 page: tab.page as AddFoodPage,
                 isNew: true,
                 food: {},
-                isCustom: tab.page === 'edit',
+                isCustom: tab.page === 'custom',
                 date,
               })
             }

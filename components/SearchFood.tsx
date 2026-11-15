@@ -5,8 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { getMainNutrients } from '../utils';
-import { WhiteText } from '../styledComponents/WhiteText';
 import styles from '../styles/styles';
+import searchStyles from '../styles/search';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 
@@ -48,10 +48,10 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
   }
 
   return (
-    <View style={styles.search.content}>
-      <WhiteText style={styles.screenHeading}>Find a food</WhiteText>
-      <View style={styles.search.queryRow}>
-        <Input style={[styles.field, styles.search.queryField]}>
+    <View style={searchStyles.content}>
+      <Text style={[styles.screenHeading, styles.typography.whiteText]}>Find a food</Text>
+      <View style={searchStyles.queryRow}>
+        <Input style={[styles.field, searchStyles.queryField]}>
           <InputField
             value={text}
             onChangeText={setText}
@@ -63,7 +63,7 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
           />
         </Input>
         <Button
-          style={styles.search.searchButton}
+          style={searchStyles.searchButton}
           isDisabled={loading}
           onPress={() => search(text)}
         >
@@ -72,9 +72,9 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
           </Text>
         </Button>
       </View>
-      {loading && <Text style={styles.search.message}>Searching foods…</Text>}
+      {loading && <Text style={searchStyles.message}>Searching foods…</Text>}
       {!loading && hasSearched && searchFailed && (
-        <Text style={styles.search.message}>
+        <Text style={searchStyles.message}>
           Search failed. Check your connection and try again.
         </Text>
       )}
@@ -82,7 +82,7 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
         hasSearched &&
         !searchFailed &&
         searchResults.length === 0 && (
-          <Text style={styles.search.message}>
+          <Text style={searchStyles.message}>
             No foods found. Try another search.
           </Text>
         )}
@@ -104,46 +104,46 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
                     isCustom: false,
                   })
                 }
-                style={styles.search.resultCard}
+                style={searchStyles.resultCard}
               >
-                <Text style={styles.search.resultTitle}>
+                <Text style={searchStyles.resultTitle}>
                   {item.description}
                 </Text>
                 {!!item.brandName && (
-                  <Text style={styles.search.resultDetail}>
+                  <Text style={searchStyles.resultDetail}>
                     {item.brandName}
                   </Text>
                 )}
-                <View style={styles.search.resultFooter}>
+                <View style={searchStyles.resultFooter}>
                   <View>
                     {!!item.servingSize && !!item.servingSizeUnit && (
-                      <Text style={styles.search.resultDetail}>
+                      <Text style={searchStyles.resultDetail}>
                         {Number(item.servingSize).toFixed(2)}{' '}
                         {item.servingSizeUnit}
                       </Text>
                     )}
                     {!!item.householdServingFullText && (
-                      <Text style={styles.search.resultDetail}>
+                      <Text style={searchStyles.resultDetail}>
                         {item.householdServingFullText}
                       </Text>
                     )}
                   </View>
-                  <View style={styles.search.macros}>
-                    <View style={styles.search.macroItem}>
-                      <Text style={styles.search.macroLabel}>P</Text>
-                      <Text style={styles.search.macro}>
+                  <View style={searchStyles.macros}>
+                    <View style={searchStyles.macroItem}>
+                      <Text style={searchStyles.macroLabel}>P</Text>
+                      <Text style={searchStyles.macro}>
                         {nutrients.protein?.value || 0}
                       </Text>
                     </View>
-                    <View style={styles.search.macroItem}>
-                      <Text style={styles.search.macroLabel}>C</Text>
-                      <Text style={styles.search.macro}>
+                    <View style={searchStyles.macroItem}>
+                      <Text style={searchStyles.macroLabel}>C</Text>
+                      <Text style={searchStyles.macro}>
                         {nutrients.carbs?.value || 0}
                       </Text>
                     </View>
-                    <View style={styles.search.macroItem}>
-                      <Text style={styles.search.macroLabel}>F</Text>
-                      <Text style={styles.search.macro}>
+                    <View style={searchStyles.macroItem}>
+                      <Text style={searchStyles.macroLabel}>F</Text>
+                      <Text style={searchStyles.macro}>
                         {nutrients.fat?.value || 0}
                       </Text>
                     </View>

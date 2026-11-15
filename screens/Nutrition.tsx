@@ -5,6 +5,7 @@ import { ToastAndroid, View, Text, Pressable } from 'react-native';
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import { Food } from '../components/Food';
 import styles from '../styles/styles';
+import nutritionStyles from '../styles/nutrition';
 import {
   FoodItem,
   Meal,
@@ -161,15 +162,15 @@ export function Nutrition({
     setTotals({ ...newTotals });
   }
   return (
-    <View style={styles.nutrition.screen}>
-      <ScrollView contentContainerStyle={styles.nutrition.content}>
-        <Text style={styles.nutrition.title}>Nutrition</Text>
-        <View style={styles.nutrition.dateNavigation}>
+    <View style={nutritionStyles.screen}>
+      <ScrollView contentContainerStyle={nutritionStyles.content}>
+        <Text style={nutritionStyles.title}>Nutrition</Text>
+        <View style={nutritionStyles.dateNavigation}>
           <Pressable
             testID="Previous Day"
             accessibilityRole="button"
             accessibilityLabel="Previous day"
-            style={styles.nutrition.dateButton}
+            style={nutritionStyles.dateButton}
             onPress={() => changeDate(-1)}
           >
             <FontAwesome5
@@ -179,12 +180,12 @@ export function Nutrition({
               color={styles.colors.text}
             />
           </Pressable>
-          <Text style={styles.nutrition.dateText}>{date}</Text>
+          <Text style={nutritionStyles.dateText}>{date}</Text>
           <Pressable
             testID="Next Day"
             accessibilityRole="button"
             accessibilityLabel="Next day"
-            style={styles.nutrition.dateButton}
+            style={nutritionStyles.dateButton}
             onPress={() => changeDate(1)}
           >
             <FontAwesome5
@@ -195,7 +196,7 @@ export function Nutrition({
             />
           </Pressable>
         </View>
-        <View style={styles.nutrition.summary}>
+        <View style={nutritionStyles.summary}>
           <Nutrients
             Protein={totals.protein}
             Fat={totals.fat}
@@ -209,9 +210,9 @@ export function Nutrition({
                 ToastAndroid.SHORT,
               )
             }
-            style={styles.nutrition.caloriesButton}
+            style={nutritionStyles.caloriesButton}
           >
-            <Text style={styles.nutrition.caloriesText}>Show Calories</Text>
+            <Text style={nutritionStyles.caloriesText}>Show Calories</Text>
           </Pressable>
         </View>
         {food &&
@@ -232,7 +233,7 @@ export function Nutrition({
         testID="Add Food"
         accessibilityRole="button"
         accessibilityLabel="Add food"
-        style={styles.nutrition.fab}
+        style={nutritionStyles.fab}
         onPress={() =>
           navigation.navigate('AddFood', {
             page: 'search' as AddFoodPage,

@@ -4,7 +4,6 @@ import { Button, HStack, Input, InputField } from '@gluestack-ui/themed';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { Text, ScrollView } from 'react-native';
 import styles from '../styles/styles';
-import { WhiteText } from '../styledComponents/WhiteText';
 
 interface Goals {
   [key: string]: string;
@@ -62,7 +61,7 @@ function Goals(props: GoalsProps) {
   function displayInput(nutrient: string) {
     return (
       <HStack space="xl" paddingBottom={20} style={styles.row}>
-        <WhiteText style={styles.fieldLabel}>{nutrient}</WhiteText>
+        <Text style={[styles.fieldLabel, styles.typography.whiteText]}>{nutrient}</Text>
         <Input width={'35%'} position="absolute" right={0} style={styles.field}>
           <InputField
             value={goals[nutrient]}
