@@ -20,14 +20,20 @@ import { getMainNutrients } from '../utils.tsx';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import styles from '../styles/styles';
-import { FoodItem } from '../types.ts';
+import { FoodItem, RootStackParamList } from '../types.ts';
 
-export function CustomFoods(props: any): React.JSX.Element {
+interface CustomFoodsProps {
+  date: string;
+}
+
+export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
   const [foods, setFoods] = useState<FoodItem[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const cancelRef = useRef(null);
-  const navigation = useNavigation<StackNavigationProp<any>>();
+
+  type RootNavigation = StackNavigationProp<RootStackParamList>;
+  const navigation = useNavigation<RootNavigation>();
   /**
    * Load function that retrieves custom food from storage and sets it in state.
    */
@@ -121,6 +127,7 @@ export function CustomFoods(props: any): React.JSX.Element {
                 food: { ...food },
                 isNew: true,
                 date: props.date,
+                isCustom: true,
               });
             }}
           />

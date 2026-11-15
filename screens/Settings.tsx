@@ -21,7 +21,10 @@ export function Settings() {
   const cancelRef = useRef(null);
 
   return (
-    <ScrollView style={styles.settings.screen} contentContainerStyle={{ paddingBottom: 28 }}>
+    <ScrollView
+      style={styles.settings.screen}
+      contentContainerStyle={{ paddingBottom: 28 }}
+    >
       <Text style={styles.screenHeading}>Settings</Text>
       <Pressable
         style={styles.settings.action}

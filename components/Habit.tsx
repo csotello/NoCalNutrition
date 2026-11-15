@@ -4,7 +4,21 @@ import { Box, Button, ButtonIcon, HStack } from '@gluestack-ui/themed';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { useState } from 'react';
 import styles from '../styles/styles';
-export function Habit(props: any) {
+
+interface Habit {
+  title: string;
+  catagory: string;
+  days: { [key: string]: string };
+}
+
+interface HabitProps {
+  habit: Habit;
+  setDays: (title: string) => void;
+  edit: (habit: Habit) => void;
+  remove: (title: string) => void;
+}
+
+export function Habit(props: HabitProps) {
   const [days, setDays] = useState<{ [key: string]: string }>(props.habit.days);
   const dayText: { [key: string]: string } = {
     Monday: 'M',
@@ -39,12 +53,8 @@ export function Habit(props: any) {
     <ScrollView>
       <Box style={styles.habit.card}>
         <HStack w={'100%'} style={styles.row}>
-          <Text style={styles.habit.title}>
-            {props.habit.title}
-          </Text>
-          <Text style={styles.habit.category}>
-            {props.habit.catagory}
-          </Text>
+          <Text style={styles.habit.title}>{props.habit.title}</Text>
+          <Text style={styles.habit.category}>{props.habit.catagory}</Text>
           <Button testID="Edit Habit" onPress={() => props.edit(props.habit)}>
             <ButtonIcon
               as={FontAwesome5}
@@ -81,7 +91,11 @@ export function Habit(props: any) {
                 style={styles.habit.day}
                 key={i}
                 onPress={() => handleClick(day)}
-                bg={days[day] === 'Default' ? styles.colors.accent : styles.colors.successDark}
+                bg={
+                  days[day] === 'Default'
+                    ? styles.colors.accent
+                    : styles.colors.successDark
+                }
               >
                 <Text style={styles.habit.dayText}>{dayText[day]}</Text>
               </Button>

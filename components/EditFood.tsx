@@ -23,15 +23,15 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WhiteText } from '../styledComponents/WhiteText';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { convertCustomFood, store, retrieve } from '../utils';
-import { FoodItem } from '../types';
+import { FoodItem, Meal } from '../types';
 import styles from '../styles/styles';
 
 interface EditFoodProps {
   food: FoodItem;
   isNew: boolean;
   isCustom: boolean;
-  add: (food: FoodItem, meal: string) => Promise<void>;
-  edit: (food: FoodItem, meal: string) => Promise<void>;
+  add: (food: FoodItem, meal: Meal) => Promise<void>;
+  edit: (food: FoodItem, meal: Meal) => Promise<void>;
   editCustom: (food: FoodItem) => Promise<void>;
 }
 
@@ -57,8 +57,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     sugar: 0,
     saturatedFat: 0,
   });
-  const [meal, setMeal] = useState('Breakfast');
+  const [meal, setMeal] = useState<Meal>('Breakfast');
   const [dropdown, setDropdown] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const scrollRef = useRef<ScrollView>(null);
   useEffect(() => {
     if (dropdown) scrollRef.current?.scrollToEnd({ animated: true });
@@ -331,7 +332,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
           <Select
             selectedValue={meal}
             defaultValue="Breakfast"
-            onValueChange={itemValue => setMeal(itemValue)}
+            onValueChange={itemValue => setMeal(itemValue as Meal)}
           >
             <SelectTrigger variant="outline" style={styles.editFood.select}>
               <SelectInput style={{ color: styles.colors.white }} />
@@ -400,7 +401,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               color={styles.colors.white}
               value={servings.servings.toString()}
               onChangeText={text =>
-                setServings({ ...servings, servings: Number(text) || 0 })
+                setServings({ ...servings, servings: text || '0' })
               }
             />
           </Input>
@@ -430,10 +431,19 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               {displayAdditionalNutrients('sugar', 'g')}
             </View>
           )}
+          {!!saveError && (
+            <Text style={styles.editFood.saveError}>{saveError}</Text>
+          )}
           <Button
             style={styles.editFood.saveButton}
             onPress={async () => {
-              await addFood();
+              try {
+                await addFood();
+                setSaveError('');
+              } catch (error) {
+                console.error('Failed to save food', error);
+                setSaveError('Could not save. Please try again.');
+              }
             }}
             variant="link"
             testID="SaveButton"

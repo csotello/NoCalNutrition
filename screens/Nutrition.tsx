@@ -3,38 +3,43 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { ToastAndroid, View, Text, Pressable } from 'react-native';
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import { Food } from '../components/Food';
 import styles from '../styles/styles';
-// import { retrieve } from '../utils';
-import { FoodItem } from '../types';
+import {
+  FoodItem,
+  Meal,
+  NutritionDay,
+  MainTabParamList,
+  RootStackParamList,
+  AddFoodPage,
+} from '../types';
 import Nutrients from '../components/Nutrients';
+import { emptyNutritionDay, loadNutrition, saveNutrition } from '../utils';
+import { CompositeScreenProps } from '@react-navigation/core';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-function emptyNutrition(): { [key: string]: any[] } {
-  return {
-    Breakfast: [],
-    Lunch: [],
-    Dinner: [],
-    Snacks: [],
-  };
-}
+type NutritionProps = CompositeScreenProps<
+  BottomTabScreenProps<MainTabParamList, 'Nutrition'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
 
-export function Nutrition({ route, navigation }: any): React.JSX.Element {
-  const [loaded, setLoaded] = useState(false);
+export function Nutrition({
+  route,
+  navigation,
+}: NutritionProps): React.JSX.Element {
+  const [dayReady, setDayReady] = useState(false);
   const [totals, setTotals] = useState<{ [key: string]: number }>({
     protein: 0,
     carbs: 0,
     fat: 0,
   });
-  const [food, setFood] = useState<{ [key: string]: any[] }>(emptyNutrition);
+  const [food, setFood] = useState(emptyNutritionDay);
   const [date, setDate] = useState<string>(
     route.params?.date || new Date().toDateString(),
   );
   useEffect(() => {
-    if (!loaded) {
-      load(date);
-      setLoaded(true);
-    }
+    load(date);
     updateTotals();
   }, []);
 
@@ -43,45 +48,29 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
   }, [food]);
 
   async function load(date: string) {
-    let key = 'nutrition' + '-' + date;
-    console.log('Loading: ' + key);
     try {
-      let val = await EncryptedStorage.getItem('nutrition' + '-' + date);
-      if (val) {
-        setFood(JSON.parse(val));
-        console.log('Loaded: ', val);
-      } else {
-        setFood(emptyNutrition());
-      }
+      setFood(await loadNutrition(date));
+      setDayReady(true);
     } catch (error) {
-      setFood(emptyNutrition());
-      console.log(error);
-      console.log('Failed to load');
-    }
-    if (!loaded) setLoaded(true);
-  }
-
-  async function store(nutrition: any) {
-    let key = 'nutrition' + '-' + date;
-    console.log('Storing: ' + key);
-    try {
-      await EncryptedStorage.setItem(
-        'nutrition' + '-' + date,
-        JSON.stringify(nutrition),
-      );
-      console.log('Stored:' + JSON.stringify(nutrition));
-    } catch (error) {
-      console.log('Failed to store');
+      setDayReady(false);
+      console.error(`Failed to load nutrition for ${date}`, error);
     }
   }
 
   async function changeDate(value: number) {
-    await store({ ...food });
-    let newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + value);
-    let ret = newDate.toDateString();
-    await load(ret);
-    setDate(newDate.toDateString());
+    if (!dayReady) return;
+    try {
+      await saveNutrition(date, food);
+      let newDate = new Date(date);
+      newDate.setDate(newDate.getDate() + value);
+      const newDateString = newDate.toDateString();
+      const newFood = await loadNutrition(newDateString);
+      setFood(newFood);
+      setDate(newDateString);
+      setDayReady(true);
+    } catch (error) {
+      console.error(`Failed to save nutrition for ${date}`, error);
+    }
   }
 
   /**
@@ -90,18 +79,23 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
    * @param {object} item - The item to be removed from the section.
    * @param {string} section - The section from which the item is to be removed.
    */
-  function removeFood(item: any, section: string) {
-    let meal = food[`${section}`];
+  async function removeFood(item: any, section: Meal) {
+    if (!dayReady) return;
+    let meal = food[section];
     meal = meal?.filter((cur: any) => item.UUID !== cur.UUID);
-    let cur: { [key: string]: any } = {
+    let cur: NutritionDay = {
       Breakfast: [...food.Breakfast],
       Lunch: [...food.Lunch],
       Dinner: [...food.Dinner],
       Snacks: [...food.Snacks],
     };
     cur[`${section}`] = [...meal];
-    setFood({ ...cur });
-    store({ ...cur });
+    try {
+      await saveNutrition(date, cur);
+      setFood(cur);
+    } catch (error) {
+      console.error(`Failed to save nutrition for ${date}`, error);
+    }
   }
 
   /**
@@ -125,10 +119,11 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
    */
   function openEdit(food: any, meal: string) {
     navigation.navigate('AddFood', {
-      page: 'edit',
+      page: 'edit' as AddFoodPage,
       food: { ...food, meal: meal },
       isNew: false,
       date: date,
+      isCustom: false,
     });
   }
 
@@ -142,7 +137,7 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
       carbs: 0,
     };
     Object.keys(food).forEach(meal => {
-      food[`${meal}`]?.map((food: any) => {
+      food[meal as Meal]?.map((food: any) => {
         food.foodNutrients.map((nutrient: any, i: number) => {
           switch (nutrient.nutrientName) {
             case 'Protein':
@@ -221,11 +216,11 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
         </View>
         {food &&
           Object.keys(food).map((meal, i) => {
-            const info: FoodItem[] = food[meal];
+            const info: FoodItem[] = food[meal as Meal];
             return (
               <Food
-                meal={[...info]}
-                title={meal}
+                meal={meal as Meal}
+                foods={[...info]}
                 key={i}
                 remove={removeFood}
                 edit={openEdit}
@@ -239,7 +234,13 @@ export function Nutrition({ route, navigation }: any): React.JSX.Element {
         accessibilityLabel="Add food"
         style={styles.nutrition.fab}
         onPress={() =>
-          navigation.navigate('AddFood', { page: 'search', isNew: true, date })
+          navigation.navigate('AddFood', {
+            page: 'search' as AddFoodPage,
+            isNew: true,
+            date,
+            isCustom: false,
+            food: {},
+          })
         }
       >
         <FontAwesome5

@@ -16,18 +16,26 @@ import { Pressable, Text } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils';
 import styles from '../styles/styles';
+import { FoodItem, Meal } from '../types';
 
-export function Food(props: any): React.JSX.Element {
-  const [selectedFood, setSelectedFood] = useState<any>(null);
+interface FoodProps {
+  meal: Meal;
+  foods: FoodItem[];
+  edit: (item: FoodItem, meal: Meal) => void;
+  remove: (item: FoodItem, meal: Meal) => void;
+}
+
+export function Food(props: FoodProps): React.JSX.Element {
+  const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
   const cancelRef = useRef(null);
 
   return (
     <View style={styles.nutrition.mealCard}>
-      <Text style={styles.nutrition.mealTitle}>{props.title}</Text>
-      {props.meal?.length === 0 && (
+      <Text style={styles.nutrition.mealTitle}>{props.meal}</Text>
+      {props.foods?.length === 0 && (
         <Text style={styles.typography.muted}>No foods added yet</Text>
       )}
-      {props.meal?.map((item: any) => {
+      {props.foods?.map((item: any) => {
         const nutrients = getMainNutrients({ ...item });
         return (
           <View
@@ -74,7 +82,7 @@ export function Food(props: any): React.JSX.Element {
                   accessibilityLabel={`Edit ${item.description}`}
                   hitSlop={4}
                   style={styles.nutrition.actionButton}
-                  onPress={() => props.edit(item, props.title)}
+                  onPress={() => props.edit(item, props.meal)}
                 >
                   <FontAwesome5
                     name="pencil-alt"
@@ -125,7 +133,7 @@ export function Food(props: any): React.JSX.Element {
               style={styles.dialogs.destructive}
               testID="Delete Button"
               onPress={() => {
-                if (selectedFood) props.remove(selectedFood, props.title);
+                if (selectedFood) props.remove(selectedFood, props.meal);
                 setSelectedFood(null);
               }}
             >
