@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { render, fireEvent } from '@testing-library/react-native';
 import { SearchFood } from '../components/SearchFood';
 

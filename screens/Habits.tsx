@@ -62,6 +62,7 @@ export function Habits() {
       console.log('Stored:' + JSON.stringify(habits));
     } catch (error) {
       console.log('Failed to store');
+      console.log(error);
     }
   }
   async function add(habit: any) {
@@ -146,7 +147,11 @@ export function Habits() {
           size="lg"
         >
           <ModalBackdrop />
-          <ModalContent h={'80%'} style={styles.dialogs.content} paddingTop={10}>
+          <ModalContent
+            h={'80%'}
+            style={styles.dialogs.content}
+            paddingTop={10}
+          >
             <ModalHeader>
               <ModalCloseButton />
             </ModalHeader>
@@ -156,7 +161,7 @@ export function Habits() {
                 value={text}
                 onChangeText={txt => setText(txt)}
                 placeholder={'habit'}
-              ></InputField>
+              />
             </Input>
             <Text style={styles.fieldLabel}>Catagory</Text>
             <Input style={styles.field}>
@@ -164,7 +169,7 @@ export function Habits() {
                 value={catagory}
                 onChangeText={txt => setCatagory(txt)}
                 placeholder={'catagory'}
-              ></InputField>
+              />
             </Input>
             <Button style={styles.dialogs.confirm} onPress={() => add(text)}>
               <Text style={styles.buttonText}>Add Habit</Text>
@@ -211,7 +216,7 @@ export function Habits() {
                     habit.catagory = edit.catagory;
                   }
                 });
-                setHabits(prev => [...habits]);
+                setHabits(_ => [...habits]);
                 setEdit(null);
                 store(habits);
               }}

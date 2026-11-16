@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   Input,
@@ -67,7 +68,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
 
   useEffect(() => {
     var cur = { ...nutrients };
-    props.food.foodNutrients?.map((nutrient: any, i: any) => {
+    props.food.foodNutrients?.map((nutrient: any, _: any) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
           cur.protein = Number(nutrient.value);
@@ -113,7 +114,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     newFood.description = descriptors.description;
     newFood.additionalDescriptions = descriptors.additionalDescriptions;
     newFood.category = descriptors.category;
-    newFood.foodNutrients?.map((nutrient: any, i: any) => {
+    newFood.foodNutrients?.map((nutrient: any, _: any) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
           console.log('Protein: ', nutrients.protein);
@@ -177,7 +178,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
    * @param {object} newFood - new food to create
    */
   async function createCustom(newFood: FoodItem) {
-    newFood['UUID'] = uuid();
+    newFood.UUID = uuid();
     console.log('Create');
     console.log(newFood);
     let current = await retrieve('customFood');
@@ -239,7 +240,14 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             }}
           />
         </VStack>
-        <Text style={[{ fontSize: 15, alignSelf: 'center' }, styles.typography.whiteText]}>g</Text>
+        <Text
+          style={[
+            { fontSize: 15, alignSelf: 'center' },
+            styles.typography.whiteText,
+          ]}
+        >
+          g
+        </Text>
       </HStack>
     );
   }
@@ -250,7 +258,14 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     return (
       <View style={editFoodStyles.additionalRow}>
         <View style={{ flex: 1 }}>
-          <Text style={[{ textAlignVertical: 'center' }, styles.typography.whiteText]}>{title}</Text>
+          <Text
+            style={[
+              { textAlignVertical: 'center' },
+              styles.typography.whiteText,
+            ]}
+          >
+            {title}
+          </Text>
         </View>
         <View
           style={{
@@ -272,7 +287,12 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             />
           </Input>
         </View>
-        <Text style={[{ marginLeft: 5, marginRight: 5, fontSize: 15 }, styles.typography.whiteText]}>
+        <Text
+          style={[
+            { marginLeft: 5, marginRight: 5, fontSize: 15 },
+            styles.typography.whiteText,
+          ]}
+        >
           {unit}
         </Text>
       </View>
@@ -286,7 +306,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
         contentContainerStyle={editFoodStyles.content}
       >
         <VStack style={[editFoodStyles.section, { marginBottom: 14 }]}>
-          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>Brand Name</Text>
+          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>
+            Brand Name
+          </Text>
           <Input style={styles.field}>
             <InputField
               color={styles.colors.white}
@@ -296,7 +318,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               }
             />
           </Input>
-          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>Description</Text>
+          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>
+            Description
+          </Text>
           <Input style={styles.field}>
             <InputField
               color={styles.colors.white}
@@ -318,7 +342,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               }
             />
           </Input>
-          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>Category</Text>
+          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>
+            Category
+          </Text>
           <Input style={styles.field}>
             <InputField
               color={styles.colors.white}
@@ -328,7 +354,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               }
             />
           </Input>
-          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>Meal</Text>
+          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>
+            Meal
+          </Text>
           <Select
             selectedValue={meal}
             defaultValue="Breakfast"
@@ -353,7 +381,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
               </SelectContent>
             </SelectPortal>
           </Select>
-          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>Serving Size</Text>
+          <Text style={[styles.fieldLabel, styles.typography.whiteText]}>
+            Serving Size
+          </Text>
           <HStack style={editFoodStyles.servingRow}>
             <Input width={60} style={styles.field}>
               <InputField
@@ -418,7 +448,9 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
             }}
           >
             <HStack style={editFoodStyles.additionalToggle}>
-              <Text style={styles.typography.whiteText}>Additional Nutrients</Text>
+              <Text style={styles.typography.whiteText}>
+                Additional Nutrients
+              </Text>
               <FontAwesome5 name="caret-down" iconStyle="solid" size={20} />
             </HStack>
           </Pressable>

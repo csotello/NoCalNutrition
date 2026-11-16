@@ -1,7 +1,7 @@
-import {render, screen, fireEvent} from '@testing-library/react-native';
-import {CustomFoods} from '../components/CustomFoods';
-import {NavigationContainer} from '@react-navigation/native';
-
+/* eslint-disable no-undef */
+import { render, screen, fireEvent } from '@testing-library/react-native';
+import { CustomFoods } from '../components/CustomFoods';
+import { NavigationContainer } from '@react-navigation/native';
 
 const props = {
   date: new Date(),
@@ -23,7 +23,8 @@ it('has functional add button', async () => {
   );
   const addButton = await screen.getByTestId('Add Icon');
   fireEvent.press(addButton);
-  expect(mockPush).toHaveBeenCalled()})
+  expect(mockPush).toHaveBeenCalled();
+});
 
 it('has functional delete button', async () => {
   await render(
@@ -33,7 +34,7 @@ it('has functional delete button', async () => {
   );
   const deleteButton = await screen.getByTestId('Delete Icon');
   fireEvent.press(deleteButton);
-})
+});
 
 it('has functional edit button', async () => {
   await render(
@@ -43,5 +44,5 @@ it('has functional edit button', async () => {
   );
   const editButton = await screen.getByTestId('Edit Icon');
   fireEvent.press(editButton);
-  expect(mockPush).toHaveBeenCalled()
-})
+  expect(mockPush).toHaveBeenCalled();
+});

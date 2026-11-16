@@ -32,6 +32,7 @@ function FoodCategories(): React.JSX.Element {
       console.log('Stored:' + JSON.stringify(categories));
     } catch (error) {
       console.log('Failed to store');
+      console.log(error);
     }
   }
   function add(category: string) {
@@ -55,7 +56,9 @@ function FoodCategories(): React.JSX.Element {
         {categories.map((cat, i) => {
           return (
             <View key={i} style={[styles.listItem, styles.row]}>
-              <Text style={[{ flex: 1 }, styles.typography.whiteText]}>{cat}</Text>
+              <Text style={[{ flex: 1 }, styles.typography.whiteText]}>
+                {cat}
+              </Text>
               <FontAwesome5
                 size={20}
                 name="trash"
@@ -77,7 +80,12 @@ function FoodCategories(): React.JSX.Element {
           placeholder="New Category"
         />
       </Input>
-      <Button w={'100%'} alignSelf={'center'} style={styles.dialogs.confirm} onPress={() => add(text)}>
+      <Button
+        w={'100%'}
+        alignSelf={'center'}
+        style={styles.dialogs.confirm}
+        onPress={() => add(text)}
+      >
         <Text style={styles.buttonText}>Add Category</Text>
       </Button>
     </View>

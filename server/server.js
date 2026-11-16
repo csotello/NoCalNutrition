@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require('dotenv').config();
 
 const express = require('express');
@@ -7,17 +8,17 @@ const host = '0.0.0.0';
 const port = Number(process.env.PORT) || 8080;
 const maxQueryLength = 200;
 
-app.use(express.json({limit: '10kb'}));
+app.use(express.json({ limit: '10kb' }));
 
 app.get('/', (req, res) => {
-  res.status(200).json({message: 'NoCalNutrition API'});
+  res.status(200).json({ message: 'NoCalNutrition API' });
 });
 
 async function searchFoods(req, res) {
   const query = String(req.query.query ?? req.body?.query ?? '').trim();
 
   if (!query) {
-    return res.status(400).json({error: 'A search query is required.'});
+    return res.status(400).json({ error: 'A search query is required.' });
   }
 
   if (query.length > maxQueryLength) {
@@ -28,7 +29,7 @@ async function searchFoods(req, res) {
 
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    return res.status(500).json({error: 'Food search is not configured.'});
+    return res.status(500).json({ error: 'Food search is not configured.' });
   }
 
   const url = new URL('https://api.nal.usda.gov/fdc/v1/foods/search');
@@ -45,7 +46,9 @@ async function searchFoods(req, res) {
     });
 
     if (!upstreamResponse.ok) {
-      return res.status(502).json({error: 'Food search provider request failed.'});
+      return res
+        .status(502)
+        .json({ error: 'Food search provider request failed.' });
     }
 
     const data = await upstreamResponse.json();
@@ -53,14 +56,13 @@ async function searchFoods(req, res) {
       foods: Array.isArray(data.foods) ? data.foods : [],
     });
   } catch (error) {
-    const timedOut = error?.name === 'TimeoutError' || error?.name === 'AbortError';
-    return res
-      .status(timedOut ? 504 : 502)
-      .json({
-        error: timedOut
-          ? 'Food search provider timed out.'
-          : 'Unable to search for foods right now.',
-      });
+    const timedOut =
+      error?.name === 'TimeoutError' || error?.name === 'AbortError';
+    return res.status(timedOut ? 504 : 502).json({
+      error: timedOut
+        ? 'Food search provider timed out.'
+        : 'Unable to search for foods right now.',
+    });
   }
 }
 

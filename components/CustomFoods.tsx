@@ -62,6 +62,7 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
       console.log('Stored:' + JSON.stringify(foods));
     } catch (error) {
       console.log('Failed to store');
+      console.log(error);
     }
   }
 
@@ -85,14 +86,21 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
     return (
       <View style={[styles.listItem, styles.customFoods.card]}>
         <View style={styles.customFoods.details}>
-          <Text style={[styles.typography.sectionTitle, styles.typography.whiteText]}>
+          <Text
+            style={[
+              styles.typography.sectionTitle,
+              styles.typography.whiteText,
+            ]}
+          >
             {food.description || 'Food Description'}
           </Text>
           <Text style={[styles.typography.muted, styles.typography.whiteText]}>
             {food.brandName || ''}
           </Text>
           {food.householdServingFullText && (
-            <Text style={styles.typography.whiteText}>{food.householdServingFullText}</Text>
+            <Text style={styles.typography.whiteText}>
+              {food.householdServingFullText}
+            </Text>
           )}
           {food.servingSize && (
             <Text style={styles.typography.whiteText}>
@@ -102,15 +110,21 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
         </View>
         <View style={styles.customFoods.macro}>
           <Text style={styles.typography.whiteText}>P</Text>
-          <Text style={styles.typography.whiteText}>{nutrients.protein?.value || 0}</Text>
+          <Text style={styles.typography.whiteText}>
+            {nutrients.protein?.value || 0}
+          </Text>
         </View>
         <View style={styles.customFoods.macro}>
           <Text style={styles.typography.whiteText}>C</Text>
-          <Text style={styles.typography.whiteText}>{nutrients.carbs?.value || 0}</Text>
+          <Text style={styles.typography.whiteText}>
+            {nutrients.carbs?.value || 0}
+          </Text>
         </View>
         <View style={styles.customFoods.macro}>
           <Text style={styles.typography.whiteText}>F</Text>
-          <Text style={styles.typography.whiteText}>{nutrients.fat?.value || 0}</Text>
+          <Text style={styles.typography.whiteText}>
+            {nutrients.fat?.value || 0}
+          </Text>
         </View>
         <View style={styles.customFoods.actions}>
           <FontAwesome5
@@ -199,7 +213,9 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
 
   return (
     <ScrollView contentContainerStyle={styles.customFoods.list}>
-      <Text style={[styles.screenHeading, styles.typography.whiteText]}>Custom Foods</Text>
+      <Text style={[styles.screenHeading, styles.typography.whiteText]}>
+        Custom Foods
+      </Text>
       {foods.length === 0 && (
         <Text style={[styles.typography.muted, styles.typography.whiteText]}>
           No custom foods saved yet.

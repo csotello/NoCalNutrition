@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Text, View, Pressable } from 'react-native';
 import React from 'react';
 import { SearchFood } from '../components/SearchFood';
@@ -65,7 +66,8 @@ export function AddFood({ navigation, route }: AddFoodProps) {
       Snacks: [...nutrition.Snacks],
     };
     console.log('cur:' + JSON.stringify(cur));
-    item['UUID'] = uuid();
+    // item['UUID'] = uuid();
+    item.UUID = uuid();
     cur[meal] = [...cur[meal], item];
     await saveNutrition(date, cur);
     console.log(JSON.stringify(cur));

@@ -11,9 +11,10 @@ import { config } from '@gluestack-ui/config';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RootStackParamList } from './types';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const headerStyle = {
   headerStyle: {
@@ -25,54 +26,47 @@ const headerStyle = {
   headerTintColor: styles.colors.white,
 };
 
-function App(): React.JSX.Element {
-  const MainTabs = () => {
-    return (
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: styles.navigator.activeColor,
-          tabBarInactiveTintColor: styles.colors.textMuted,
-          tabBarStyle: {
-            backgroundColor: styles.navigator.backgroundColor,
-            borderTopColor: styles.colors.border,
-          },
-          tabBarLabelStyle: { fontWeight: '600' },
+const MainTabs = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: styles.navigator.activeColor,
+        tabBarInactiveTintColor: styles.colors.textMuted,
+        tabBarStyle: {
+          backgroundColor: styles.navigator.backgroundColor,
+          borderTopColor: styles.colors.border,
+        },
+        tabBarLabelStyle: { fontWeight: '600' },
+      }}
+    >
+      <Tab.Screen
+        name="Nutrition"
+        component={Nutrition}
+        // initialParams={{date: new Date().toDateString()}}
+        options={{
+          tabBarLabel: 'Nutrition',
+          // headerShown: false,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Icon as={AddIcon} color={color} m={1} />
+          ),
         }}
-      >
-        <Tab.Screen
-          name="Nutrition"
-          component={Nutrition}
-          // initialParams={{date: new Date().toDateString()}}
-          options={{
-            tabBarLabel: 'Nutrition',
-            // headerShown: false,
-            tabBarIcon: ({ color }: { color: string }) => (
-              <Icon
-                as={AddIcon}
-                color={color}
-                m={1}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            tabBarLabel: 'Settings',
-            tabBarIcon: ({ color }: { color: string }) => (
-              <Icon
-                as={SettingsIcon}
-                color={color}
-              />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    );
-  };
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Icon as={SettingsIcon} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
+function App(): React.JSX.Element {
   return (
     <GluestackUIProvider config={config}>
       <NavigationContainer>
@@ -90,7 +84,6 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="AddFood"
             component={AddFood}
-            // options={{headerShown: false}}
             options={headerStyle}
           />
         </Stack.Navigator>

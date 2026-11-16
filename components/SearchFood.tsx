@@ -3,7 +3,6 @@ import { API_KEY } from '@env';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { getMainNutrients } from '../utils';
 import styles from '../styles/styles';
 import searchStyles from '../styles/search';
@@ -49,7 +48,9 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
 
   return (
     <View style={searchStyles.content}>
-      <Text style={[styles.screenHeading, styles.typography.whiteText]}>Find a food</Text>
+      <Text style={[styles.screenHeading, styles.typography.whiteText]}>
+        Find a food
+      </Text>
       <View style={searchStyles.queryRow}>
         <Input style={[styles.field, searchStyles.queryField]}>
           <InputField
@@ -106,9 +107,7 @@ export function SearchFood(props: SearchFoodProps): React.JSX.Element {
                 }
                 style={searchStyles.resultCard}
               >
-                <Text style={searchStyles.resultTitle}>
-                  {item.description}
-                </Text>
+                <Text style={searchStyles.resultTitle}>{item.description}</Text>
                 {!!item.brandName && (
                   <Text style={searchStyles.resultDetail}>
                     {item.brandName}

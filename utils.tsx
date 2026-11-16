@@ -20,8 +20,15 @@ function normalizeNutritionDay(value: unknown): NutritionDay {
     if (!Array.isArray(items)) {
       throw new Error(`Stored nutrition meal "${meal}" must be an array.`);
     }
-    if (items.some(item => item === null || typeof item !== 'object' || Array.isArray(item))) {
-      throw new Error(`Stored nutrition meal "${meal}" contains an invalid food item.`);
+    if (
+      items.some(
+        item =>
+          item === null || typeof item !== 'object' || Array.isArray(item),
+      )
+    ) {
+      throw new Error(
+        `Stored nutrition meal "${meal}" contains an invalid food item.`,
+      );
     }
     normalized[meal] = items as FoodItem[];
   });
@@ -41,7 +48,9 @@ export async function loadNutrition(date: string): Promise<NutritionDay> {
   try {
     parsed = JSON.parse(stored);
   } catch (error) {
-    throw new Error(`Stored nutrition for ${date} is not valid JSON: ${String(error)}`);
+    throw new Error(
+      `Stored nutrition for ${date} is not valid JSON: ${String(error)}`,
+    );
   }
   return normalizeNutritionDay(parsed);
 }
@@ -198,7 +207,7 @@ export function getMainNutrients(food: FoodItem): NutrientValues {
     saturatedFat: { value: 0 },
     cholesterol: { value: 0 },
   };
-  food?.foodNutrients?.map((nutrient, i) => {
+  food?.foodNutrients?.map((nutrient, _) => {
     switch (nutrient.nutrientName) {
       case 'Protein':
         ret.protein = { ...nutrient };

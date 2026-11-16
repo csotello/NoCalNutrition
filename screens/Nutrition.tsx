@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollView } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
@@ -139,7 +140,7 @@ export function Nutrition({
     };
     Object.keys(food).forEach(meal => {
       food[meal as Meal]?.map((food: any) => {
-        food.foodNutrients.map((nutrient: any, i: number) => {
+        food.foodNutrients.map((nutrient: any, _: number) => {
           switch (nutrient.nutrientName) {
             case 'Protein':
               newTotals.protein +=

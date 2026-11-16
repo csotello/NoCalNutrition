@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { Button, HStack, Input, InputField } from '@gluestack-ui/themed';
@@ -61,7 +62,9 @@ function Goals(props: GoalsProps) {
   function displayInput(nutrient: string) {
     return (
       <HStack space="xl" paddingBottom={20} style={styles.row}>
-        <Text style={[styles.fieldLabel, styles.typography.whiteText]}>{nutrient}</Text>
+        <Text style={[styles.fieldLabel, styles.typography.whiteText]}>
+          {nutrient}
+        </Text>
         <Input width={'35%'} position="absolute" right={0} style={styles.field}>
           <InputField
             value={goals[nutrient]}

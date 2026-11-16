@@ -3,7 +3,6 @@ import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { Food } from '../components/Food';
 import { defaultFood } from '../utils';
-import { Meal } from '../types';
 
 async function renderFood(overrides = {}) {
   const food = {
