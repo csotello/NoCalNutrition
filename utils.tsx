@@ -1,71 +1,4 @@
-import EncryptedStorage from 'react-native-encrypted-storage';
-import { FoodItem, Meal, NutrientValues, NutritionDay } from './types.ts';
-
-const nutritionMeals: Meal[] = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
-
-export function emptyNutritionDay(): NutritionDay {
-  return { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] };
-}
-
-function normalizeNutritionDay(value: unknown): NutritionDay {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error('Stored nutrition data must be an object.');
-  }
-
-  const source = value as Record<string, unknown>;
-  const normalized = emptyNutritionDay();
-  nutritionMeals.forEach(meal => {
-    const items = source[meal];
-    if (items === undefined) return;
-    if (!Array.isArray(items)) {
-      throw new Error(`Stored nutrition meal "${meal}" must be an array.`);
-    }
-    if (
-      items.some(
-        item =>
-          item === null || typeof item !== 'object' || Array.isArray(item),
-      )
-    ) {
-      throw new Error(
-        `Stored nutrition meal "${meal}" contains an invalid food item.`,
-      );
-    }
-    normalized[meal] = items as FoodItem[];
-  });
-  return normalized;
-}
-
-function nutritionStorageKey(date: string): string {
-  return `nutrition-${date}`;
-}
-
-/** Reads and validates a day's nutrition from encrypted storage. */
-export async function loadNutrition(date: string): Promise<NutritionDay> {
-  const stored = await EncryptedStorage.getItem(nutritionStorageKey(date));
-  if (stored === null) return emptyNutritionDay();
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(stored);
-  } catch (error) {
-    throw new Error(
-      `Stored nutrition for ${date} is not valid JSON: ${String(error)}`,
-    );
-  }
-  return normalizeNutritionDay(parsed);
-}
-
-/** Validates and writes a day's nutrition to encrypted storage. */
-export async function saveNutrition(
-  date: string,
-  nutrition: NutritionDay,
-): Promise<void> {
-  const normalized = normalizeNutritionDay(nutrition);
-  await EncryptedStorage.setItem(
-    nutritionStorageKey(date),
-    JSON.stringify(normalized),
-  );
-}
+import { FoodItem, NutrientValues } from './types.ts';
 
 /**
  * Convert user input into format used by API
@@ -159,36 +92,6 @@ export const defaultFood = {
     },
   ],
 };
-
-/**
- * Stores a value in the encrypted storage.
- *
- * @param {string} key - the key to store the value under
- * @param {string} value - the value to be stored
- */
-export async function store(key: string, value: string) {
-  try {
-    await EncryptedStorage.setItem(key, value);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-/**
- * Retrieves a value from the encrypted storage.
- *
- * @param {string} key - the key to retrieve the value under
- * @return {string} the value retrieved
- */
-export async function retrieve(key: string): Promise<string | null> {
-  try {
-    const val = await EncryptedStorage.getItem(key);
-    return val;
-  } catch (error) {
-    console.log(error);
-  }
-  return null;
-}
 
 /**
  * Retrieves nutrient values from given food object
