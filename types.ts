@@ -18,8 +18,8 @@ export type FoodItem = {
   category?: string;
   brandName?: string;
   householdServingFullText?: string;
-  servings?: string;
-  servingSize?: number;
+  servings?: string | number;
+  servingSize?: number | string;
   servingSizeUnit?: string;
   foodNutrients?: Nutrient[];
 };
@@ -38,7 +38,7 @@ export type AddFoodPage = 'search' | 'custom' | 'edit';
 
 export type MainTabParamList = {
   Nutrition: { date?: string } | undefined;
-  Setting: undefined;
+  Settings: undefined;
 };
 
 export type RootStackParamList = {
