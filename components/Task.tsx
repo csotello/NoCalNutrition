@@ -1,19 +1,13 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, StyleProp, ViewStyle } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import styles from '../styles/styles';
-
-interface Task {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
+import { TaskType } from '../domain/task';
 interface TaskProps {
-  task: Task;
+  task: TaskType;
   complete: (id: string) => void;
   delete: (id: string) => void;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function Task(props: TaskProps): React.JSX.Element {

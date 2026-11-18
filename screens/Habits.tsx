@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import { ScrollView, View, Text, Keyboard, ToastAndroid } from 'react-native';
 import { Habit } from '../components/Habit';
@@ -17,69 +17,68 @@ import {
 import { FontAwesome5 } from '@react-native-vector-icons/fontawesome5';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import styles from '../styles/styles';
+import {
+  isHabitType,
+  defaultDays,
+  HabitDayStatus,
+  HabitDays,
+  HabitType,
+} from '../domain/habit';
 
 export function Habits() {
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
-  const [catagory, setCatagory] = useState('');
+  const [category, setCategory] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [editTitle, setEditTitle] = useState(null);
-  const [edit, setEdit] = useState<any>(null);
-  const [habits, setHabits] = useState([
+  const [editTitle, setEditTitle] = useState<string | null>(null);
+  const [edit, setEdit] = useState<HabitType | null>(null);
+  const [habits, setHabits] = useState<HabitType[]>([
     {
       title: 'Drink 100oz of Water',
-      days: {
-        Monday: 'Default',
-        Tuesday: 'Default',
-        Wednesday: 'Default',
-        Thursday: 'Finished',
-        Friday: 'Default',
-        Saturday: 'Default',
-        Sunday: 'Default',
-      },
-      catagory: 'goal',
+      days: { ...defaultDays },
+      category: 'goal',
     },
   ]);
-  async function load() {
-    try {
-      const val = await EncryptedStorage.getItem('habits');
-      if (val) {
-        setHabits(JSON.parse(val));
-        console.log('Loaded');
+  useEffect(() => {
+    async function load() {
+      try {
+        const val = await EncryptedStorage.getItem('habits');
+        if (val) {
+          const parsed: unknown = JSON.parse(val);
+          if (Array.isArray(parsed)) {
+            setHabits(
+              parsed.filter(isHabitType).map(habit => ({
+                ...habit,
+                category: habit.category || '',
+              })),
+            );
+          }
+        }
+      } catch (error) {
+        console.log('Failed to load habits', error);
+      } finally {
+        setLoaded(true);
       }
-    } catch (error) {
-      console.log(error);
-      console.log('Failed to load');
     }
-  }
-  if (!loaded) {
     load();
-    setLoaded(true);
-  }
-  async function store(habits: any) {
+  }, []);
+  async function store(nextHabits: HabitType[]) {
     try {
-      await EncryptedStorage.setItem('habits', JSON.stringify(habits));
-      console.log('Stored:' + JSON.stringify(habits));
+      await EncryptedStorage.setItem('habits', JSON.stringify(nextHabits));
+      console.log('Stored:' + JSON.stringify(nextHabits));
     } catch (error) {
       console.log('Failed to store');
       console.log(error);
     }
   }
-  async function add(habit: any) {
+  async function add(habit: string) {
+    if (!loaded) return;
     if (!habit) return;
-    console.log(habit.title);
-    let cur = {
+    console.log(habit);
+    const cur: HabitType = {
       title: habit,
-      days: {
-        Monday: 'Default',
-        Tuesday: 'Default',
-        Wednesday: 'Default',
-        Thursday: 'Default',
-        Friday: 'Default',
-        Saturday: 'Default',
-        Sunday: 'Default',
-      },
-      catagory: catagory,
+      days: { ...defaultDays },
+      category,
     };
     let has = false;
     habits.forEach(habit => {
@@ -97,29 +96,22 @@ export function Habits() {
   }
 
   function remove(title: string) {
-    let cur = habits.filter(x => x.title !== title);
-    store(cur);
+    if (!loaded) return;
+    const cur = habits.filter(x => x.title !== title);
     setHabits(cur);
+    store(cur);
   }
 
-  function setDays(habit: any) {
-    habits.forEach(cur => {
-      if (cur.title === habit.title) {
-        cur.days = {
-          Monday: 'Default',
-          Tuesday: 'Default',
-          Wednesday: 'Default',
-          Thursday: 'Default',
-          Friday: 'Default',
-          Saturday: 'Default',
-          Sunday: 'Default',
-        };
-      }
-    });
-    setHabits([...habits]);
+  function setDays(title: string, days: HabitDays) {
+    if (!loaded) return;
+    const cur = habits.map(habit =>
+      habit.title === title ? { ...habit, days } : habit,
+    );
+    setHabits(cur);
+    store(cur);
   }
 
-  function openEditor(habit: any) {
+  function openEditor(habit: HabitType) {
     setEdit({ ...habit });
     setEditTitle(habit.title);
   }
@@ -129,17 +121,18 @@ export function Habits() {
       <Box style={[styles.screenContent, { flex: 1 }]}>
         <Text style={styles.screenHeading}>Habits</Text>
         <ScrollView>
-          {habits.map((habit, i) => {
-            return (
-              <Habit
-                habit={habit}
-                setDays={setDays}
-                key={i}
-                remove={remove}
-                edit={openEditor}
-              />
-            );
-          })}
+          {loaded &&
+            habits.map((habit, i) => {
+              return (
+                <Habit
+                  habit={habit}
+                  setDays={setDays}
+                  key={i}
+                  remove={remove}
+                  edit={openEditor}
+                />
+              );
+            })}
         </ScrollView>
         <Modal
           isOpen={visible}
@@ -163,21 +156,26 @@ export function Habits() {
                 placeholder={'habit'}
               />
             </Input>
-            <Text style={styles.fieldLabel}>Catagory</Text>
+            <Text style={styles.fieldLabel}>Category</Text>
             <Input style={styles.field}>
               <InputField
-                value={catagory}
-                onChangeText={txt => setCatagory(txt)}
-                placeholder={'catagory'}
+                value={category}
+                onChangeText={txt => setCategory(txt)}
+                placeholder={'category'}
               />
             </Input>
-            <Button style={styles.dialogs.confirm} onPress={() => add(text)}>
+            <Button
+              style={styles.dialogs.confirm}
+              isDisabled={!loaded}
+              onPress={() => add(text)}
+            >
               <Text style={styles.buttonText}>Add Habit</Text>
             </Button>
           </ModalContent>
         </Modal>
         <Button
           style={styles.habits.addButton}
+          isDisabled={!loaded}
           onPress={() => setVisible(prev => !prev)}
         >
           <ButtonIcon
@@ -198,11 +196,11 @@ export function Habits() {
                 placeholder="Title"
               />
             </Input>
-            <Text style={styles.fieldLabel}>Catagory</Text>
+            <Text style={styles.fieldLabel}>Category</Text>
             <Input style={styles.field}>
               <InputField
-                value={edit.catagory}
-                onChangeText={txt => setEdit({ ...edit, catagory: txt })}
+                value={edit.category || ''}
+                onChangeText={txt => setEdit({ ...edit, category: txt })}
                 size={'sm'}
                 placeholder="New Task"
               />
@@ -210,15 +208,21 @@ export function Habits() {
             <Button
               style={styles.dialogs.confirm}
               onPress={() => {
-                habits.forEach(habit => {
-                  if (habit.title === editTitle) {
-                    habit.title = edit.title;
-                    habit.catagory = edit.catagory;
-                  }
-                });
-                setHabits(_ => [...habits]);
+                if (!loaded) return;
+                if (!edit) return;
+                const nextHabits = habits.map(habit =>
+                  habit.title === editTitle
+                    ? {
+                        ...habit,
+                        title: edit.title,
+                        category: edit.category,
+                        catagory: undefined,
+                      }
+                    : habit,
+                );
+                setHabits(nextHabits);
                 setEdit(null);
-                store(habits);
+                store(nextHabits);
               }}
             >
               <Text style={styles.buttonText}>Save Changes</Text>

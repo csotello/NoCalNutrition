@@ -2,25 +2,19 @@ import { ScrollView, Text } from 'react-native';
 import React from 'react';
 import { Box, Button, ButtonIcon, HStack } from '@gluestack-ui/themed';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-import { useState } from 'react';
 import styles from '../styles/styles';
-
-interface Habit {
-  title: string;
-  catagory: string;
-  days: { [key: string]: string };
-}
+import { defaultDays, HabitDay, HabitDays, HabitType } from '../domain/habit';
 
 interface HabitProps {
-  habit: Habit;
-  setDays: (title: string) => void;
-  edit: (habit: Habit) => void;
+  habit: HabitType;
+  setDays: (title: string, days: HabitDays) => void;
+  edit: (habit: HabitType) => void;
   remove: (title: string) => void;
 }
 
 export function Habit(props: HabitProps) {
-  const [days, setDays] = useState<{ [key: string]: string }>(props.habit.days);
-  const dayText: { [key: string]: string } = {
+  const days = props.habit.days;
+  const dayText: Record<HabitDay, string> = {
     Monday: 'M',
     Tuesday: 'T',
     Wednesday: 'W',
@@ -29,24 +23,14 @@ export function Habit(props: HabitProps) {
     Saturday: 'S',
     Sunday: 'Su',
   };
-  function handleClick(day: string) {
-    let cur = days[day];
-    days[day] = cur === 'Default' ? 'Complete' : 'Default';
-    setDays({
+  function handleClick(day: HabitDay) {
+    props.setDays(props.habit.title, {
       ...days,
+      [day]: days[day] === 'Default' ? 'Complete' : 'Default',
     });
   }
   function reset() {
-    props.setDays(props.habit.title);
-    setDays({
-      Monday: 'Default',
-      Tuesday: 'Default',
-      Wednesday: 'Default',
-      Thursday: 'Default',
-      Friday: 'Default',
-      Saturday: 'Default',
-      Sunday: 'Default',
-    });
+    props.setDays(props.habit.title, { ...defaultDays });
   }
 
   return (
@@ -54,7 +38,9 @@ export function Habit(props: HabitProps) {
       <Box style={styles.habit.card}>
         <HStack w={'100%'} style={styles.row}>
           <Text style={styles.habit.title}>{props.habit.title}</Text>
-          <Text style={styles.habit.category}>{props.habit.catagory}</Text>
+          <Text style={styles.habit.category}>
+            {props.habit.category || props.habit.catagory || ''}
+          </Text>
           <Button testID="Edit Habit" onPress={() => props.edit(props.habit)}>
             <ButtonIcon
               as={FontAwesome5}
@@ -84,7 +70,7 @@ export function Habit(props: HabitProps) {
           </Button>
         </HStack>
         <HStack w={'100%'} style={{ flexWrap: 'wrap' }}>
-          {Object.keys(days).map((day, i) => {
+          {(Object.keys(days) as HabitDay[]).map((day, i) => {
             return (
               <Button
                 testID={`Habit Day ${day}`}
