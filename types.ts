@@ -50,5 +50,6 @@ export type RootStackParamList = {
     isNew: boolean;
     isCustom: boolean;
     food: FoodItem;
+    meal?: Meal;
   };
 };
