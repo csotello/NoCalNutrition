@@ -14,9 +14,14 @@ import {
   MainTabParamList,
   RootStackParamList,
   AddFoodPage,
+  Nutrient,
 } from '../types';
 import Nutrients from '../components/Nutrients';
-import { emptyNutritionDay, loadNutrition, saveNutrition } from '../utils';
+import {
+  emptyNutritionDay,
+  loadNutrition,
+  saveNutrition,
+} from '../storage/foodRepository';
 import { CompositeScreenProps } from '@react-navigation/core';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -81,10 +86,10 @@ export function Nutrition({
    * @param {object} item - The item to be removed from the section.
    * @param {string} section - The section from which the item is to be removed.
    */
-  async function removeFood(item: any, section: Meal) {
+  async function removeFood(item: FoodItem, section: Meal) {
     if (!dayReady) return;
     let meal = food[section];
-    meal = meal?.filter((cur: any) => item.UUID !== cur.UUID);
+    meal = meal?.filter((cur: FoodItem) => item.UUID !== cur.UUID);
     let cur: NutritionDay = {
       Breakfast: [...food.Breakfast],
       Lunch: [...food.Lunch],
@@ -119,10 +124,11 @@ export function Nutrition({
    * @param {Object} food - The food item to be edited.
    * @param {string} meal - The meal category of the food item.
    */
-  function openEdit(food: any, meal: string) {
+  function openEdit(food: FoodItem, meal: string) {
     navigation.navigate('AddFood', {
       page: 'edit' as AddFoodPage,
-      food: { ...food, meal: meal },
+      food: { ...food },
+      meal: meal as Meal,
       isNew: false,
       date: date,
       isCustom: false,
@@ -139,18 +145,20 @@ export function Nutrition({
       carbs: 0,
     };
     Object.keys(food).forEach(meal => {
-      food[meal as Meal]?.map((food: any) => {
-        food.foodNutrients.map((nutrient: any, _: number) => {
+      food[meal as Meal]?.map((food: FoodItem) => {
+        food.foodNutrients?.map((nutrient: Nutrient, _: number) => {
           switch (nutrient.nutrientName) {
             case 'Protein':
               newTotals.protein +=
-                Number(nutrient.value) * Number(food.servings);
+                Number(nutrient.value) * Number(food.servings || 0);
               break;
             case 'Carbohydrate, by difference':
-              newTotals.carbs += Number(nutrient.value) * Number(food.servings);
+              newTotals.carbs +=
+                Number(nutrient.value) * Number(food.servings || 0);
               break;
             case 'Total lipid (fat)':
-              newTotals.fat += Number(nutrient.value) * Number(food.servings);
+              newTotals.fat +=
+                Number(nutrient.value) * Number(food.servings || 0);
               break;
             default:
           }

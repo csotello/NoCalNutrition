@@ -10,7 +10,7 @@ import {
   AlertDialogBody,
   Heading,
 } from '@gluestack-ui/themed';
-import { store } from '../utils';
+import { saveCustomFoods } from '../storage/foodRepository';
 import styles from '../styles/styles';
 import Goals from '../components/Goals';
 import FoodCategories from '../components/FoodCategories';
@@ -46,9 +46,11 @@ export function Settings() {
       </Pressable>
       <Pressable
         style={styles.settings.action}
-        onPress={async () => {
-          await store('customFood', JSON.stringify([]));
-        }}
+        onPress={() =>
+          saveCustomFoods([]).catch(error =>
+            console.error('Failed to reset custom foods', error),
+          )
+        }
       >
         <Text style={styles.settings.actionText}>Reset Custom</Text>
       </Pressable>

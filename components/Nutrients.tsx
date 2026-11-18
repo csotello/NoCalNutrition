@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import styles from '../styles/styles';
-import { retrieve } from '../utils';
+import { retrieve } from '../storage/keyValueStorage';
 
 interface NutrientProps {
   Protein: number;

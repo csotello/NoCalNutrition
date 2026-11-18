@@ -22,7 +22,8 @@ import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
-import { convertCustomFood, store, retrieve } from '../utils';
+import { convertCustomFood } from '../utils';
+import { loadCustomFoods, saveCustomFoods } from '../storage/foodRepository';
 import { FoodItem, Meal } from '../types';
 import styles from '../styles/styles';
 import editFoodStyles from '../styles/editFood';
@@ -31,6 +32,7 @@ interface EditFoodProps {
   food: FoodItem;
   isNew: boolean;
   isCustom: boolean;
+  meal: Meal;
   add: (food: FoodItem, meal: Meal) => Promise<void>;
   edit: (food: FoodItem, meal: Meal) => Promise<void>;
   editCustom: (food: FoodItem) => Promise<void>;
@@ -58,7 +60,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     sugar: 0,
     saturatedFat: 0,
   });
-  const [meal, setMeal] = useState<Meal>('Breakfast');
+  const [meal, setMeal] = useState<Meal>(props.meal || 'Breakfast');
   const [dropdown, setDropdown] = useState(false);
   const [saveError, setSaveError] = useState('');
   const scrollRef = useRef<ScrollView>(null);
@@ -68,7 +70,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
 
   useEffect(() => {
     var cur = { ...nutrients };
-    props.food.foodNutrients?.map((nutrient: any, _: any) => {
+    props.food.foodNutrients?.map((nutrient: Nutrient, _: number) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
           cur.protein = Number(nutrient.value);
@@ -114,7 +116,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     newFood.description = descriptors.description;
     newFood.additionalDescriptions = descriptors.additionalDescriptions;
     newFood.category = descriptors.category;
-    newFood.foodNutrients?.map((nutrient: any, _: any) => {
+    newFood.foodNutrients?.map((nutrient: Nutrient, _: number) => {
       switch (nutrient.nutrientName) {
         case 'Protein':
           console.log('Protein: ', nutrients.protein);
@@ -152,7 +154,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     console.log(props.isNew ? 'New' : 'Edit');
     console.log(props.isCustom ? 'Custom' : 'Normal');
     if (props.isNew) {
-      if (props.isCustom) {
+      if (props.isCustom && !props.food.UUID) {
         let custom = convertCustomFood({
           ...nutrients,
           ...descriptors,
@@ -181,15 +183,8 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
     newFood.UUID = uuid();
     console.log('Create');
     console.log(newFood);
-    let current = await retrieve('customFood');
-    let val: FoodItem[];
-    if (!current) val = [];
-    else val = JSON.parse(current);
-    if (val) val.push(newFood);
-    else val = [newFood];
-    console.log('Custom After');
-    console.log(val);
-    await store('customFood', JSON.stringify(val));
+    const current = await loadCustomFoods();
+    await saveCustomFoods([...current, newFood]);
   }
 
   /**
@@ -197,7 +192,7 @@ export function EditFood(props: EditFoodProps): React.JSX.Element {
    *
    * @param {object} nutrient - nutrient to display
    */
-  function displayNutrient(nutrient: any) {
+  function displayNutrient(nutrient: Nutrient) {
     return (
       <HStack alignItems={'center'} style={editFoodStyles.nutrientEditor}>
         <Text style={styles.typography.whiteText}>{nutrient}: </Text>

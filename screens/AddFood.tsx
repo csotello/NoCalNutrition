@@ -7,21 +7,27 @@ import { EditFood } from '../components/EditFood';
 import styles from '../styles/styles';
 import { useEffect, useState } from 'react';
 import uuid from 'uuid-random';
+import { convertCustomFood } from '../utils';
 import {
-  store,
-  retrieve,
-  convertCustomFood,
   emptyNutritionDay,
+  loadCustomFoods,
   loadNutrition,
+  saveCustomFoods,
   saveNutrition,
-} from '../utils';
-import { AddFoodPage, Meal, NutritionDay, RootStackParamList } from '../types';
+} from '../storage/foodRepository';
+import {
+  AddFoodPage,
+  FoodItem,
+  Meal,
+  NutritionDay,
+  RootStackParamList,
+} from '../types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type AddFoodProps = NativeStackScreenProps<RootStackParamList, 'AddFood'>;
 
 export function AddFood({ navigation, route }: AddFoodProps) {
-  const { page, isNew, food, date, isCustom } = route?.params;
+  const { page, isNew, food, date, isCustom, meal } = route?.params;
   const [loaded, setLoaded] = useState(false);
   const [nutritionReady, setNutritionReady] = useState(false);
   const [nutrition, setNutrition] = useState<NutritionDay>(emptyNutritionDay);
@@ -56,7 +62,7 @@ export function AddFood({ navigation, route }: AddFoodProps) {
    * @param {object} item - The item to be added.
    * @param {string} meal - The meal to add the item to.
    */
-  async function add(item: any, meal: Meal) {
+  async function add(item: FoodItem, meal: Meal) {
     if (!nutritionReady)
       throw new Error('Nutrition data is not ready to save.');
     let cur: NutritionDay = {
@@ -88,7 +94,7 @@ export function AddFood({ navigation, route }: AddFoodProps) {
    * @param {object} item - The meal item to be edited.
    * @param {string} meal - The meal category to which the item belongs (e.g., Breakfast, Lunch, Dinner, Snacks).
    */
-  async function edit(item: any, meal: Meal) {
+  async function edit(item: FoodItem, meal: Meal) {
     if (!nutritionReady)
       throw new Error('Nutrition data is not ready to save.');
     let cur: NutritionDay = {
@@ -120,19 +126,11 @@ export function AddFood({ navigation, route }: AddFoodProps) {
    *
    * @param {object} food - The food to be added.
    */
-  async function editCustom(food: any) {
-    let val = await retrieve('customFood');
-    let customs;
-    if (val) customs = JSON.parse(val);
-    else customs = [];
-    console.log('customs: ' + JSON.stringify(customs));
-    customs = customs?.filter((cur: any) => food.UUID !== cur.UUID);
-    console.log('Food: ' + JSON.stringify(food));
-    let newFood = { ...food };
-    newFood = convertCustomFood(food);
-    customs.push({ ...newFood });
-    console.log('customs: ' + JSON.stringify(customs));
-    await store('customFood', JSON.stringify(customs));
+  async function editCustom(food: FoodItem) {
+    const customs = await loadCustomFoods();
+    const updatedFoods = customs.filter(cur => food.UUID !== cur.UUID);
+    const newFood = convertCustomFood(food);
+    await saveCustomFoods([...updatedFoods, newFood]);
     navigation.reset({
       index: 0,
       routes: [
@@ -164,6 +162,7 @@ export function AddFood({ navigation, route }: AddFoodProps) {
             editCustom={editCustom}
             isNew={isNew}
             isCustom={isCustom}
+            meal={meal}
           />
         );
       default:
@@ -186,7 +185,7 @@ export function AddFood({ navigation, route }: AddFoodProps) {
             onPress={() =>
               navigation.navigate('AddFood', {
                 page: tab.page as AddFoodPage,
-                isNew: true,
+                isNew: isNew || true,
                 food: {},
                 isCustom: tab.page === 'custom',
                 date,

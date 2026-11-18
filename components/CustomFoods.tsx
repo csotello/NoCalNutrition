@@ -13,9 +13,9 @@ import {
 import React from 'react';
 import { Text, ScrollView } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { getMainNutrients } from '../utils.tsx';
+import { loadCustomFoods, saveCustomFoods } from '../storage/foodRepository';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import styles from '../styles/styles';
@@ -38,15 +38,9 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
    */
   async function load() {
     try {
-      let stored = await EncryptedStorage.getItem('customFood');
-      if (!stored) return;
-      let customFood: any[] = JSON.parse(stored);
-      console.log('Loaded: ' + customFood);
-      if (!customFood) return;
-      setFoods([...customFood]);
+      setFoods(await loadCustomFoods());
     } catch (error) {
-      console.error('Failed to load');
-      console.log(error);
+      console.error('Failed to load custom foods', error);
     }
   }
   useEffect(() => {
@@ -56,24 +50,18 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
     }
   }, [loaded]);
 
-  async function store(foods: any) {
-    try {
-      await EncryptedStorage.setItem('customFood', JSON.stringify(foods));
-      console.log('Stored:' + JSON.stringify(foods));
-    } catch (error) {
-      console.log('Failed to store');
-      console.log(error);
-    }
-  }
-
   /**
    * Removes a food from the list
    * @param {object} food - The food to be removed
    */
-  async function removeFood(food: any) {
-    var cur = foods?.filter(item => item.UUID !== food.UUID);
-    setFoods([...cur]);
-    store([...cur]);
+  async function removeFood(food: FoodItem) {
+    const remainingFoods = foods.filter(item => item.UUID !== food.UUID);
+    try {
+      await saveCustomFoods(remainingFoods);
+      setFoods(remainingFoods);
+    } catch (error) {
+      console.error('Failed to save custom foods', error);
+    }
   }
 
   /**
@@ -81,7 +69,7 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
    *
    * @param {object} food - The food to be rendered
    */
-  function displayFoods(food: any): React.JSX.Element {
+  function displayFoods(food: FoodItem): React.JSX.Element {
     let nutrients = getMainNutrients(food);
     return (
       <View style={[styles.listItem, styles.customFoods.card]}>
@@ -176,7 +164,7 @@ export function CustomFoods(props: CustomFoodsProps): React.JSX.Element {
     );
   }
 
-  function alertDialog(food: any): React.JSX.Element {
+  function alertDialog(food: FoodItem): React.JSX.Element {
     return (
       <AlertDialog
         isOpen={isOpen}
