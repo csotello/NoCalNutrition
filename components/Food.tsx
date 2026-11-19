@@ -36,11 +36,11 @@ export function Food(props: FoodProps): React.JSX.Element {
       {props.foods?.length === 0 && (
         <Text style={styles.typography.muted}>No foods added yet</Text>
       )}
-      {props.foods?.map((item: any) => {
+      {props.foods?.map((item: FoodItem) => {
         const nutrients = getMainNutrients({ ...item });
         return (
           <View
-            key={item.UUID || item.fdcId || item.description}
+            key={item.UUID || item.description}
             style={nutritionStyles.foodCard}
           >
             <HStack style={nutritionStyles.foodHeader}>
@@ -50,9 +50,7 @@ export function Food(props: FoodProps): React.JSX.Element {
                     {item.brandName}
                   </Text>
                 )}
-                <Text style={nutritionStyles.foodName}>
-                  {item.description}
-                </Text>
+                <Text style={nutritionStyles.foodName}>{item.description}</Text>
                 <Text style={nutritionStyles.foodDetail}>
                   Serving Size: {Number(item.servingSize)}{' '}
                   {item.servingSizeUnit}
