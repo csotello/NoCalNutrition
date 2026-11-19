@@ -2,6 +2,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { Habit } from '../components/Habit';
+import React, { useState } from 'react';
 
 const habit = {
   title: 'Drink water',
@@ -31,6 +32,23 @@ async function renderHabit(props = {}) {
   );
 }
 
+function StatefulHabit({ edit, remove, setDays }) {
+  const [currentHabit, setCurrentHabit] = useState(habit);
+  return (
+    <GluestackUIProvider config={config}>
+      <Habit
+        habit={currentHabit}
+        edit={edit}
+        remove={remove}
+        setDays={(title, days) => {
+          setDays(title, days);
+          setCurrentHabit({ ...currentHabit, days });
+        }}
+      />
+    </GluestackUIProvider>
+  );
+}
+
 it('renders the habit title, category, and weekday controls', async () => {
   const { getByText } = await renderHabit();
 
@@ -45,7 +63,9 @@ it('calls edit, remove, and reset handlers with the habit title', async () => {
   const edit = jest.fn();
   const remove = jest.fn();
   const setDays = jest.fn();
-  const { getByTestId } = await renderHabit({ edit, remove, setDays });
+  const { getByTestId } = await render(
+    <StatefulHabit edit={edit} remove={remove} setDays={setDays} />,
+  );
 
   expect(getByTestId('Habit Day Monday').props.sx.bg).toBe('#6fdc6f');
   await fireEvent.press(getByTestId('Habit Day Monday'));
@@ -55,8 +75,25 @@ it('calls edit, remove, and reset handlers with the habit title', async () => {
   await fireEvent.press(getByTestId('Remove Habit'));
   await fireEvent.press(getByTestId('Reset Habit'));
 
-  expect(edit).toHaveBeenCalledWith(habit);
+  expect(edit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      ...habit,
+      days: { ...habit.days, Monday: 'Complete' },
+    }),
+  );
   expect(remove).toHaveBeenCalledWith(habit.title);
-  expect(setDays).toHaveBeenCalledWith(habit.title);
+  expect(setDays).toHaveBeenNthCalledWith(1, habit.title, {
+    ...habit.days,
+    Monday: 'Complete',
+  });
+  expect(setDays).toHaveBeenNthCalledWith(2, habit.title, {
+    Monday: 'Default',
+    Tuesday: 'Default',
+    Wednesday: 'Default',
+    Thursday: 'Default',
+    Friday: 'Default',
+    Saturday: 'Default',
+    Sunday: 'Default',
+  });
   expect(getByTestId('Habit Day Monday').props.sx.bg).toBe('#6fdc6f');
 });

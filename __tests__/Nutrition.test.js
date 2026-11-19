@@ -57,7 +57,8 @@ it('opens the selected food for editing', async () => {
 
   expect(navigation.navigate).toHaveBeenCalledWith('AddFood', {
     page: 'edit',
-    food: { ...defaultFood, meal: 'Breakfast' },
+    food: { ...defaultFood },
+    meal: 'Breakfast',
     isNew: false,
     date,
     isCustom: false,
